@@ -1,0 +1,64 @@
+This file takes note of specific points of interest for the design document as well as general design decisions.
+
+Classes:
+
+Below is a list of some of the important classes in the existing linphone-android source code.
+
+LinphoneService:
+-----------------------------------------------------------------------------------
+Description:
+-----------
+- Initializes LinphoneManager
+- Starts C liblinphone using LinphoneManager
+- Reacts to LinphoneManager state changes
+- Delegates GUI state changes to the GUI listener
+
+ Key points:
+ ------------
+ - in onCreate() method:
+	- (line 163) initialization of LinphoneCoreListenerBase with implementation of stub functions **important for our  LinphoneChatManagerListener**
+		This might be where we capture the existing listeners and ensure that our listener intercepts group chat messages else the other listeners will deal
+		with the event.
+
+- GUI listener seems to be a NotificationManager from the android sdk.
+ 
+-----------------------------------------------------------------------------------
+
+LinphoneManager:
+-----------------------------------------------------------------------------------
+Description:
+-----------
+Manager of the low level liblinphone stuff. Includes:
+ - starting C liblinphone,
+ - reacting to C liblinphone state changes,
+ - calling Linphone android service listener methods,
+ - interactions between Android GUI/service and low level SIP stuff.
+ Note: Add Service Listener to react to Linphone state changes.
+ 
+ Key points:
+ ------------
+ - This class implements LinphoneCoreListener (we can use this class with the LinphoneGroupChatManager to send messages where they are suppsoed to go, as well as create notifications, etc)
+ 
+ - constructor: (line 139)
+	lists a number of file paths, one of particular interest it the chat database file (chat storage)
+	
+ - startLibLinphone(Context c): (line 441)
+	starts the linphone core and uses a thread to call the iterate() method on a timer loop
+	(line 449) LinphoneCore initialization, this class sets it's instance as the listener **important**
+	
+ -----------------------------------------------------------------------------------
+	
+LinphoneUtils:
+-----------------------------------------------------------------------------------
+Description:
+-----------
+Set of helper functions for the linphone app.
+
+Key points:
+- functions specific to checking sip addresses, loading images from a uri (should come in handy for profile pictures perhaps?), also functions for 
+on-click events it seems.
+
+-----------------------------------------------------------------------------------
+
+
+

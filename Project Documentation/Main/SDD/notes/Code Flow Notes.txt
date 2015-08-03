@@ -1,0 +1,41 @@
+LinphoneChatRoom:
+-----------------------------------------------------------------------------------
+Responsible for sending, receiving messages between two clients. 
+
+Flow of functionality:
+----------------------
+1. Obtaining peer address
+Java:
+getPeerAddress	-> new LinphoneAddressImpl(...)
+				-> nativePointer = newLinphoneAddressImpl()
+C:	(linphonecore_jni.cc and address.c)				
+					-> address = linphone_address_new(uri) 
+						->sal_address_new
+					->linphone_address_set_display_name()
+					-> return address
+	In sal_address_impl.c		sal_address_new(uri)
+
+2. Sending message
+Java: 
+sendMessage(String message) -> sendMessage(nativePtr, message)
+C: (linphonecor_jni.cc and chat.c)
+	-> linphone_chat_room_send_message()
+	-> _linphone_chat_room_send_message(...)
+--------------------------------------------------------------------------------
+
+
+
+File Chat.c
+--------------------------------------------------------------------------------
+C implementation of LinphoneChatRoom Native Interface
+
+Flow of functionality:
+------------------------
+1. Receiving a message
+linphone_core_message_received(...) 
+	-> linphone_chat_room_message_received(...)
+	-> linphone_core_notify_message_received	(in vtable.c)
+	-> message_received(...) (in linphonecore_jni.cc)
+	-> env->CallVoidMethod(...) (some java function ?)
+
+--------------------------------------------------------------------------------

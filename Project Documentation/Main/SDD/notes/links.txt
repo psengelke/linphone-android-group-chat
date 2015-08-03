@@ -1,0 +1,1 @@
+http://www.linphone.org/docs/liblinphone-javadoc/org/linphone/core/LinphoneChatRoom.html

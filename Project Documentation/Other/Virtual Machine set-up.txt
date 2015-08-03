@@ -1,0 +1,53 @@
+http://www.coders-hub.com/2015/04/start-working-on-linphone-android-part-1.html?m=1
+
+Working off this link from Paul, this is how I proceeded to set-up a Virtual Ubuntu Machine in VirtualBox and get it up and running with linphone android development
+
+VM specs:
+64-bit Ubuntu 15.04 with 6GB ram and a BIG hdd (I recommend 25GB minimum as all the libraries and tools are very big when extracted and installed)
+
+Notes on steps
+
+I installed scite as I like that text editor
+
+step 2
+run
+sudo apt-get install openjdk-7-jdk
+
+Step 7:
+In Ubuntu .bashrc is hidden, so you won't see it in home with ls command in terminal. It is there though.
+Edit it with the following command:
+sudo scite ~/.bashrc
+
+Step 8:
+after step 7, close all terminal windows and relaunch terminal
+run
+android avd
+now create a device and attempt to run it. There will likely be errors if you running 64-bit linux.
+Install the required dependencies with the following:
+sudo apt-get update
+sudo apt-get install lib32z1 lib32z1-dev lib32ncurses5 
+
+Step 9:
+When setting sdk and ndk preferences do the following:
+at "SDK Location:" enter or browse to the path of sdk which should look like this:
+/home/USERNAME/anroid-sdk-linux
+Expand the >Android bullet in the left menu and select NDK.
+Enter or browse for the NDK Location which should look like:
+/home/USERNAME/android-ndk-r10e
+
+Step 10:
+I encountered a problem with aclocal. could not locate package.
+Same thing for libtoolize and pkgconfig. Don't think they're actually available for ubuntu 15.04 x64
+
+for libtoolize, run
+sudo apt-get install libtool
+
+step 11:
+install git
+run
+git clone http://github.com/psengelke/linphone-android-group-chat --recursive
+
+
+Step 12:
+
+Get an error here about target 'checktools.mk'

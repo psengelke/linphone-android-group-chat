@@ -1,0 +1,27 @@
+Presentation Friday 31 July
+
+Re-cap
++++++++++
+- Client
+- Project
+- Team Eclectic
+
+Linphone
+++++++++
+- Core in C
+- Android in Java
+
+Coding
+++++++
+Class Skeletons
+Testing
+
+"Absolutely on track" - Kobus, Monday 27th July
+
+
+Documentation
++++++++++++++
+SDD
+- Classes and Interfaces
+- UI Design
+- Software Interactions

@@ -1,0 +1,37 @@
+Current Interface
+Linphone interface
+	When a Linphone user opens the application, he/she is greeted and interacts with the following interface:
+	•	Light shades of blue/grey, dark grey and orange are used as a colour scheme
+	•	The user options are located at the bottom of the screen, represented by ‘self-explanatory’ symbols with an accompanying label.
+	•	The user can navigate between these options depending on the needed functionality.
+Chat interface 
+	The current default interface for a chat between two Linphone users consists of:
+	•	A plain blue/grey background
+	•	The name of the contact to which the user is currently chatting to is displayed at the top of the chat along with their profile picture.
+	•	+++++++++++++++++++
+		+			+
+		++++++++++++++++++++
+	•	Speech bubbles to represent messages
+		o	Each speech bubble is either left or right aligned depending on whether it is a the users sent message or the users received message.
+		o	A received message appears to be left aligned
+		o	A message sent by the user appears to be right aligned
+		o	All Speech bubbles representing received messages are represented by a light shade of blue
+		o	All speech bubbles representing the users’ sent messages are represented by a darker shade of blue.
+	•	A yellow arrow represents a sending message
+	•	A green tick represents a sent and delivered message
+	•	A red cross symbolizes a message that cannot be sent and thus not delivered
+	•	When the contact to which the user is chatting to types, the line “Remote is writing…” appears at the bottom of the chat screen
+Potential upgrades and changes to Current interface
+	•	Add the option for users to change background colour scheme *
+	•	Add a defined panel/ bar at the top of a chat to represent the contact to which the user is chatting to. 
+		o	Left align the contact details such as picture and name.
+	•	Change the colours of the speech bubbles that represent the messages to be more distinguishable to the background.
+		o	The default colour of the speech bubble representing a users’ sent message is very similar to the default background colour and thus it is difficult to distinguish the message from the background. Therefore changing the colour of this will allow the messages to stand out.
+		o	The users’ sent messages should be represented by a duller colour to the received messages as the received messages need more focus.
+	•	Limit the size of speech bubbles.
+		o	Speech bubbles representing a users’ sent message should be limited to stretch to 80% - 90% of the screen while being right-aligned.
+		o	Speech bubbles representing a received message should be limited to stretch to 80% - 90% of the screen while being left-aligned. *
+		o	This will allow easier distinguishability between sent and received messages when dealing with longer messages.
+		o	+++++++++++++++++++
+			+			+
+			++++++++++++++++++++

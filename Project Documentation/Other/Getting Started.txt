@@ -1,0 +1,23 @@
+Hope this file can save you prodigal sons some time. 
+
+1. Clone repository into Linux
+2. To fetch submodules use the command git submodule update --init --recursive
+3. Follow the instructions on the github readme to install required software for build and development.
+4. Also install eclipse on Linux
+
+** To add Android stuff to Path in Linux **
+1. Navigate to etc folder. Open environment file in vi editor
+2. Add :/home/**usr**/**AndroidFolder**/Sdk/tools to the end of the path
+3. Do the same for the platform tools folder and also for the android ndk folder
+
+** Note: You'll probably need to login as root to edit the environment file. To edit as root use the command (sudo su)
+
+Important code:
+
+Java Native Code
+Interfaces: linphone-android/submodules/linphone/java/common
+Implementations: linphone-android/submodules/java/impl
+
+C Bindings
+linphone-android/submodules/linphone/coreapi
+Follow #include statements to find function implementation locations when unknown
