@@ -38,3 +38,9 @@ tests/*$py.class
 tests/build.xml
 tests/project.properties
 ant_password.properties
+Project Documentation/Main/SDD/SDD.aux
+Project Documentation/Main/SDD/SDD.lof
+Project Documentation/Main/SDD/SDD.log
+Project Documentation/Main/SDD/SDD.pdf
+Project Documentation/Main/SDD/SDD.synctex.gz
+Project Documentation/Main/SDD/SDD.toc
