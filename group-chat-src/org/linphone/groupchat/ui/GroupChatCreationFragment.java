@@ -46,14 +46,20 @@ public class GroupChatCreationFragment
 		
 	}
 	
-	public void toggleEncryption;
+	public void toggleEncryption()
+	{
+		
+	}
 	
 	public void addMember()
 	{
 		
 	}
 	
-	
+	/**
+	 * This function removes a member only from the user interface, since the group has yet to be created
+	 * @param participant The TextView to be removed from the fragment.
+	 */
 	public void removeMember(TextView participant)
 	{
 		

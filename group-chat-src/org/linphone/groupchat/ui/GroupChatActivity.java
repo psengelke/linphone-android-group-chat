@@ -24,7 +24,7 @@ public class GroupChatActivity extends FragmentActivity
 		
 		GroupChatFragment gFragment = new GroupChatFragment();
 		gFragment.setArguments(extras);
-		//getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "ChatFragment").commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "GroupChatFragment").commit();
 		
 		FragmentManager fm = getSupportFragmentManager();
 		groupChatFragment = (GroupChatFragment) fm.findFragmentByTag(GROUP_CHAT_FRAGMENT);
@@ -33,8 +33,8 @@ public class GroupChatActivity extends FragmentActivity
 	    // retained across a configuration change.
 		if (groupChatFragment == null) {
 			groupChatFragment = new GroupChatFragment();
-			chatFragment.setArguments(extras);
-			//fm.beginTransaction().add(R.id.fragmentContainer, chatFragment, CHAT_FRAGMENT).commit();
+			groupChatFragment.setArguments(extras);
+			fm.beginTransaction().add(R.id.fragmentContainer, groupChatFragment, GROUP_CHAT_FRAGMENT).commit();
 	    }
 	}
 }
