@@ -2,6 +2,8 @@ package org.linphone.groupchat.ui;
 
 import org.linphone.ChatFragment;
 import org.linphone.groupchat.core;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 public class GroupChatMessagingFragment extends ChatFragment
 {
@@ -19,6 +21,18 @@ public class GroupChatMessagingFragment extends ChatFragment
 	{
 		super.onCreate(savedInstanceState);
 		instance = this;
+		
+	}
+	
+	public void onPause()
+	{
+		
+		
+	}
+	
+	public void onResume()
+	{
+		
 		
 	}
 	

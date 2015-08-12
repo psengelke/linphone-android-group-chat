@@ -11,6 +11,9 @@ public class GroupChatActivity extends FragmentActivity
 	private GroupChatSettingsFragment groupChatSettingsFragment;
 	
 	@Override
+	/*
+	 * Please modify as needed. Just included code that might be needed here...
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_chat_activity);
