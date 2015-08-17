@@ -12,7 +12,9 @@ import java.lang.String;
 
 public interface EncryptionHandler {
 
-    //public enum EncryptionType
+    public static enum EncryptionType{
+        None, AES256
+    }
 
     public static encrpyt(String message, long key){
 
