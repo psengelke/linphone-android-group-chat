@@ -1,6 +1,8 @@
 package org.linphone.groupchat.interfaces;
 
 
+import java.lang.String;
+
 /**
  *
  * @author David Breetzke
@@ -10,7 +12,10 @@ package org.linphone.groupchat.interfaces;
 
 public interface EncryptionStrategy {
 
-    //not sure where to go with this. It seems redundant alongside the EncryptionHandler
-    //Cannot see a clear link in the SDD
+    public static void sendMessage(String message, GroupChatMember[] members, LinphoneCore lc){}
+
+    public static String receiveMessage(String message){}
+
+    public EncryptionType getEncryptionType(){}
 
 }
