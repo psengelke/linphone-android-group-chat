@@ -23,21 +23,41 @@ public class LinphoneGroupChatManager {
 	
 	private LinphoneGroupChatManager() {
 		
+		// GroupChatStorage.getInstance();
 	}
 	
 	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members /*, EncryptionType encryption_type*/){
 		
 	}
 	
-	public void deleteGroupChat(String id){
-		
-	}
-	
-	public LinkedList<LinphoneGroupChatRoom> getGroupChatList(){
+	public LinphoneGroupChatRoom getGroupChat(String id){
 		
 		return null;
 	}
 	
+	/**
+	 * Removes a group chat from the client.
+	 * @param id The ID of the group chat to be deleted.
+	 */
+	public void deleteGroupChat(String id){
+		
+	}
+	
+	/**
+	 * Function returns a LinkedList object containing the identification information of the group chats.
+	 * @return LinkedList containing group chat identification.
+	 */
+	public LinkedList<String> getGroupChatList(){
+		
+		return null;
+	}
+	
+	/**
+	 * Sends the message to the correct group chat instance.
+	 * @param lc The {@link LinphoneCore} instance.
+	 * @param cr The {@link LinphoneChatRoom} instance.
+	 * @param message The message received for a group chat.
+	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
 	}
