@@ -1,26 +1,30 @@
 package org.linphone.groupchat.encryption;
 
-import org.linphone.groupchat.interfaces.EncryptionHandler;
+import java.util.LinkedList;
 
-public class NoEncryptionStrategy {
-	
-	private EncryptionType encryption_type;
-	private EncryptionHandler encryption_handler;
+import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.interfaces.EncryptionStrategy;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
 
-	public NoEncryptionStrategy() {
-	
-	}
-	
-	public void sendMessage(String message, GroupChatMember[] gcm, LinphoneCore lc){
+public class NoEncryptionStrategy implements EncryptionStrategy {
+
+	public NoEncryptionStrategy() {}
+
+	@Override
+	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+		// TODO Auto-generated method stub
 		
 	}
-	
-	public String receiveMessage(String message){
-		
+
+	@Override
+	public String receiveMessage(String message) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public EncryptionType getEncryption_type() {
-		return encryption_type;
+	@Override
+	public EncryptionType getEncryptionType() {
+		return EncryptionType.None;
 	}
 }

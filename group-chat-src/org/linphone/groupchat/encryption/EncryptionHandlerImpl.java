@@ -2,29 +2,36 @@ package org.linphone.groupchat.encryption;
 
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 
-public class EncryptionHandlerImpl implements EncryptionHandler{
+public class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	protected long key_private;
 	protected long key_public;
-	protected EncryptionType encryption_type;
 	
 	public EncryptionHandlerImpl(){
 		
 	}
-	
-	public void encrypt(String message, long key){
-		
-	}
-	
-	public void decrypt(String message){
-		
+
+	@Override
+	public String encrpyt(String message, long key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public long getKey_public() {
-		return key_public;
+	@Override
+	public String decrypt(String message) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public EncryptionType getEncryption_type() {
-		return encryption_type;
+	@Override
+	public long getPublicKey() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public EncryptionType getEncryptionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

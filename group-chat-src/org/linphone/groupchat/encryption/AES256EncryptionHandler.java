@@ -1,23 +1,25 @@
 package org.linphone.groupchat.encryption;
 
-public class AES256EncryptionHandler extends EncryptionHandlerImpl{
+import org.linphone.groupchat.interfaces.EncryptionHandler;
+
+public class AES256EncryptionHandler extends EncryptionHandlerImpl implements EncryptionHandler {
 
 	@Override
-	public void encrypt(String message, long key) {
+	public String encrpyt(String message, long key) {
 		// TODO Auto-generated method stub
-		super.encrypt(message, key);
+		return null;
 	}
 
 	@Override
-	public void decrypt(String message) {
+	public String decrypt(String message) {
 		// TODO Auto-generated method stub
-		super.decrypt(message);
+		return super.decrypt(message);
 	}
 
 	@Override
-	public long getKey_public() {
+	public long getPublicKey() {
 		// TODO Auto-generated method stub
-		return super.getKey_public();
+		return super.getPublicKey();
 	}
 	
 }
