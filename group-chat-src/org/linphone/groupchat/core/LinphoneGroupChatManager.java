@@ -6,7 +6,11 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.interfaces.EncryptionHandler;
+import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
+
+import exception.GroupChatSizeException;
 
 
 /**
@@ -26,8 +30,15 @@ public class LinphoneGroupChatManager {
 		// GroupChatStorage.getInstance();
 	}
 	
-	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members /*, EncryptionType encryption_type*/){
+	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, 
+			EncryptionHandler.EncryptionType type) 
+			throws GroupChatSizeException {
 		
+		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
+		
+		// else continue:
+		// determine encryption type
+		// create group and append to list.
 	}
 	
 	public LinphoneGroupChatRoom getGroupChat(String id){
@@ -41,6 +52,7 @@ public class LinphoneGroupChatManager {
 	 */
 	public void deleteGroupChat(String id){
 		
+		// query database and try to delete the group, else throw exception?
 	}
 	
 	/**
@@ -48,6 +60,8 @@ public class LinphoneGroupChatManager {
 	 * @return LinkedList containing group chat identification.
 	 */
 	public LinkedList<String> getGroupChatList(){
+		
+		// use a public inner class for key-pairs (id and name) 
 		
 		return null;
 	}
@@ -60,7 +74,10 @@ public class LinphoneGroupChatManager {
 	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
+		// retrieve group chat id from message header, get correct group chat and pass the message on.
 	}
+	
+	/* -- Singleton Declarations -- */
 	
 	/**
 	 * Getter method for the singleton.
@@ -70,7 +87,6 @@ public class LinphoneGroupChatManager {
 		
 		return InstanceHolder.INSTANCE;
 	}
-	
 	
 	/**
 	 * This class provides a thread-safe lazy initialisation of the singleton.

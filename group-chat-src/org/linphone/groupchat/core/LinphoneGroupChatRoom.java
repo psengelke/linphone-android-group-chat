@@ -9,6 +9,7 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.interfaces.EncryptionHandler;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
@@ -28,6 +29,17 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	private static final int MAX_MEMBERS = 50;
 	
+	/**
+	 * Constructor: First-time construction
+	 * @param name	The name of the group.
+	 * @param group_id	The group's ID provided by the {@link LinphoneGroupChatManager} instance.
+	 * @param admin	The administrator of the group (this client).
+	 * @param members A list of all the initial group members, including administrator.
+	 * @param encryption_strategy The encryption to be used, as specified by the group creator.
+	 * @param linphone_core The {@link LinphoneCore} instance TODO: Might be removed.
+	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed 
+	 * to give way to singleton instantiation.
+	 */
 	public LinphoneGroupChatRoom(
 			String name,
 			String group_id,
@@ -47,6 +59,15 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		// create database entry for group
 		// send invites
+	}
+	
+	/**
+	 * Constructor: Existing group in the database.
+	 * @param id The ID of the group to be initialised from the database.
+	 */
+	public LinphoneGroupChatRoom(String id){
+		
+		// initialise self from database
 	}
 	
 	
@@ -121,9 +142,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.encryption_strategy = encryption_strategy;
 	}
 	
-//	public getEncryptionType(){
-//		return encryption_strategy.getEncryptionType();
-//	}
+	public EncryptionHandler.EncryptionType getEncryptionType(){
+		return encryption_strategy.getEncryptionType();
+	}
 	
 	/* LinphoneChatRoom Implementation*/ 
 	
