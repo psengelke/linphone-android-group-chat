@@ -54,13 +54,14 @@ public interface GroupChatStorage {
 
     public LinkedList<String> getChatList();
 
-    //maybe make return Boolean? -- could do, we have to look at return types where possible as well as exceptions for testability and system control
+    //maybe make return Boolean? -- could do, we have to look at return types where possible as well
+    // as exceptions for testability and system control
     // and stability
     public void deleteChat(String id);
 
     public void markChatAsRead(String id);
 
-    //No GroupChatMember type exists -- it does now, as per SDD
+    //No GroupChatMember type exists -- it does now, as per SDD -- Sweet!
     public GroupChatMember getMembers(String id);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
