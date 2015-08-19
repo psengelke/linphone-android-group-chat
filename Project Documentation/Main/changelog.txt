@@ -1,0 +1,15 @@
+
+
+Changes that are made that alter the spec of the software should be recorded here 
+so that they may be accounted for should any revisions on documentation be necessary.
+
+------------------------------------------------------------------------------------------
+
+--	LinphoneGroupChatManager, LinphoneGroupChatListener made singleton.
+	Reason: The original idea, though not portrayed in the SDD. Allows for easier access by other classes
+	and ensures a single instance for interaction.
+	
+-- 	GroupChatStorage implementations should be implemented as singletons  to enforce a single database access 
+	point. This shall be reflected in GroupChatStorageAndroidImpl.
+	
+-- 	Group chats shall be held separate from private chats for simplicity's sake as well as a convenience to clients.

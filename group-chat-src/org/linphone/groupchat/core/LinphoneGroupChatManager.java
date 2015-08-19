@@ -49,6 +49,14 @@ public class LinphoneGroupChatManager {
 		// GroupChatStorage.getInstance();
 	}
 	
+	/**
+	 * Function to create a new group chat.
+	 * @param name	The name of the new group.
+	 * @param admin The creator of the group.
+	 * @param members The members in the group (including the administrator).
+	 * @param type The type of encryption to be used for the group chat messages.
+	 * @throws GroupChatSizeException In the event that the group size is too small.
+	 */
 	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, 
 			EncryptionType type) 
 			throws GroupChatSizeException {
@@ -84,7 +92,7 @@ public class LinphoneGroupChatManager {
 	/**
 	 * Removes a group chat from the client.
 	 * @param id The ID of the group chat to be deleted.
-	 * @throws GroupDoesNotExistException  
+	 * @throws GroupDoesNotExistException
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
 		

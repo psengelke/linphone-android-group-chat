@@ -35,7 +35,7 @@ import org.linphone.core.SubscriptionState;
  */
 public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	
-	private LinphoneCoreListener linphone_manager;
+	private LinphoneManager linphone_manager;
 	private LinphoneGroupChatManager chat_manager;
 	
 	private LinphoneGroupChatListener() {
