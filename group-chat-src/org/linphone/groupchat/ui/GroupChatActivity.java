@@ -1,5 +1,6 @@
 package org.linphone.groupchat.ui;
 
+import android.R;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -22,17 +23,17 @@ public class GroupChatActivity extends FragmentActivity
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		
 		
-		GroupChatFragment gFragment = new GroupChatFragment();
+		GroupChatMessagingFragment gFragment = new GroupChatMessagingFragment();
 		gFragment.setArguments(extras);
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "GroupChatFragment").commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, gFragment, "GroupChatFragment").commit();
 		
 		FragmentManager fm = getSupportFragmentManager();
-		groupChatFragment = (GroupChatFragment) fm.findFragmentByTag(GROUP_CHAT_FRAGMENT);
+		groupChatFragment = (GroupChatMessagingFragment) fm.findFragmentByTag(GROUP_CHAT_FRAGMENT);
 
 	    // If the Fragment is non-null, then it is currently being
 	    // retained across a configuration change.
 		if (groupChatFragment == null) {
-			groupChatFragment = new GroupChatFragment();
+			groupChatFragment = new GroupChatMessagingFragment();
 			groupChatFragment.setArguments(extras);
 			fm.beginTransaction().add(R.id.fragmentContainer, groupChatFragment, GROUP_CHAT_FRAGMENT).commit();
 	    }

@@ -63,6 +63,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView edit, ok, newDiscussion, noChatHistory;
+	private TextView newGroupChat;
 	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
@@ -79,9 +80,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		registerForContextMenu(chatList);
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
-		
 		edit = (TextView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
+		
 		
 		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
 		newDiscussion.setOnClickListener(this);

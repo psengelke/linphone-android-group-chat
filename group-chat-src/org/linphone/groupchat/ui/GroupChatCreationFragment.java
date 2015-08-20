@@ -1,18 +1,29 @@
 package org.linphone.groupchat.ui;
 
+import java.util.LinkedList;
+
 import android.widget.TextView;
+import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.LayoutInflater;
-import org.linphone.groupchat.core;
-import org.linphone.groupchat.encryption;
 
-public class GroupChatCreationFragment 
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.groupchat.core.LinphoneGroupChatListener;
+import org.linphone.groupchat.core.LinphoneGroupChatManager;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+
+public class GroupChatCreationFragment  extends Fragment
 {
 	private LinphoneGroupChatListener coreListener;
-	private LinphoneGroupChatManagaer groupChatManager;
+	private LinphoneGroupChatManager groupChatManager;
 	private LinphoneCoreListenerBase mListener; 	// Really needed?
 	
 	private LinearLayout participants;
@@ -25,14 +36,14 @@ public class GroupChatCreationFragment
 	private TextView leaveGroup;
 	private TextView setUpGroup;
 	private CheckBoxPreference encryptionCheckbox;
-	
+	private static GroupChatCreationFragment instance;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		instance = this;
-		
+		return null;
 	}
 	
 	public void onPause()
