@@ -1,10 +1,12 @@
 package org.linphone.groupchat.storage;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
+import java.lang.Override;
 import java.lang.String;
 
 /**
@@ -22,12 +24,26 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
-        //add tables and name them
+        //add table names as Strings
+        //add column names under each table name, as Strings
 
         public GroupChatHelper(Context context){
             super(context, GROUPCHAT_DB_NAME, null, GROUPCHAT_DB_VERSION);
         }
 
+        //creating tables
+        @Override
+        public void onCreate(SQLiteDatabase db){
+            String CREATE_TABLE_A = "CREATE TABLE "/*+ Table_Name*/;
+            db.execSQL(CREATE_TABLE_A);
+        }
+
+        //upgrading database
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            //drop old table
+            db.execSQL("DROP TABLE IF EXISTS "/*+ Table_Name*/);
+        }
 
 
     }
