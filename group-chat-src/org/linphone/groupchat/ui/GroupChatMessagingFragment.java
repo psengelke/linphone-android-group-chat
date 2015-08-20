@@ -1,9 +1,20 @@
 package org.linphone.groupchat.ui;
 
 import org.linphone.ChatFragment;
-import org.linphone.groupchat.core;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.ui.BubbleChat;
+
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class GroupChatMessagingFragment extends ChatFragment
 {
@@ -14,13 +25,14 @@ public class GroupChatMessagingFragment extends ChatFragment
 	private TextView remoteMemberComposing;
 	
 	private LinphoneGroupChatRoom chatroom;
-	private GroupChatMessageAdapter groupChatMessageAdapter;
+	private GroupChatMessageAdpater groupChatMessageAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		instance = this;
+		return null;
 		
 	}
 	
@@ -58,6 +70,58 @@ public class GroupChatMessagingFragment extends ChatFragment
 	{
 		
 		
+		
+	}
+	
+	public class GroupChatMessageAdpater extends BaseAdapter
+	{
+		LinphoneChatMessage[] history;
+		Context context;
+		
+		public GroupChatMessageAdpater(Context context, LinphoneChatMessage[] history) 
+		{
+			this.history = history;
+			this.context = context;
+		}
+		
+		public void refreshHistory()
+		{
+			
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			LinphoneChatMessage message = history[position];
+			
+			BubbleChat bubble = new BubbleChat(context, message, GroupChatMessagingFragment.this);
+			View v = bubble.getView();
+			
+			//registerForContextMenu(v);
+			RelativeLayout rlayout = new RelativeLayout(context);
+			rlayout.addView(v);
+			
+			return rlayout;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
 		
 	}
 }

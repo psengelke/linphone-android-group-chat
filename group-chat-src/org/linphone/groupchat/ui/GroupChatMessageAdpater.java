@@ -15,7 +15,7 @@ public class GroupChatMessageAdpater extends BaseAdapter
 	LinphoneChatMessage[] history;
 	Context context;
 	
-	public GroupChatMessageAdapter(Context context, LinphoneChatMessage[] history) 
+	public GroupChatMessageAdpater(Context context, LinphoneChatMessage[] history) 
 	{
 		this.history = history;
 		this.context = context;
