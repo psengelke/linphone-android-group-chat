@@ -25,7 +25,11 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //add table names as Strings
+        //private static final String TABLE_A = "NameForTableA";
         //add column names under each table name, as Strings
+        //These can be used literally in onCreate without being declared here, but when DBs get large
+        //this helps readability
+
 
         public GroupChatHelper(Context context){
             super(context, GROUPCHAT_DB_NAME, null, GROUPCHAT_DB_VERSION);
@@ -43,6 +47,8 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
             //drop old table
             db.execSQL("DROP TABLE IF EXISTS "/*+ Table_Name*/);
+            //create tables again
+            onCreate(db);
         }
 
 
