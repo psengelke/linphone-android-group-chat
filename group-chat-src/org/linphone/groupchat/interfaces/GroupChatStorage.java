@@ -29,11 +29,15 @@ public interface GroupChatStorage {
 		public SipAddress sip;
 		public long public_key;
 	}
-	
-	// these two are in the SDD
-	// MessageState enum
-	// MessageDirection enum
-	
+    
+    public static enum MessageState{
+        Read, Unread
+    }
+    public static enum MessageDirection{
+        Incoming, Outgoing
+    }
+
+
     public GroupChatStorage getInstance();
 
     public void close();
