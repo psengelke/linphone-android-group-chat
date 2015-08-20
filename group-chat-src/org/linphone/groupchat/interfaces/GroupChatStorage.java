@@ -29,7 +29,7 @@ public interface GroupChatStorage {
 		public SipAddress sip;
 		public long public_key;
 	}
-    
+
     public static enum MessageState{
         Read, Unread
     }
@@ -65,7 +65,6 @@ public interface GroupChatStorage {
 
     public void markChatAsRead(String id);
 
-    //No GroupChatMember type exists -- it does now, as per SDD -- Sweet!
     public GroupChatMember getMembers(String id);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
