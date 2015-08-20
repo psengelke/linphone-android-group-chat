@@ -29,11 +29,15 @@ public interface GroupChatStorage {
 		public SipAddress sip;
 		public long public_key;
 	}
-	
-	// these two are in the SDD
-	// MessageState enum
-	// MessageDirection enum
-	
+
+    public static enum MessageState{
+        Read, Unread
+    }
+    public static enum MessageDirection{
+        Incoming, Outgoing
+    }
+
+
     public GroupChatStorage getInstance();
 
     public void close();
@@ -54,13 +58,13 @@ public interface GroupChatStorage {
 
     public LinkedList<String> getChatList();
 
-    //maybe make return Boolean? -- could do, we have to look at return types where possible as well as exceptions for testability and system control
+    //maybe make return Boolean? -- could do, we have to look at return types where possible as well
+    // as exceptions for testability and system control
     // and stability
     public void deleteChat(String id);
 
     public void markChatAsRead(String id);
 
-    //No GroupChatMember type exists -- it does now, as per SDD
     public GroupChatMember getMembers(String id);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);

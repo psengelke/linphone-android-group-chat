@@ -6,6 +6,8 @@ public class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	protected long key_private;
 	protected long key_public;
+	protected EncryptionType encryption_type;
+
 	
 	public EncryptionHandlerImpl(){
 		
