@@ -1,5 +1,7 @@
 package org.linphone.groupchat.storage;
 
+import android.database.sqlite.SQLiteOpenHelper;
+
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 /**
@@ -11,5 +13,5 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
-    private class GroupChatHelper{} // this class implements an  class provided by the android sdk, SQLiteOpenHelper
+    private class GroupChatHelper extends SQLiteOpenHelper{} // this class implements a class provided by the android sdk, SQLiteOpenHelper
 }
