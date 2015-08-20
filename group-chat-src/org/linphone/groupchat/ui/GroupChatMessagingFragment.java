@@ -73,12 +73,12 @@ public class GroupChatMessagingFragment extends ChatFragment
 		
 	}
 	
-	public class GroupChatMessageAdpater extends BaseAdapter
+	public class GroupChatMessageAdapter extends BaseAdapter
 	{
 		LinphoneChatMessage[] history;
 		Context context;
 		
-		public GroupChatMessageAdpater(Context context, LinphoneChatMessage[] history) 
+		public GroupChatMessageAdapter(Context context, LinphoneChatMessage[] history) 
 		{
 			this.history = history;
 			this.context = context;
