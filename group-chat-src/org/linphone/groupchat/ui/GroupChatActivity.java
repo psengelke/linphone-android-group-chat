@@ -1,6 +1,5 @@
 package org.linphone.groupchat.ui;
 
-import android.R;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +16,7 @@ public class GroupChatActivity extends FragmentActivity
 	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.group_chat_activity);
+		setContentView(R.layout.groupchat_activity);
 		
 		Bundle extras = new Bundle();
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));

@@ -25,7 +25,7 @@ public class GroupChatMessagingFragment extends ChatFragment
 	private TextView remoteMemberComposing;
 	
 	private LinphoneGroupChatRoom chatroom;
-	private GroupChatMessageAdpater groupChatMessageAdapter;
+	private GroupChatMessageAdapter groupChatMessageAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 

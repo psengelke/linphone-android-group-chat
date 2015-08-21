@@ -1,3 +1,4 @@
+/*
 package org.linphone.groupchat.ui;
 
 import org.linphone.core.LinphoneChatMessage;
@@ -61,3 +62,4 @@ public class GroupChatMessageAdpater extends BaseAdapter
 
 	
 }
+*/
