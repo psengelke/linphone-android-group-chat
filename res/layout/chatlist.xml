@@ -36,6 +36,19 @@
 		    android:layout_height="match_parent"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
+			
+		<TextView 
+            android:contentDescription="@string/content_description_groupchat"
+            android:id="@+id/groupchat"
+            android:background="@drawable/group_chat"
+            android:text="@string/button_groupchat"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@drawable/text_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
         
         <TextView 
             android:contentDescription="@string/content_description_validate"
