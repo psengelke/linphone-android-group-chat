@@ -257,7 +257,6 @@
   <string name="content_description_add">Add button</string>
   <string name="content_description_new_discussion">New discussion</string>
   <string name="content_description_edit">Edit button</string>
-  <string name="content_description_groupchat">Group Chat</string>
   <string name="content_description_validate">Validate button</string>
   <string name="content_description_search">Search</string>
   <string name="content_description_all_contacts">All contacts</string>
@@ -311,7 +310,6 @@
   <string name="button_setup_next">Let\'s go</string>
   <string name="button_new_chat">New conversation</string>
   <string name="button_edit">Edit</string>
-  <string name="button_groupchat">Group Chat</string>
   <string name="button_cancel">Cancel</string>
   <string name="button_ok">Okay</string>
   <string name="button_back">Back</string>
