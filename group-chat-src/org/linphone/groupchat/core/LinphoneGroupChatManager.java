@@ -11,6 +11,7 @@ import org.linphone.groupchat.encryption.AES256EncryptionHandler;
 import org.linphone.groupchat.encryption.NoEncryptionStrategy;
 import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
@@ -46,7 +47,8 @@ public class LinphoneGroupChatManager {
 	
 	private LinphoneGroupChatManager() {
 		
-		// GroupChatStorage.getInstance();
+		// storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // getInstance() must be static
+		generateGroupChats();
 	}
 	
 	/**
@@ -63,6 +65,8 @@ public class LinphoneGroupChatManager {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
+		// persist group data and then create instance.
+		
 		EncryptionStrategy strategy;
 		switch (type) {
 		case None:
@@ -74,6 +78,15 @@ public class LinphoneGroupChatManager {
 		}
 		
 		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null));
+	}
+	
+	private void generateGroupChats(){
+		
+		// get group information from database
+		// for each group:
+		// get member list
+		// set name, admin, member list, encryption type
+		// call createGroupChat() and append to list
 	}
 	
 	public LinphoneGroupChatRoom getGroupChat(String id) throws GroupDoesNotExistException {
@@ -125,7 +138,17 @@ public class LinphoneGroupChatManager {
 	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
+		String group_id = "";
 		// retrieve group chat id from message header, get correct group chat and pass the message on.
+		// also make sure the message gets deleted from the individual chat...
+		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
+		while (it.hasNext()) {
+			LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();
+			if (chat.getGroupId().equals(group_id)){
+				chat.receiveMessage(message);
+				break;
+			}
+		}
 	}
 	
 	/* -- Singleton Declarations -- */

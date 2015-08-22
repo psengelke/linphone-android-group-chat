@@ -18,14 +18,19 @@ import android.graphics.Bitmap;
 @SuppressWarnings("deprecation")
 public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
+	public static final String MSG_HEADER_GROUP_ID = "LinphoneGroupChatRoom.group_id";
+	public static final String MSG_HEADER_TYPE_MESSAGE = "LinphoneGroupChatRoom.plain_message";
+	// we may have to add new headers for the distributed communication protocol for groups,
+	// i.e invite messages, new group member additions and deletions
+	
 	// private LinkedList<GroupChatMember> members
-	private EncryptionStrategy encryption_strategy;
+	private EncryptionStrategy encryption_strategy; // injected by LinphoneGroupChatManager
 	private LinphoneAddress admin;
 	private String group_id;
 	private String group_name;
 	private String group_image_url; // may change to a BitMap?
-	private LinphoneCore linphone_core;
-	private GroupChatStorage storage_adapter;
+	private LinphoneCore linphone_core; // injected by LinphoneGroupChatManager
+	private GroupChatStorage storage_adapter; // injected by LinphoneGroupChatManager
 	
 	private static final int MAX_MEMBERS = 50;
 	
@@ -37,7 +42,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param members A list of all the initial group members, including administrator.
 	 * @param encryption_strategy The encryption to be used, as specified by the group creator.
 	 * @param linphone_core The {@link LinphoneCore} instance TODO: Might be removed.
-	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed 
+	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed
+	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 * to give way to singleton instantiation.
 	 */
 	public LinphoneGroupChatRoom(
@@ -47,7 +53,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			LinkedList<LinphoneAddress> members, 
 			EncryptionStrategy encryption_strategy, 
 			LinphoneCore linphone_core,
-			GroupChatStorage storage_adapter
+			GroupChatStorage storage_adapter,
+			boolean is_new
 	){
 		
 		this.group_id = group_id;
@@ -56,19 +63,12 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.encryption_strategy = encryption_strategy;
 		this.linphone_core = linphone_core;
 		this.storage_adapter = storage_adapter;
-		
-		// create database entry for group
-		// send invites
+
+		if (is_new){
+			// send invites
+		}
 	}
 	
-	/**
-	 * Constructor: Existing group in the database.
-	 * @param id The ID of the group to be initialised from the database.
-	 */
-	public LinphoneGroupChatRoom(String id){
-		
-		// initialise self from database
-	}
 	
 	
 	/**
@@ -100,6 +100,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void receiveMessage(LinphoneChatMessage message){
 		
+		// parse message content based on message headers
 	}
 	
 	/* Getters & Setters */
