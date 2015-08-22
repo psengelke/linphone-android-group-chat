@@ -57,15 +57,18 @@ public class LinphoneGroupChatManager {
 	 * @param admin The creator of the group.
 	 * @param members The members in the group (including the administrator).
 	 * @param type The type of encryption to be used for the group chat messages.
+	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 * @throws GroupChatSizeException In the event that the group size is too small.
 	 */
 	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, 
-			EncryptionType type) 
+			EncryptionType type, boolean is_new) 
 			throws GroupChatSizeException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
-		// persist group data and then create instance.
+		if (is_new){
+			// persist group data and then create instance.
+		}
 		
 		EncryptionStrategy strategy;
 		switch (type) {
@@ -77,7 +80,7 @@ public class LinphoneGroupChatManager {
 			break;
 		}
 		
-		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null));
+		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null, is_new));
 	}
 	
 	private void generateGroupChats(){
@@ -138,9 +141,8 @@ public class LinphoneGroupChatManager {
 	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
-		String group_id = "";
-		// retrieve group chat id from message header, get correct group chat and pass the message on.
-		// also make sure the message gets deleted from the individual chat...
+		String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
+		cr.deleteMessage(message);
 		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 		while (it.hasNext()) {
 			LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();

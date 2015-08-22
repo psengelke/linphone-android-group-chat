@@ -174,8 +174,11 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		
-		// intercept message else send to linphone_manager
-		//chat_manager.handleMessage(lc, cr, message);
+		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID) != null){
+			chat_manager.handleMessage(lc, cr, message);
+		} else {
+			linphone_manager.messageReceived(lc, cr, message);
+		}
 	}
 
 	@Override

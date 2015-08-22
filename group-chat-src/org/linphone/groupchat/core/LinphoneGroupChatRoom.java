@@ -43,8 +43,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param encryption_strategy The encryption to be used, as specified by the group creator.
 	 * @param linphone_core The {@link LinphoneCore} instance TODO: Might be removed.
 	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed
-	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 * to give way to singleton instantiation.
+	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 */
 	public LinphoneGroupChatRoom(
 			String name,
