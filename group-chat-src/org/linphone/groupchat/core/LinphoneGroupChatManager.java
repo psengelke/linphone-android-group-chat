@@ -10,13 +10,12 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.encryption.AES256EncryptionHandler;
 import org.linphone.groupchat.encryption.NoEncryptionStrategy;
 import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
+import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
-
-import exception.GroupChatSizeException;
-import exception.GroupDoesNotExistException;
 
 
 /**

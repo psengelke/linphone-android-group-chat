@@ -1,4 +1,4 @@
-package exception;
+package org.linphone.groupchat.exception;
 
 public class GroupDoesNotExistException extends Exception {
 
