@@ -17,7 +17,7 @@ public interface EncryptionHandler {
         None, AES256
     }
     
-    public String encrpyt(String message, long key);
+    public String encrypt(String message, long key);
     public String decrypt(String message);
     public long getPublicKey();
     public EncryptionHandler.EncryptionType getEncryptionType();

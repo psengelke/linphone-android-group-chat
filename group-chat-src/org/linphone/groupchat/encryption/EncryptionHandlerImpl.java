@@ -14,26 +14,22 @@ public class EncryptionHandlerImpl implements EncryptionHandler {
 	}
 
 	@Override
-	public String encrpyt(String message, long key) {
-		// TODO Auto-generated method stub
+	public String encrypt(String message, long key) {
 		return null;
 	}
 
 	@Override
 	public String decrypt(String message) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public long getPublicKey() {
-		// TODO Auto-generated method stub
-		return 0;
+		return key_public;
 	}
 
 	@Override
 	public EncryptionType getEncryptionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return encryption_type;
 	}
 }

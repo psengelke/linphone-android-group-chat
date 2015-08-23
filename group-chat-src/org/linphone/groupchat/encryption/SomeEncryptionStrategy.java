@@ -24,8 +24,7 @@ public class SomeEncryptionStrategy implements EncryptionStrategy {
 	
 	@Override
 	public String receiveMessage(String message){
-		
-		return null;
+		return message;
 	}
 
 	@Override

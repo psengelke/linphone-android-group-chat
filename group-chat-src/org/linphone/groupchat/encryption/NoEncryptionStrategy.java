@@ -19,8 +19,7 @@ public class NoEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public String receiveMessage(String message) {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
 
 	@Override
