@@ -25,7 +25,10 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //add table names as Strings
-        //private static final String TABLE_A = "NameForTableA";
+        private static final String TABLE_GROUPS = "Groups";
+        private static final String TABLE_MESSAGES = "Messages";
+        private static final String TABLE_MEMBERS = "Members";
+        private static final String TABLE_ATTACHMENTS = "Attachments";
         //add column names under each table name, as Strings
         //These can be used literally in onCreate without being declared here, but when DBs get large
         //this helps readability
