@@ -19,7 +19,13 @@ public class SomeEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
-		
+		// for each member:
+		// encrypt message with public key from chat member
+		// use lc to get individual chat
+		// create message with that chat
+		// send message
+		//delete message
+		// next member
 	}
 	
 	@Override
