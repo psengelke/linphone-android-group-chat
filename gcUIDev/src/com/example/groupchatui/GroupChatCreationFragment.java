@@ -42,9 +42,12 @@ public class GroupChatCreationFragment  extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		super.onCreate(savedInstanceState);
+		//super.onCreate(savedInstanceState);
 		instance = this;
-		return null;
+		View view = inflater.inflate(R.layout.groupchat, container, false);
+		setRetainInstance(true);
+		
+		return view;
 	}
 	
 	public void onPause()

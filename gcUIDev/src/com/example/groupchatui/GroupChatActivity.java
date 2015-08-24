@@ -7,9 +7,10 @@ import android.support.v4.app.FragmentManager;
 
 public class GroupChatActivity extends FragmentActivity
 {
-	private static final String GROUP_CHAT_FRAGMENT = "";
-	private GroupChatMessagingFragment groupChatFragment;
-	private GroupChatSettingsFragment groupChatSettingsFragment;
+	private static final String GROUP_CHAT_FRAGMENT = "gcCreationFragment";
+	private GroupChatMessagingFragment gcMessagingFragment;
+	private GroupChatSettingsFragment gcSettingsFragment;
+	private GroupChatCreationFragment gcCreationFragment;
 	
 	@Override
 	/*
@@ -23,19 +24,25 @@ public class GroupChatActivity extends FragmentActivity
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		
 		
-		GroupChatMessagingFragment gFragment = new GroupChatMessagingFragment();
+		GroupChatCreationFragment gFragment = new GroupChatCreationFragment();
 		//gFragment.setArguments(extras);
-		getSupportFragmentManager().beginTransaction().add(R.id.gcactivity, gFragment, "GroupChatFragment").commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.gcactivity, gFragment, GROUP_CHAT_FRAGMENT).addToBackStack(null).commit();
 		
 		FragmentManager fm = getSupportFragmentManager();
-		groupChatFragment = (GroupChatMessagingFragment) fm.findFragmentByTag("GroupChatFragment");
+		gcCreationFragment = (GroupChatCreationFragment) fm.findFragmentByTag(GROUP_CHAT_FRAGMENT);
 
 	    // If the Fragment is non-null, then it is currently being
 	    // retained across a configuration change.
-		if (groupChatFragment == null) {
-			groupChatFragment = new GroupChatMessagingFragment();
-			groupChatFragment.setArguments(extras);
-			fm.beginTransaction().add(R.id.gcactivity, groupChatFragment, "GroupChatFragment").commit();
+		if (gcCreationFragment == null) {
+			gcCreationFragment = new GroupChatCreationFragment();
+			//gcCreationFragment.setArguments(extras);
+			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).addToBackStack(null).commit();
 	    }
+	}
+	
+	public void onBackPressed()
+	{
+		super.onBackPressed();
+		
 	}
 }

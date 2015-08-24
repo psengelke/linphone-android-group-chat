@@ -32,10 +32,10 @@ public class GroupChatMessagingFragment extends Fragment
 		super.onCreate(savedInstanceState);
 		instance = this;
 		
-		View view = inflater.inflate(R.layout.groupchat, container);
+		//View view = inflater.inflate(R.layout.groupchat, container);
 		
 		setRetainInstance(true);
-		return view;
+		return null;
 		
 	}
 	
