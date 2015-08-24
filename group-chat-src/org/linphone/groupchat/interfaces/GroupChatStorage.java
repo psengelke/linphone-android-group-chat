@@ -37,7 +37,7 @@ public interface GroupChatStorage {
     }
 
 
-    public GroupChatStorage getInstance();//Priority
+    public GroupChatStorage getInstance();
 
     public void close();
 
@@ -67,4 +67,8 @@ public interface GroupChatStorage {
     public GroupChatMember getMembers(String groupId);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
+
+    public void createGroupChat(String groupId, String groupName,  EncryptionType encryptionType,
+                                LinkedList<GroupChatMember> memberList);
+    public void updateMemberPublicKey();
 }

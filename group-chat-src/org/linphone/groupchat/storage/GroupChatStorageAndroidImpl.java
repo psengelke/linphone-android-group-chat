@@ -50,10 +50,15 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type){}
 
+    public void createGroupChat(String groupId, String groupName,  EncryptionType encryptionType,
+                                LinkedList<GroupChatMember> memberList){}
+
+    public void updateMemberPublicKey(){}
 
 
 
-    
+
+
 
 
 
