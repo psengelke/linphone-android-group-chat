@@ -20,7 +20,6 @@ import java.util.LinkedList;
  */
 
 public interface GroupChatStorage {
-
 	/**
 	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
 	 */
@@ -38,13 +37,13 @@ public interface GroupChatStorage {
     }
 
 
-    public GroupChatStorage getInstance();
+    public GroupChatStorage getInstance();//Priority
 
     public void close();
 
-    public void updateMessageStatus(String to, String message, MessageState status);
+    //public void updateMessageStatus(String to, String message, MessageState status);
 
-    public void updateMessageStatus(String to, String id, MessageState status);
+    //public void updateMessageStatus(String to, String id, MessageState status);
 
     public void saveTextMessage(String from, String message, MessageDirection direction,
                                        MessageState status, long time);
@@ -61,11 +60,11 @@ public interface GroupChatStorage {
     //maybe make return Boolean? -- could do, we have to look at return types where possible as well
     // as exceptions for testability and system control
     // and stability
-    public void deleteChat(String id);
+    public void deleteChat(String groupId);
 
-    public void markChatAsRead(String id);
+    public void markChatAsRead(String groupId);
 
-    public GroupChatMember getMembers(String id);
+    public GroupChatMember getMembers(String groupId);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
 }

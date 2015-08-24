@@ -18,6 +18,45 @@ import java.lang.String;
 
 public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
+    public GroupChatStorageAndroidImpl(){}
+
+
+    public void close(){}
+
+    //public void updateMessageStatus(String to, String message, MessageState status);
+
+    //public void updateMessageStatus(String to, String id, MessageState status);
+
+    public void saveTextMessage(String from, String message, MessageDirection direction,
+                                MessageState status, long time){}
+
+    public void saveImageMessage(String from, Bitmap image, String url, long time){}
+
+    // not sure bitstream exists
+    public void saveVoiceRecording(String from, Bitstream voiceNote, long time){}
+
+    public LinkedList<LinphoneChatMessage> getMessage(String id){}
+
+    public LinkedList<String> getChatList(){}
+
+    //maybe make return Boolean? -- could do, we have to look at return types where possible as well
+    // as exceptions for testability and system control
+    // and stability
+    public void deleteChat(String groupId){}
+
+    public void markChatAsRead(String groupId){}
+
+    public GroupChatMember getMembers(String groupId){}
+
+    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type){}
+
+
+
+
+    
+
+
+
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
     private class GroupChatHelper extends SQLiteOpenHelper{// this class implements a class provided by the android sdk, SQLiteOpenHelper
         private static final int GROUPCHAT_DB_VERSION = 1;
@@ -54,6 +93,24 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
             onCreate(db);
         }
 
+    }
 
+
+	/* -- Singleton Declarations -- */
+    /**
+     * Getter method for the singleton.
+     * @return The {@link GroupChatStorageAndroidImpl} singleton instance.
+     */
+    public static GroupChatStorageAndroidImpl getInstance(){
+
+        return InstanceHolder.INSTANCE;
+    }
+
+    /**
+     * This class provides a thread-safe lazy initialisation of the singleton.
+     */
+    private static class InstanceHolder {
+
+        private static final GroupChatStorageAndroidImpl INSTANCE = new GroupChatStorageAndroidImpl();
     }
 }
