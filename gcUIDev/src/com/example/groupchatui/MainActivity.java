@@ -23,7 +23,7 @@ public class MainActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			ChatListFragment chatlistFragment= new ChatListFragment();
 			
-			getSupportFragmentManager().beginTransaction().add(R.id.container, chatlistFragment, "chatListFragment").commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.container, chatlistFragment, "chatListFragment").addToBackStack(null).commit();
 			FragmentManager fm = getSupportFragmentManager();
 			chatlistFragment = (ChatListFragment) fm.findFragmentByTag("chatListFragment");
 		}

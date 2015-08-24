@@ -70,12 +70,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	private boolean useLinphoneStorage;
+	private boolean displayGroupChats;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater = inflater;
-
+		displayGroupChats = false;
 		View view = inflater.inflate(R.layout.chatlist, container, false);
 		chatList = (ListView) view.findViewById(R.id.chatList);
 		chatList.setOnItemClickListener(this);
@@ -97,6 +98,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		chatsTab = (TextView) view.findViewById(R.id.allChats);
 		chatsTab.setOnClickListener(this);
+		
+		groupsTab.setEnabled(displayGroupChats);
+		chatsTab.setEnabled(!groupsTab.isEnabled());
 		
 		ok = (TextView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
@@ -251,7 +255,41 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.newGroupDiscussion)
 		{
 			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
+			
 			startActivity(intent);
+		}
+		else if (id == R.id.allGroups)
+		{
+			displayGroupChats = true;
+			changeContactAdapter();
+		}
+		else if (id == R.id.allChats)
+		{
+			displayGroupChats = false;
+			changeContactAdapter();
+		}
+	}
+	
+	/**
+	 * Method to refresh chatlist to display either groupChats or Normal Chats
+	 */
+	private void changeContactAdapter()
+	{
+		toggleContactsTab();
+		
+	}
+	
+	private void toggleContactsTab()
+	{
+		if (displayGroupChats)
+		{
+			groupsTab.setEnabled(false);
+			chatsTab.setEnabled(true);
+		}
+		else
+		{
+			groupsTab.setEnabled(true);
+			chatsTab.setEnabled(false);
 		}
 	}
 

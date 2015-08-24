@@ -9,9 +9,13 @@ import android.preference.CheckBoxPreference;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
@@ -21,7 +25,7 @@ import android.widget.LinearLayout;
 //import org.linphone.groupchat.core.LinphoneGroupChatManager;
 //import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
-public class GroupChatCreationFragment  extends Fragment
+public class GroupChatCreationFragment  extends Fragment implements OnClickListener, OnItemClickListener
 {
 //	private LinphoneGroupChatListener coreListener;
 //	private LinphoneGroupChatManager groupChatManager;
@@ -29,12 +33,11 @@ public class GroupChatCreationFragment  extends Fragment
 	
 	private LinearLayout participants;
 	private LinearLayout topBar;
-	private TextView back;
+	private TextView back, next;
 	private EditText groupName;
-	private TextView groupParticipants;
-	private TextView addParticipant;
+	private ListView groupParticipants;
+	private ImageView addParticipant;
 	private TextView removeParticipant;
-	private TextView leaveGroup;
 	private TextView setUpGroup;
 	private CheckBoxPreference encryptionCheckbox;
 	private static GroupChatCreationFragment instance;
@@ -46,6 +49,24 @@ public class GroupChatCreationFragment  extends Fragment
 		instance = this;
 		View view = inflater.inflate(R.layout.groupchat_creation, container, false);
 		setRetainInstance(true);
+		
+		back = (TextView) view.findViewById(R.id.back);
+		back.setOnClickListener(this);
+		
+		next = (TextView) view.findViewById(R.id.next);
+		next.setOnClickListener(this);
+		
+		groupName = (EditText) view.findViewById(R.id.newGroupChatName);
+		
+		addParticipant = (ImageView) view.findViewById(R.id.addMember);
+		addParticipant.setOnClickListener(this);
+		
+		groupParticipants = (ListView) view.findViewById(R.id.memberList);
+//		groupParticipants.setOnClickListener(this);
+//		registerForContextMenu(groupParticipants);
+		
+		
+		
 		
 		return view;
 	}
@@ -77,6 +98,24 @@ public class GroupChatCreationFragment  extends Fragment
 	 */
 	public void removeMember(TextView participant)
 	{
+		
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		
+		if (id == R.id.back)
+		{
+			getFragmentManager().popBackStackImmediate();
+		}
+		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		// TODO Auto-generated method stub
 		
 	}
 }
