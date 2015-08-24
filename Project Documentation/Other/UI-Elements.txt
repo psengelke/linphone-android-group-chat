@@ -1,0 +1,52 @@
+
+Notes on UI elements
+
+________________________________________________________________________________________________
+
+Interface 1 : Create New Group Chat
+
+File location: linphone-android-group-chat\res\layout\chatlist.xml
+Additions:
+- New Group Chat Button
+	android:id="@+id/newGroupDiscussion"
+	
+- Chats/Groups Toggle
+	Chats: 	android:id="@+id/allChats"
+	Groups: 	android:id="@+id/allGroups"
+
+________________________________________________________________________________________________
+
+
+Interface 2 : Create New Group Chat - Information
+
+File location: linphone-android-group-chat\res\layout\chat_group.xml
+Additions:
+- Next Button
+	android:id="@+id/next"
+	
+- Profile Picture
+	android:id="@+id/allContacts"
+	
+- Text Edit for group name
+	android:id="@+id/newGroupChatName"
+
+- "+" Button to add contact
+	android:id="@+id/addMember"
+
+- Text Edit for Member
+	android:id="@+id/newMemberGroupChat"
+
+- List of members in the group
+	android:id="@+id/memberList"
+
+- Label to state that no members are currently in the group
+	android:id="@+id/noGroupMembers"
+	
+Notes:
+	- Need to add "-" sign to each added member to give user "undo" option
+
+________________________________________________________________________________________________
+
+
+
+
