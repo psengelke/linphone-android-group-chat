@@ -65,7 +65,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private LayoutInflater mInflater;
 	private List<String> mConversations, mDrafts;
 	private ListView chatList;
-	private TextView edit, ok, newDiscussion, noChatHistory, groupChat;
+	private TextView edit, ok, newDiscussion, noChatHistory, groupChat, groupsTab, chatsTab;
 	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
@@ -89,8 +89,14 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
 		newDiscussion.setOnClickListener(this);
 		
-		groupChat = (TextView) view.findViewById(R.id.groupchat);
+		groupChat = (TextView) view.findViewById(R.id.newGroupDiscussion);
 		groupChat.setOnClickListener(this);
+		
+		groupsTab = (TextView) view.findViewById(R.id.allGroups);
+		groupsTab.setOnClickListener(this);
+		
+		chatsTab = (TextView) view.findViewById(R.id.allChats);
+		chatsTab.setOnClickListener(this);
 		
 		ok = (TextView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
@@ -242,7 +248,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 //				LinphoneActivity.instance().displayChat(sipUri);
 //			}
 		}
-		else if (id == R.id.groupchat)
+		else if (id == R.id.newGroupDiscussion)
 		{
 			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 			startActivity(intent);

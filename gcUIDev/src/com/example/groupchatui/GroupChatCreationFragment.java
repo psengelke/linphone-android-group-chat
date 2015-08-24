@@ -44,7 +44,7 @@ public class GroupChatCreationFragment  extends Fragment
 	{
 		//super.onCreate(savedInstanceState);
 		instance = this;
-		View view = inflater.inflate(R.layout.groupchat, container, false);
+		View view = inflater.inflate(R.layout.groupchat_creation, container, false);
 		setRetainInstance(true);
 		
 		return view;
