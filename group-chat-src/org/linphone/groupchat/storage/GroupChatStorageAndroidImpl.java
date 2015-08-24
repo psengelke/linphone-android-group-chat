@@ -8,6 +8,7 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
 import java.lang.String;
+import java.security.PrivateKey;
 
 /**
  *
@@ -68,14 +69,41 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
-        //add table names as Strings
-        private static final String TABLE_GROUPS = "Groups";
-        private static final String TABLE_MESSAGES = "Messages";
-        private static final String TABLE_MEMBERS = "Members";
-        private static final String TABLE_ATTACHMENTS = "Attachments";
-        //add column names under each table name, as Strings
-        //These can be used literally in onCreate without being declared here, but when DBs get large
-        //this helps readability
+        //Groups Table
+        private static class Groups{
+            private static final String name = "Groups";
+            private static final String id = "_id";
+            private static final String groupId = "group_id";
+            private static final String groupName = "group_name";
+            private static final String encryptionType = "encryption_type";
+            private static final String adminId = "admin_id";
+        }
+
+        //Messages Table
+        private static class Messages{
+            private static final String id = "_id";
+            private static final String messageText = "message_text";
+            private static final String memberId = "member_id";
+            private static final String messageState = "message_state";
+            private static final String messageDirection = "message_direction";
+            private static final String timeSent = "time_sent";
+        }
+
+        //Members Table
+        private static class Members{
+            private static final String id = "_id";
+            private static final String name = "name";
+            private static final String sip_address "sip_address";
+            private static final String public_key "public_key";
+            private static final String group_id "group_id";
+        }
+
+        //Attachments Table
+        private static class Attachment{
+            private static final String id = "_id";
+            private static final String file = "file";
+            private static final String message_id = "message_id";
+        }
 
 
         public GroupChatHelper(Context context){
