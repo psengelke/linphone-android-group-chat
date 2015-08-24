@@ -11,6 +11,8 @@ so that they may be accounted for should any revisions on documentation be neces
 	and ensures a single instance for interaction.
 
 +++++++ GroupChatStorage ++++++++
--- 	GroupChatStorage add function createGroupChat()
+-- 	GroupChatStorage add functions:
+--- createGroupChat(String groupId, String groupName,  EncryptionType encryptionType, LinkedList<GroupChatMember> memberList)
+--- updateMemberPublicKey() //used for updating public keys when accepting invite
 	
 -- 	Group chats shall be held separate from private chats for simplicity's sake as well as a convenience to clients.
