@@ -4,6 +4,7 @@ package org.linphone.groupchat.interfaces;
 import android.graphics.Bitmap;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -27,8 +28,10 @@ public interface GroupChatStorage {
 	 */
 	public class GroupChatMember {
 		
-		public SipAddress sip;
-		public long public_key;
+//		public SipAddress sip;
+//		public long public_key;
+		public String sip;
+		public String name;
 	}
 	
 	/**

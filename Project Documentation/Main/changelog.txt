@@ -16,3 +16,7 @@ so that they may be accounted for should any revisions on documentation be neces
 --- updateMemberPublicKey() //used for updating public keys when accepting invite
 	
 -- 	Group chats shall be held separate from private chats for simplicity's sake as well as a convenience to clients.
+
+--		Updated GroupChatMember to have two simple string values for an address and display name.
+
+--		Added GroupChatData class for easier data passing and management between the data storage and the manager.
