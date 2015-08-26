@@ -70,7 +70,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //Groups Table
-        private static class Groups{
+        private class Groups{
             private static final String name = "Groups";
             private static final String id = "_id";
             private static final String groupId = "group_id";
@@ -80,7 +80,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Messages Table
-        private static class Messages{
+        private class Messages{
             private static final String id = "_id";
             private static final String messageText = "message_text";
             private static final String memberId = "member_id";
@@ -90,16 +90,16 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Members Table
-        private static class Members{
+        private class Members{
             private static final String id = "_id";
             private static final String name = "name";
-            private static final String sip_address "sip_address";
-            private static final String public_key "public_key";
-            private static final String group_id "group_id";
+            private static final String sip_address = "sip_address";
+            private static final String public_key = "public_key";
+            private static final String group_id = "group_id";
         }
 
         //Attachments Table
-        private static class Attachment{
+        private class Attachment{
             private static final String id = "_id";
             private static final String file = "file";
             private static final String message_id = "message_id";
@@ -134,7 +134,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
      * Getter method for the singleton.
      * @return The {@link GroupChatStorageAndroidImpl} singleton instance.
      */
-    public static GroupChatStorageAndroidImpl getInstance(){
+    public static GroupChatStorage getInstance(){
 
         return InstanceHolder.INSTANCE;
     }

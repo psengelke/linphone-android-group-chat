@@ -37,7 +37,7 @@ public interface GroupChatStorage {
     }
 
 
-    public GroupChatStorage getInstance();
+    //public GroupChatStorage getInstance();
 
     public void close();
 
