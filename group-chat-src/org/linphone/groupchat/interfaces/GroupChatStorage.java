@@ -21,6 +21,7 @@ import java.util.LinkedList;
  */
 
 public interface GroupChatStorage {
+	
 	/**
 	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
 	 */
@@ -28,6 +29,18 @@ public interface GroupChatStorage {
 		
 		public SipAddress sip;
 		public long public_key;
+	}
+	
+	/**
+	 * Public structure for data from a group stored in the database.
+	 */
+	public class GroupChatData {
+		
+		public String group_id;
+		public String group_name;
+		public LinkedList<GroupChatMember> members;
+		public String admin;
+		public EncryptionType encryption_type;
 	}
 
     public static enum MessageState{
@@ -56,7 +69,11 @@ public interface GroupChatStorage {
 
     public LinkedList<LinphoneChatMessage> getMessage(String id);
 
-    public LinkedList<String> getChatList();
+    /**
+     * A function that returns a list of all the groups persistent in the database.
+     * @return {@link LinkedList} of {@link GroupChatData} objects.
+     */
+    public LinkedList<GroupChatData> getChatList();
 
     //maybe make return Boolean? -- could do, we have to look at return types where possible as well
     // as exceptions for testability and system control
@@ -69,7 +86,10 @@ public interface GroupChatStorage {
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
 
-    public void createGroupChat(String groupId, String groupName,  EncryptionType encryptionType,
-                                LinkedList<GroupChatMember> memberList);
+    /**
+     * Persists a new group chat to the database.
+     * @param data The group chat information in a format understandable by the {@link GroupChatData} implementation.
+     */
+    public void createGroupChat(GroupChatData data);
     public void updateMemberPublicKey();
 }
