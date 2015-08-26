@@ -7,10 +7,15 @@ import android.support.v4.app.FragmentManager;
 
 public class GroupChatActivity extends FragmentActivity
 {
+	private static GroupChatActivity instance;
 	private static final String GROUP_CHAT_FRAGMENT = "gcCreationFragment";
 	private GroupChatMessagingFragment gcMessagingFragment;
 	private GroupChatSettingsFragment gcSettingsFragment;
 	private GroupChatCreationFragment gcCreationFragment;
+	
+	static final boolean isInstanciated() {
+		return instance != null;
+	}
 	
 	@Override
 	/*
@@ -20,6 +25,7 @@ public class GroupChatActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.groupchat_activity);
 		
+		instance = this;
 		Bundle extras = new Bundle();
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		
@@ -45,4 +51,6 @@ public class GroupChatActivity extends FragmentActivity
 		super.onBackPressed();
 		
 	}
+
+	
 }

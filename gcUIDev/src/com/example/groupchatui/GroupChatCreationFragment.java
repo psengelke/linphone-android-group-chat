@@ -37,7 +37,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private TextView back, next;
 	private EditText groupName, newParticipant;
 	private ListView groupParticipants;
-	private ImageView addParticipant;
+	private ImageView addParticipant, clearGroupName, clearSipAddress;
 	private TextView removeParticipant, noMembers;
 	private TextView setUpGroup;
 	private CheckBoxPreference encryptionCheckbox;
@@ -69,6 +69,12 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		addParticipant.setOnClickListener(this);
 		
 		newParticipant = (EditText) view.findViewById(R.id.newMemberGroupChat);
+		
+		clearGroupName = (ImageView) view.findViewById(R.id.clearGroupNameField);
+		clearGroupName.setOnClickListener(this);
+		
+		clearSipAddress = (ImageView) view.findViewById(R.id.clearMemberField);
+		clearSipAddress.setOnClickListener(this);
 		
 		noMembers = (TextView) view.findViewById(R.id.noGroupMembers);
 		noMembers.setVisibility(View.VISIBLE);
@@ -137,6 +143,10 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 				noMembers.setVisibility(View.INVISIBLE);
 			}
 		}
+		else if (id == R.id.clearGroupNameField)
+			groupName.setText("");
+		else if (id == R.id.clearMemberField)
+			newParticipant.setText("");
 		
 	}
 
@@ -182,7 +192,6 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			delete.setVisibility(view.VISIBLE);
-			
 			
 			return view;
 		}
