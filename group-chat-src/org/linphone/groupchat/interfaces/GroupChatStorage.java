@@ -6,6 +6,7 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import java.lang.String;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public interface GroupChatStorage {
 
     public void markChatAsRead(String groupId);
 
-    public GroupChatMember getMembers(String groupId);
+    public LinkedList<GroupChatMember> getMembers(String groupId);
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
 

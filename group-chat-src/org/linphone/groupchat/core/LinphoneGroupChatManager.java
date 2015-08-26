@@ -16,6 +16,7 @@ import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
 
 
 /**
@@ -46,7 +47,7 @@ public class LinphoneGroupChatManager {
 	
 	private LinphoneGroupChatManager() {
 		
-		// storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // getInstance() must be static
+		storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // use a factory instead
 		generateGroupChats();
 	}
 	
@@ -65,10 +66,6 @@ public class LinphoneGroupChatManager {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
-		if (is_new){
-			// persist group data and then create instance.
-		}
-		
 		EncryptionStrategy strategy;
 		switch (type) {
 		case None:
@@ -77,6 +74,12 @@ public class LinphoneGroupChatManager {
 		default:
 			strategy = new NoEncryptionStrategy();
 			break;
+		}
+		
+		if (is_new){
+			// persist group data and then create instance.
+			// need admin parameter, need a converter for LinphoneAddress -> GroupChatMember
+			storage_adapter.createGroupChat(null, name, strategy.getEncryptionType(), null /*, admin*/);
 		}
 		
 		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null, is_new));
@@ -89,6 +92,22 @@ public class LinphoneGroupChatManager {
 		// get member list
 		// set name, admin, member list, encryption type
 		// call createGroupChat() and append to list
+		LinkedList<String> group_ids = storage_adapter.getChatList();
+		Iterator<String> it = group_ids.iterator();
+		while (it.hasNext()) {
+			String group_id = (String) it.next();
+			
+			LinkedList<GroupChatMember> members = storage_adapter.getMembers(group_id);
+			// need encryption type from database -- method
+			// need to get admin_id to set admin -- method
+			// need group name as well.. -- method
+			// can fix this issue with a structure returned by the database? 
+			// - group id
+			// - group name
+			// - group member list
+			// - admin id
+			// - encryption type
+		}
 	}
 	
 	public LinphoneGroupChatRoom getGroupChat(String id) throws GroupDoesNotExistException {

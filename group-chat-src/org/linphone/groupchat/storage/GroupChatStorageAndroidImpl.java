@@ -4,11 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
 import java.lang.String;
 import java.security.PrivateKey;
+import java.util.LinkedList;
 
 /**
  *
@@ -47,7 +49,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public void markChatAsRead(String groupId){}
 
-    public GroupChatMember getMembers(String groupId){}
+    public LinkedList<GroupChatMember> getMembers(String groupId){}
 
     public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type){}
 
