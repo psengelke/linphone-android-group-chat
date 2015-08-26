@@ -36,7 +36,7 @@ public class GroupChatActivity extends FragmentActivity
 		if (gcCreationFragment == null) {
 			gcCreationFragment = new GroupChatCreationFragment();
 			//gcCreationFragment.setArguments(extras);
-			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).addToBackStack(null).commit();
+			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).commit();
 	    }
 	}
 	

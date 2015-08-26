@@ -2,6 +2,7 @@ package com.example.groupchatui;
 
 
 import java.util.LinkedList;
+import java.util.List;
 
 import android.widget.TextView;
 import android.os.Bundle;
@@ -13,10 +14,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 //import org.linphone.core.LinphoneAddress;
@@ -34,38 +35,50 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private LinearLayout participants;
 	private LinearLayout topBar;
 	private TextView back, next;
-	private EditText groupName;
+	private EditText groupName, newParticipant;
 	private ListView groupParticipants;
 	private ImageView addParticipant;
-	private TextView removeParticipant;
+	private TextView removeParticipant, noMembers;
 	private TextView setUpGroup;
 	private CheckBoxPreference encryptionCheckbox;
 	private static GroupChatCreationFragment instance;
+	private LayoutInflater mInflater;
+	private List<String> members = new LinkedList<String>();
+	private boolean isEditMode = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		//super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.groupchat_creation, container, false);
 		setRetainInstance(true);
+		
+		mInflater = inflater;
 		
 		back = (TextView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
 		
 		next = (TextView) view.findViewById(R.id.next);
 		next.setOnClickListener(this);
+		next.setEnabled(false);
 		
 		groupName = (EditText) view.findViewById(R.id.newGroupChatName);
 		
 		addParticipant = (ImageView) view.findViewById(R.id.addMember);
 		addParticipant.setOnClickListener(this);
 		
+		newParticipant = (EditText) view.findViewById(R.id.newMemberGroupChat);
+		
+		noMembers = (TextView) view.findViewById(R.id.noGroupMembers);
+		noMembers.setVisibility(View.VISIBLE);
+		
 		groupParticipants = (ListView) view.findViewById(R.id.memberList);
-//		groupParticipants.setOnClickListener(this);
-//		registerForContextMenu(groupParticipants);
+		groupParticipants.setOnItemClickListener(this);
 		
+		groupParticipants.setAdapter(new MembersAdapter());
 		
+		groupParticipants.setVisibility(View.INVISIBLE);
 		
 		
 		return view;
@@ -74,7 +87,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	public void onPause()
 	{
 		
-		
+		super.onPause();
 	}
 	
 //	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, EncryptionType encryptionType)
@@ -107,7 +120,22 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 		if (id == R.id.back)
 		{
-			getFragmentManager().popBackStackImmediate();
+			//getFragmentManager().popBackStackImmediate();
+			getActivity().finish();
+		}
+		else if (id == R.id.addMember)
+		{
+			// TODO Test for valid sip address before adding
+			String newContact = newParticipant.getText().toString();
+			newParticipant.setText("");
+			
+			if (!newContact.isEmpty())
+			{
+				members.add(newContact);
+				groupParticipants.setAdapter(new MembersAdapter());
+				groupParticipants.setVisibility(View.VISIBLE);
+				noMembers.setVisibility(View.INVISIBLE);
+			}
 		}
 		
 	}
@@ -116,6 +144,48 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	class MembersAdapter extends BaseAdapter
+	{
+
+		@Override
+		public int getCount() {
+			return members.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = null;
+			
+			if (convertView != null)
+				view = convertView;
+			else
+				view = mInflater.inflate(R.layout.memberlist_cell, parent, false);
+			
+			String contact = members.get(position);
+			view.setTag(contact);
+			
+			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
+			sipUri.setText(contact);
+			
+			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+			delete.setVisibility(view.VISIBLE);
+			
+			
+			return view;
+		}
 		
 	}
 }

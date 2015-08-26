@@ -41,7 +41,7 @@ public class GroupChatMessagingFragment extends Fragment
 	
 	public void onPause()
 	{
-		
+		super.onPause();
 		
 	}
 	
