@@ -18,7 +18,7 @@ public class AES256EncryptionHandler extends EncryptionHandlerImpl implements En
 	private static int keySize=256;
 	private byte[] ivBytes;
 	
-	public String generateSalt(){
+	private String generateSalt(){
 		SecureRandom rng=new SecureRandom();
 		byte bytes[]=new byte[20];
 		rng.nextBytes(bytes);
@@ -28,13 +28,12 @@ public class AES256EncryptionHandler extends EncryptionHandlerImpl implements En
 	
 	@Override
 	public String encrypt(String message, long key) {
-		key_public=key;
 		
 		try {
 			salt=generateSalt();
 			byte[] saltBytes=salt.getBytes("UTF-8");
 			
-			SecretKeyFactory factory=SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			SecretKeyFactory factory=SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");//hash with sha256 instead
 			PBEKeySpec publicKeySpec=new PBEKeySpec(String.valueOf(key).toCharArray(), saltBytes, keyIterations, keySize);
 			
 			SecretKey privateKey=factory.generateSecret(publicKeySpec);
