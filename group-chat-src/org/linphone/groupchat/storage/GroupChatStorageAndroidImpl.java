@@ -30,8 +30,20 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     //public void updateMessageStatus(String to, String id, MessageState status);
 
+    //what is from????????? sip_address, public key, group_id??
+    //Don't know how to save "from" to the messages table
     public void saveTextMessage(String from, String message, MessageDirection direction,
-                                MessageState status, long time){}
+                                MessageState status, long time){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        //values.put(GroupChatHelper.Messages.memberId, from);
+        values.put(GroupChatHelper.Messages.messageText, contact.getPhoneNumber()); // Contact Phone Number
+
+        // Inserting Row
+        db.insert(TABLE_CONTACTS, null, values);
+        db.close(); // Closing database connection
+    }
 
     public void saveImageMessage(String from, Bitmap image, String url, long time){}
 
@@ -66,13 +78,14 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
-    private class GroupChatHelper extends SQLiteOpenHelper{// this class implements a class provided by the android sdk, SQLiteOpenHelper
+    // this class extends a class provided by the android sdk, SQLiteOpenHelper
+    private class GroupChatHelper extends SQLiteOpenHelper{
         private static final int GROUPCHAT_DB_VERSION = 1;
 
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //Groups Table
-        private class Groups{
+        public class Groups{
             private static final String tableName = "Groups";
             private static final String id = "_id";
             private static final String groupId = "group_id";
@@ -82,7 +95,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Messages Table
-        private class Messages{
+        public class Messages{
             private static final String tableName = "Messages";
             private static final String id = "_id";
             private static final String messageText = "message_text";
@@ -93,7 +106,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Members Table
-        private class Members{
+        public class Members{
             private static final String tableName = "Members";
             private static final String id = "_id";
             private static final String name = "name";
@@ -103,7 +116,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Attachments Table
-        private class Attachments{
+        public class Attachments{
             private static final String tableName = "Attachments";
             private static final String id = "_id";
             private static final String file = "file";
@@ -134,8 +147,6 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
             String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
                     + Attachments.id + " INTEGER(10) PRIMARY KEY," +  Attachments.file + " BLOB,"
                     + Attachments.messageId  + " INTEGER(10)" + ")";
-
-
 
 
             db.execSQL(createGroupsTable);
