@@ -83,6 +83,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         //Messages Table
         private class Messages{
+            private static final String name = "Messages";
             private static final String id = "_id";
             private static final String messageText = "message_text";
             private static final String memberId = "member_id";
@@ -115,8 +116,20 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         //creating tables
         @Override
         public void onCreate(SQLiteDatabase db){
-            String CREATE_TABLE_A = "CREATE TABLE "/*+ Table_Name*/;
-            db.execSQL(CREATE_TABLE_A);
+            String createGroupsTable = "CREATE TABLE " + Groups.name + "("
+                    + group.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
+                    + Groups.name + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
+                    +  Groups.adminId + " INTEGER(10)" + ")";
+            String createMessagestable = "CREATE TABLE " + Groups.name + "("
+                    + group.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
+                    + Groups.name + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
+                    +  Groups.adminId + " INTEGER(10)" + ")";
+
+
+
+
+            db.execSQL(createGroupsTable);
+            db.execSQL(createMessagestable);
         }
 
         //upgrading database
