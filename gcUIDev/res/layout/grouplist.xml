@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:background="@drawable/background"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+        
+        <TextView 
+            android:contentDescription="@string/content_description_new_discussion"
+            android:id="@+id/newDiscussion"
+            android:background="@drawable/chat_new"
+            android:text="@string/button_new_chat"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@drawable/text_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:scaleType="centerCrop"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+
+        <TextView
+            android:contentDescription="@string/content_description_new_group_discussion"
+            android:id="@+id/newGroupDiscussion"
+            android:background="@drawable/contacts_all_defaultfull"
+            android:text="@string/button_new_group_chat"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textColor="@drawable/text_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
+
+        
+        <TextView 
+            android:contentDescription="@string/content_description_edit"
+            android:id="@+id/grouplist_edit"
+            android:background="@drawable/chat_edit"
+            android:text="@string/button_edit"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@drawable/text_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+        <TextView 
+            android:contentDescription="@string/content_description_validate"
+            android:id="@+id/ok"
+            android:background="@drawable/chat_ok"
+            android:text="@string/button_ok"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            android:textColor="@drawable/text_button"
+            android:visibility="gone"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:adjustViewBounds="true"
+		    android:layout_weight="1"/>
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolsbar_background">
+
+        <TextView
+            android:visibility="invisible"
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:contentDescription="@string/content_description_all_contacts"
+            android:id="@+id/allChats"
+            android:background="@drawable/chats_all"
+            android:text="@string/button_private_chats"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:textSize="13sp"
+            android:textColor="@drawable/text_switch_button_color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:contentDescription="@string/content_description_all_contacts"
+            android:id="@+id/allGroups"
+            android:background="@drawable/groups_all"
+            android:text="@string/button_group_chats"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:textSize="13sp"
+            android:textColor="@drawable/text_switch_button_color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:visibility="invisible"
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    
+	    <ImageView 
+	        android:contentDescription="@string/content_description_cancel"
+	        android:id="@+id/clear_group_list_search_edit"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:adjustViewBounds="true"
+	        android:src="@drawable/list_delete"
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentRight="true"
+	        android:paddingLeft="5dp"
+	        android:paddingRight="5dp"/>
+        
+	    <EditText
+            android:textCursorDrawable="@null"
+	        android:id="@+id/groupSearch"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/group_list_name"
+	        android:textColor="@android:color/black"
+	        android:background="@drawable/chat_fast_address_background"
+	        android:gravity="center"
+	        android:layout_toLeftOf="@id/clear_group_list_search_edit"
+	        android:paddingRight="5dp"
+	        android:inputType="textEmailAddress"/>
+	    
+    </RelativeLayout>
+    
+    <ListView 
+        android:id="@+id/groupList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+        android:cacheColorHint="@color/transparent"
+        android:dividerHeight="1dp" />
+    
+    <TextView 
+        android:id="@+id/noGroupHistory"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_group_history"
+        android:textColor="@drawable/text_color"
+        android:textAppearance="@android:style/TextAppearance.Large"/>
+
+</LinearLayout>

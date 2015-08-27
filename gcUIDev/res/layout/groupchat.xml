@@ -27,13 +27,14 @@
             android:layout_weight="1"/>
 
         <TextView
-            android:contentDescription="@string/content_description_mark"
-            android:id="@+id/mark"
+            android:contentDescription="@string/content_description_group_info"
+            android:id="@+id/group_info"
+			android:text="@string/button_group_info"
             android:background="@drawable/toolsbar_background"
             android:gravity="center"
-            android:enabled="false"
+            android:enabled="true"
             android:paddingTop="20dp"
-            android:textColor="@drawable/text_button"
+			android:textColor="@drawable/text_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -182,7 +183,7 @@
         android:layout_above="@id/footer"/>
 
 	<ListView
-		android:id="@+id/chatMessageList"
+		android:id="@+id/group_message_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:divider="@android:color/transparent"

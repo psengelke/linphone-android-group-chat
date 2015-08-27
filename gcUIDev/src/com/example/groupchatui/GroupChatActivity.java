@@ -4,13 +4,19 @@ package com.example.groupchatui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 public class GroupChatActivity extends FragmentActivity
 {
+	private static GroupChatActivity instance;
 	private static final String GROUP_CHAT_FRAGMENT = "gcCreationFragment";
 	private GroupChatMessagingFragment gcMessagingFragment;
 	private GroupChatSettingsFragment gcSettingsFragment;
 	private GroupChatCreationFragment gcCreationFragment;
+	
+	static final boolean isInstanciated() {
+		return instance != null;
+	}
 	
 	@Override
 	/*
@@ -20,6 +26,7 @@ public class GroupChatActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.groupchat_activity);
 		
+		instance = this;
 		Bundle extras = new Bundle();
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		
@@ -36,8 +43,13 @@ public class GroupChatActivity extends FragmentActivity
 		if (gcCreationFragment == null) {
 			gcCreationFragment = new GroupChatCreationFragment();
 			//gcCreationFragment.setArguments(extras);
-			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).addToBackStack(null).commit();
+			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).commit();
 	    }
+	}
+	
+	public void onRadioButtonClicked(View view)
+	{
+		
 	}
 	
 	public void onBackPressed()
@@ -45,4 +57,6 @@ public class GroupChatActivity extends FragmentActivity
 		super.onBackPressed();
 		
 	}
+
+	
 }

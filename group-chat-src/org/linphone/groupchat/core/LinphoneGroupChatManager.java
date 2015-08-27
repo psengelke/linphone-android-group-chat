@@ -12,10 +12,13 @@ import org.linphone.groupchat.encryption.NoEncryptionStrategy;
 import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.exception.InvalidGroupNameException;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
 
 
 /**
@@ -46,7 +49,7 @@ public class LinphoneGroupChatManager {
 	
 	private LinphoneGroupChatManager() {
 		
-		// storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // getInstance() must be static
+		storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // use a factory instead
 		generateGroupChats();
 	}
 	
@@ -56,41 +59,97 @@ public class LinphoneGroupChatManager {
 	 * @param admin The creator of the group.
 	 * @param members The members in the group (including the administrator).
 	 * @param type The type of encryption to be used for the group chat messages.
-	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 * @throws GroupChatSizeException In the event that the group size is too small.
+	 * @throws InvalidGroupNameException In the event that the creator chose a name that matches an existing group 
+	 * owned by the creator.
 	 */
-	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, 
-			EncryptionType type, boolean is_new) 
-			throws GroupChatSizeException {
+	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, EncryptionType type) 
+			throws GroupChatSizeException, InvalidGroupNameException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
-		if (is_new){
-			// persist group data and then create instance.
+		EncryptionStrategy strategy = createEncryptionStrategy(type);
+		
+		GroupChatData group = new GroupChatData();
+		group.admin = admin.asStringUriOnly();
+		group.encryption_type = type;
+		group.group_name = name;
+		group.group_id = generateGroupId(admin.asStringUriOnly(), name);
+		group.members = new LinkedList<>();
+		Iterator<LinphoneAddress> it = members.iterator();
+		while (it.hasNext()) {
+			LinphoneAddress address = (LinphoneAddress) it.next();
+			GroupChatMember member = new GroupChatMember();
+			member.sip = address.asStringUriOnly();
+			member.name = address.getDisplayName();
+			group.members.add(member);
 		}
 		
-		EncryptionStrategy strategy;
-		switch (type) {
-		case None:
-			strategy = new SomeEncryptionStrategy(new AES256EncryptionHandler());
-			break;
-		default:
-			strategy = new NoEncryptionStrategy();
-			break;
-		}
+		storage_adapter.createGroupChat(group);
 		
-		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null, is_new));
+		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null, true));
 	}
 	
+	/**
+	 * A helper method for {@link #generateGroupChats()} that creates the {@link LinphoneGroupChatRoom} instances and appends 
+	 * them to the {@link #chats} list.
+	 * @param name The name of the group.
+	 * @param id The group ID.
+	 * @param admin The admin of the group.
+	 * @param members The list of members in the group.
+	 * @param type The type of encryption to be used.
+	 */
+	private void createGroupChat(String name, String id, String admin, LinkedList<GroupChatMember> members, EncryptionType type){
+		
+		
+	}
+	
+	/**
+	 * A function for generating a new group chat identification, as a concatenation of the admin's address and the name of the group.
+	 * @param admin_uri The first part of the ID.
+	 * @param group_name The second part of the ID.
+	 * @return The new group chat ID.
+	 * @throws InvalidGroupNameException In the event that another chat exists with the same ID, i.e. where the admin owns another group 
+	 * with the same name.
+	 */
+	private String generateGroupId(String admin_uri, String group_name) throws InvalidGroupNameException {
+		
+		return null;
+	}
+	
+	/**
+	 * A function for handling the instantiation of group chats on {@link LinphoneGroupChatManager} initialisation.
+	 */
 	private void generateGroupChats(){
 		
-		// get group information from database
-		// for each group:
-		// get member list
-		// set name, admin, member list, encryption type
-		// call createGroupChat() and append to list
+		LinkedList<GroupChatData> groups = storage_adapter.getChatList();
+		Iterator<GroupChatData> it = groups.iterator();
+		while (it.hasNext()) {
+			GroupChatData group = it.next();
+			createGroupChat(group.group_name, group.group_id, group.admin, group.members, group.encryption_type);
+		}
 	}
 	
+	/**
+	 * Factory method for creating {@link EncryptionStrategy} instances.
+	 * @param type The {@link EncryptionType} to be used by the group chat instance.
+	 * @return A {@link EncryptionStrategy} instance that matches the parameter.
+	 */
+	private EncryptionStrategy createEncryptionStrategy(EncryptionType type){
+		switch (type) {
+		case None:
+			return new SomeEncryptionStrategy(new AES256EncryptionHandler());
+		default:
+			return new NoEncryptionStrategy();
+		}
+	}
+	
+	/**
+	 * A function that returns a {@link LinphoneGroupChatRoom} instance that matches the id parameter.
+	 * @param id The id of the requested chat.
+	 * @return The {@link LinphoneGroupChatRoom} instance.
+	 * @throws GroupDoesNotExistException In the event that the id is invalid.
+	 */
 	public LinphoneGroupChatRoom getGroupChat(String id) throws GroupDoesNotExistException {
 		
 		Iterator<LinphoneGroupChatRoom> it = chats.iterator();

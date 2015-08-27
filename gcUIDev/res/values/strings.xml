@@ -231,13 +231,14 @@
   <string name="conference">Conference</string>
   <string name="incoming">Incoming call</string>
   <string name="draft">Draft</string>
-  <string name="new_fast_chat">Enter a SIP address to chat with…</string>
+  <string name="new_fast_chat">Enter SIP address to chat with</string>
   <string name="new_group_fast_chat">Enter a Group Name</string>
   <string name="no_call_history">No call in your history.</string>
   <string name="no_missed_call_history">No missed call in your history.</string>
   <string name="no_contact">No contact in your address book.</string>
   <string name="no_sip_contact">No SIP contact in your address book.</string>
   <string name="no_chat_history">No chat history.</string>
+  <string name="no_group_history">No group history.</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>
   <string name="call_stats_codec">Codec:</string>
@@ -247,6 +248,7 @@
   <string name="call_stats_video_resolution">Video size:</string>
   <!--Used by Android to help blind people by describing them images-->
   <string name="content_description_add_contact">Add to contacts</string>
+  <string name="content_description_group_info">Group Chat Info</string>
   <string name="content_description_new_contact">New contact</string>
   <string name="content_description_call">Call</string>
   <string name="content_description_backspace">Backspace</string>
@@ -260,6 +262,7 @@
   <string name="content_description_add">Add button</string>
   <string name="content_description_new_discussion">New discussion</string>
   <string name="content_description_new_group_discussion">New discussion</string>
+  <string name="group_list_name">Search for group name</string>
   <string name="content_description_edit">Edit button</string>
   <string name="content_description_validate">Validate button</string>
   <string name="content_description_search">Search</string>
@@ -321,6 +324,7 @@
   <string name="button_ok">Okay</string>
   <string name="button_back">Back</string>
   <string name="button_next">Next</string>
+  <string name="button_group_info">Group Information</string>
   <string name="button_all_contacts">All</string>
   <string name="button_add_contact">New contact</string>
   <string name="button_all_call">All</string>
@@ -415,4 +419,6 @@
   <string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
   <string name="remote_provisioning_again_title">Remote provisioning</string>
   <string name="remote_provisioning_again_message">Do you want to change the provisioning URI ?</string>
+  <string name="radio_none">None</string>
+  <string name="radio_EncAES256">AES256</string>
   <string name="processing_image">Processing image, can take up to a few seconds depending on the size of the file</string></resources>

@@ -29,11 +29,17 @@ Additions:
 	
 - Text Edit for group name
 	android:id="@+id/newGroupChatName"
+	
+- "X" To Clear Edit
+	android:id="@+id/clearGroupNameField"
 
 - "+" Button to add contact
 	android:id="@+id/addMember"
 
 - Text Edit for Member
+	android:id="@+id/newMemberGroupChat"
+	
+- "X" To Clear Edit
 	android:id="@+id/newMemberGroupChat"
 
 - List of members in the group
@@ -46,6 +52,37 @@ Notes:
 	- Need to add "-" sign to each added member to give user "undo" option
 
 ________________________________________________________________________________________________
+
+
+Interface 3 : Group Chats List
+
+File location: linphone-android-group-chat\res\layout\grouplist.xml
+Additions:
+
+- New Conversation
+	- No need to change functionality
+	
+- New Group Chat
+	android:id="@+id/newGroupDiscussion"
+	
+- Edit Button Group List
+	android:id="@+id/grouplist_edit"
+	
+- Chats/Groups Toggle
+	Chats: 	android:id="@+id/allChats"  	--Same as all others
+	Groups: 	android:id="@+id/allGroups"	--Same as all others
+	
+- Text Edit to search for group name
+	android:id="@+id/groupSearch"
+	
+- "X" To Clear Edit
+	android:id="@+id/clear_group_list_search_edit"
+	
+- List of groups
+	android:id="@+id/groupList"
+	
+- No group History text
+	android:id="@+id/noGroupHistory"
 
 
 

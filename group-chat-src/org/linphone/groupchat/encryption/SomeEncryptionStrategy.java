@@ -2,6 +2,8 @@ package org.linphone.groupchat.encryption;
 
 import java.util.LinkedList;
 
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -19,18 +21,19 @@ public class SomeEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
-		// for each member:
-		// encrypt message with public key from chat member
-		// use lc to get individual chat
-		// create message with that chat
-		// send message
-		//delete message
-		// next member
+		for (GroupChatMember member : members) {
+			String encryptedMessage=handler.encrypt(message, key);
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
+			chatRoom.compose();
+			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(encryptedMessage);
+			chatRoom.sendChatMessage(newMessage);
+			chatRoom.deleteMessage(newMessage);
+		}
 	}
 	
 	@Override
 	public String receiveMessage(String message){
-		return message;
+		return handler.decrypt(message);
 	}
 
 	@Override

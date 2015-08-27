@@ -1,14 +1,21 @@
 package org.linphone.groupchat.storage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
 import java.lang.String;
 import java.security.PrivateKey;
+import java.util.LinkedList;
 
 /**
  *
@@ -21,57 +28,90 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public GroupChatStorageAndroidImpl(){}
 
-
     public void close(){}
 
-    //public void updateMessageStatus(String to, String message, MessageState status);
+	@Override
+	public void createGroupChat(GroupChatData data) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+//    public void updateMessageStatus(String to, String message, MessageState status){
+//    	
+//    	// stub implemented from GroupChatStorage
+//    }
 
-    //public void updateMessageStatus(String to, String id, MessageState status);
-
+    // TODO from is a string and is the sip address of the sender -------------------------------------->
     public void saveTextMessage(String from, String message, MessageDirection direction,
-                                MessageState status, long time){}
+                                MessageState status, long time){
 
-    public void saveImageMessage(String from, Bitmap image, String url, long time){}
+        SQLiteDatabase db = this.getWritableDatabase(); // getWritableDatabase() is not a member function of this.
+        ContentValues values = new ContentValues();
+        //values.put(GroupChatHelper.Messages.memberId, from);
+        values.put(GroupChatHelper.Messages.messageText, message); // store message
 
-    // not sure bitstream exists
-    public void saveVoiceRecording(String from, Bitstream voiceNote, long time){}
+        // Inserting Row
+        db.insert(GroupChatHelper.Messages.tableName, null, values);
+        db.close(); // Closing database connection
+    }
 
-    public LinkedList<LinphoneChatMessage> getMessage(String id){}
+	@Override
+	public void saveImageMessage(String from, Bitmap image, String url, long time) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public LinkedList<String> getChatList(){}
+	// TODO
+	public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time){}
 
-    //maybe make return Boolean? -- could do, we have to look at return types where possible as well
-    // as exceptions for testability and system control
-    // and stability
-    public void deleteChat(String groupId){}
+	// TODO This  should be getMessages() where the id is the group chat id and retrieves all the messages for a group chat --------------------------- >
+    public LinkedList<LinphoneChatMessage> getMessage(String id){
+    	return null;
+    }
+
+    public LinkedList<GroupChatData> getChatList(){
+    	return null;
+    }
+
+    public void deleteChat(String groupId) throws GroupDoesNotExistException {
+    	
+    	throw new GroupDoesNotExistException("Group could not be found in the database!");
+    }
 
     public void markChatAsRead(String groupId){}
 
-    public GroupChatMember getMembers(String groupId){}
+    public LinkedList<GroupChatMember> getMembers(String groupId){
+    	return null; // TODO 
+    }
 
-    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type){}
+	@Override
+	public void updateEncryptionType(String id, EncryptionType type) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public void createGroupChat(String groupId, String groupName,  EncryptionType encryptionType,
-                                LinkedList<GroupChatMember> memberList){}
-
+    // this method will not be needed now that we understand the encryption a bit better
     public void updateMemberPublicKey(){}
 
 
 
+    
 
-
-
+    // A note on database tables:
+    
+    // The  _id field should be auto-incremented by the DBMS and not inserted when a new row is added.
 
 
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
-    private class GroupChatHelper extends SQLiteOpenHelper{// this class implements a class provided by the android sdk, SQLiteOpenHelper
+    // this class extends a class provided by the android sdk, SQLiteOpenHelper
+    private class GroupChatHelper extends SQLiteOpenHelper{
         private static final int GROUPCHAT_DB_VERSION = 1;
 
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //Groups Table
-        private static class Groups{
-            private static final String name = "Groups";
+        public class Groups{
+            private static final String tableName = "Groups";
             private static final String id = "_id";
             private static final String groupId = "group_id";
             private static final String groupName = "group_name";
@@ -80,7 +120,8 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Messages Table
-        private static class Messages{
+        public class Messages{
+            private static final String tableName = "Messages";
             private static final String id = "_id";
             private static final String messageText = "message_text";
             private static final String memberId = "member_id";
@@ -90,19 +131,21 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Members Table
-        private static class Members{
+        public class Members{
+            private static final String tableName = "Members";
             private static final String id = "_id";
             private static final String name = "name";
-            private static final String sip_address "sip_address";
-            private static final String public_key "public_key";
-            private static final String group_id "group_id";
+            private static final String sipAddress = "sip_address";
+            private static final String publicKey = "public_key"; // this field will no longer be needed 
+            private static final String groupId = "group_id";
         }
 
         //Attachments Table
-        private static class Attachment{
+        public class Attachments{
+            private static final String tableName = "Attachments";
             private static final String id = "_id";
             private static final String file = "file";
-            private static final String message_id = "message_id";
+            private static final String messageId = "message_id";
         }
 
 
@@ -113,15 +156,36 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         //creating tables
         @Override
         public void onCreate(SQLiteDatabase db){
-            String CREATE_TABLE_A = "CREATE TABLE "/*+ Table_Name*/;
-            db.execSQL(CREATE_TABLE_A);
+            String createGroupsTable = "CREATE TABLE " + Groups.tableName + "("
+                    + Groups.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
+                    + Groups.groupName + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
+                    +  Groups.adminId + " INTEGER(10) " + ")";
+            String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
+                    + Messages.id + " INTEGER(10) PRIMARY KEY," +  Messages.messageText + " TEXT,"
+                    + Messages.memberId + " INTEGER(10)," +  Messages.messageState + " INTEGER(1),"
+                    + Messages.messageDirection + " INTEGER(1)," + Messages.timeSent + " DATETIME "
+                    + ")";
+            String createMembersTable = "CREATE TABLE " + Members.tableName + "("
+                    + Members.id + " INTEGER(10) PRIMARY KEY," +  Members.name + " VARCHAR(50),"
+                    + Members.sipAddress + " VARCHAR(50)," +  Members.publicKey + " INTEGER(10),"
+                    + Members.groupId + " INTEGER(10)" + ")";
+            String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
+                    + Attachments.id + " INTEGER(10) PRIMARY KEY," +  Attachments.file + " BLOB,"
+                    + Attachments.messageId  + " INTEGER(10)" + ")";
+
+
+            db.execSQL(createGroupsTable);
+            db.execSQL(createMessagesTable);
+            db.execSQL(createMembersTable);
+            db.execSQL(createAttachmentsTable);
         }
 
         //upgrading database
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            //drop old table
-            db.execSQL("DROP TABLE IF EXISTS "/*+ Table_Name*/);
+            //drop old tables
+            db.execSQL("DROP TABLE IF EXISTS " + Groups.tableName + ", " + Messages.tableName + ", "
+            + Members.tableName + ", " + Attachments.tableName );
             //create tables again
             onCreate(db);
         }
@@ -134,7 +198,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
      * Getter method for the singleton.
      * @return The {@link GroupChatStorageAndroidImpl} singleton instance.
      */
-    public static GroupChatStorageAndroidImpl getInstance(){
+    public static GroupChatStorage getInstance(){
 
         return InstanceHolder.INSTANCE;
     }
