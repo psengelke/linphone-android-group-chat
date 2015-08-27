@@ -50,6 +50,8 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
     // not sure bitstream exists
     public void saveVoiceRecording(String from, Bitstream voiceNote, long time){}
 
+
+    //String id???? in Table this is int???????????
     public LinkedList<LinphoneChatMessage> getMessage(String id){}
 
     public LinkedList<String> getChatList(){}
