@@ -1,10 +1,15 @@
 package org.linphone.groupchat.storage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
@@ -23,19 +28,24 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public GroupChatStorageAndroidImpl(){}
 
-
     public void close(){}
 
-    //public void updateMessageStatus(String to, String message, MessageState status);
+	@Override
+	public void createGroupChat(GroupChatData data) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+//    public void updateMessageStatus(String to, String message, MessageState status){
+//    	
+//    	// stub implemented from GroupChatStorage
+//    }
 
-    //public void updateMessageStatus(String to, String id, MessageState status);
-
-    //what is from????????? sip_address, public key, group_id??
-    //Don't know how to save "from" to the messages table
+    // TODO from is a string and is the sip address of the sender -------------------------------------->
     public void saveTextMessage(String from, String message, MessageDirection direction,
                                 MessageState status, long time){
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(); // getWritableDatabase() is not a member function of this.
         ContentValues values = new ContentValues();
         //values.put(GroupChatHelper.Messages.memberId, from);
         values.put(GroupChatHelper.Messages.messageText, message); // store message
@@ -45,38 +55,51 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         db.close(); // Closing database connection
     }
 
-    public void saveImageMessage(String from, Bitmap image, String url, long time){}
+	@Override
+	public void saveImageMessage(String from, Bitmap image, String url, long time) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    // not sure bitstream exists
-    public void saveVoiceRecording(String from, Bitstream voiceNote, long time){}
+	// TODO
+	public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time){}
 
+	// TODO This  should be getMessages() where the id is the group chat id and retrieves all the messages for a group chat --------------------------- >
+    public LinkedList<LinphoneChatMessage> getMessage(String id){
+    	return null;
+    }
 
-    //String id???? in Table this is int???????????
-    public LinkedList<LinphoneChatMessage> getMessage(String id){}
+    public LinkedList<GroupChatData> getChatList(){
+    	return null;
+    }
 
-    public LinkedList<String> getChatList(){}
-
-    //maybe make return Boolean? -- could do, we have to look at return types where possible as well
-    // as exceptions for testability and system control
-    // and stability
-    public void deleteChat(String groupId){}
+    public void deleteChat(String groupId) throws GroupDoesNotExistException {
+    	
+    	throw new GroupDoesNotExistException("Group could not be found in the database!");
+    }
 
     public void markChatAsRead(String groupId){}
 
-    public LinkedList<GroupChatMember> getMembers(String groupId){}
+    public LinkedList<GroupChatMember> getMembers(String groupId){
+    	return null; // TODO 
+    }
 
-    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type){}
+	@Override
+	public void updateEncryptionType(String id, EncryptionType type) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public void createGroupChat(String groupId, String groupName,  EncryptionType encryptionType,
-                                LinkedList<GroupChatMember> memberList){}
-
+    // this method will not be needed now that we understand the encryption a bit better
     public void updateMemberPublicKey(){}
 
 
 
+    
 
-
-
+    // A note on database tables:
+    
+    // The  _id field should be auto-incremented by the DBMS and not inserted when a new row is added.
 
 
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
@@ -113,7 +136,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
             private static final String id = "_id";
             private static final String name = "name";
             private static final String sipAddress = "sip_address";
-            private static final String publicKey = "public_key";
+            private static final String publicKey = "public_key"; // this field will no longer be needed 
             private static final String groupId = "group_id";
         }
 
@@ -134,8 +157,8 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         @Override
         public void onCreate(SQLiteDatabase db){
             String createGroupsTable = "CREATE TABLE " + Groups.tableName + "("
-                    + group.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
-                    + Groups.name + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
+                    + Groups.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
+                    + Groups.groupName + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
                     +  Groups.adminId + " INTEGER(10) " + ")";
             String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
                     + Messages.id + " INTEGER(10) PRIMARY KEY," +  Messages.messageText + " TEXT,"

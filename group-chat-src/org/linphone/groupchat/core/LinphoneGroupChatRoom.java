@@ -15,6 +15,13 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import android.graphics.Bitmap;
 
+/**
+ * 
+ * @author Paul Engelke
+ *
+ * This class serves as the chat {@link LinphoneChatRoom} for group chats. It provides all the functionality 
+ * required for Linphone users to interact with groups of which they are members.
+ */
 @SuppressWarnings("deprecation")
 public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
