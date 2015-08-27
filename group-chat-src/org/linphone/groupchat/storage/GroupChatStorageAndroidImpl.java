@@ -38,10 +38,10 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         //values.put(GroupChatHelper.Messages.memberId, from);
-        values.put(GroupChatHelper.Messages.messageText, contact.getPhoneNumber()); // Contact Phone Number
+        values.put(GroupChatHelper.Messages.messageText, message); // store message
 
         // Inserting Row
-        db.insert(TABLE_CONTACTS, null, values);
+        db.insert(GroupChatHelper.Messages.tableName, null, values);
         db.close(); // Closing database connection
     }
 
