@@ -73,7 +73,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         //Groups Table
         private class Groups{
-            private static final String name = "Groups";
+            private static final String tableName = "Groups";
             private static final String id = "_id";
             private static final String groupId = "group_id";
             private static final String groupName = "group_name";
@@ -83,7 +83,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         //Messages Table
         private class Messages{
-            private static final String name = "Messages";
+            private static final String tableName = "Messages";
             private static final String id = "_id";
             private static final String messageText = "message_text";
             private static final String memberId = "member_id";
@@ -94,11 +94,12 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         //Members Table
         private class Members{
+            private static final String tableName = "Members";
             private static final String id = "_id";
             private static final String name = "name";
-            private static final String sip_address = "sip_address";
-            private static final String public_key = "public_key";
-            private static final String group_id = "group_id";
+            private static final String sipAddress = "sip_address";
+            private static final String publicKey = "public_key";
+            private static final String groupId = "group_id";
         }
 
         //Attachments Table
@@ -116,20 +117,26 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         //creating tables
         @Override
         public void onCreate(SQLiteDatabase db){
-            String createGroupsTable = "CREATE TABLE " + Groups.name + "("
+            String createGroupsTable = "CREATE TABLE " + Groups.tableName + "("
                     + group.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
                     + Groups.name + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
-                    +  Groups.adminId + " INTEGER(10)" + ")";
-            String createMessagestable = "CREATE TABLE " + Groups.name + "("
-                    + group.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
-                    + Groups.name + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
-                    +  Groups.adminId + " INTEGER(10)" + ")";
+                    +  Groups.adminId + " INTEGER(10) " + ")";
+            String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
+                    + Messages.id + " INTEGER(10) PRIMARY KEY," +  Messages.messageText + " TEXT,"
+                    + Messages.memberId + " INTEGER(10)," +  Messages.messageState + " INTEGER(1),"
+                    + Messages.messageDirection + " INTEGER(1)," + Messages.timeSent + " DATETIME "
+                    + ")";
+            String createMembersTable = "CREATE TABLE " + Members.tableName + "("
+                    + Members.id + " INTEGER(10) PRIMARY KEY," +  Members.name + " VARCHAR(50),"
+                    + Members.sipAddress + " VARCHAR(50)," +  Members.publicKey + " INTEGER(10),"
+                    + Members.groupId + " INTEGER(10)" + ")";
 
 
 
 
             db.execSQL(createGroupsTable);
-            db.execSQL(createMessagestable);
+            db.execSQL(createMessagesTable);
+            db.execSQL(createMembersTable);
         }
 
         //upgrading database
