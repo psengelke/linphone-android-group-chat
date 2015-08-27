@@ -141,6 +141,7 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
             db.execSQL(createGroupsTable);
             db.execSQL(createMessagesTable);
             db.execSQL(createMembersTable);
+            db.execSQL(createAttachmentsTable);
         }
 
         //upgrading database
