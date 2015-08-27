@@ -147,8 +147,9 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         //upgrading database
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            //drop old table
-            db.execSQL("DROP TABLE IF EXISTS "/*+ Table_Name*/);
+            //drop old tables
+            db.execSQL("DROP TABLE IF EXISTS " + Groups.tableName + ", " + Messages.tableName + ", "
+            + Members.tableName + ", " + Attachments.tableName );
             //create tables again
             onCreate(db);
         }
