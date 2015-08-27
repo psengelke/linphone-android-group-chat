@@ -360,6 +360,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		{
 			if (!isEditMode) {
 				//TODO Make Appropriate GroupChatMessagingFragment appear
+				
 			}
 			else
 			{

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 //import org.linphone.core.LinphoneAddress;
 //import org.linphone.core.LinphoneCoreListenerBase;
@@ -40,7 +41,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private ImageView addParticipant, clearGroupName, clearSipAddress;
 	private TextView removeParticipant, noMembers;
 	private TextView setUpGroup;
-	private CheckBoxPreference encryptionCheckbox;
+	private RadioButton encryptionNone, encryptionAES;
 	private static GroupChatCreationFragment instance;
 	private LayoutInflater mInflater;
 	private List<String> members = new LinkedList<String>();
@@ -62,6 +63,9 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		next = (TextView) view.findViewById(R.id.next);
 		next.setOnClickListener(this);
 		next.setEnabled(false);
+		
+		encryptionNone = (RadioButton) view.findViewById(R.id.radio_none);
+		encryptionAES = (RadioButton) view.findViewById(R.id.radio_EncAES);
 		
 		groupName = (EditText) view.findViewById(R.id.newGroupChatName);
 		
@@ -88,6 +92,11 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 		
 		return view;
+	}
+	
+	public void onRadioButtonClicked(View view)
+	{
+		
 	}
 	
 	public void onPause()

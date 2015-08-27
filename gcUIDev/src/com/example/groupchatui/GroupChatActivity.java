@@ -4,6 +4,7 @@ package com.example.groupchatui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 public class GroupChatActivity extends FragmentActivity
 {
@@ -44,6 +45,11 @@ public class GroupChatActivity extends FragmentActivity
 			//gcCreationFragment.setArguments(extras);
 			fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_FRAGMENT).commit();
 	    }
+	}
+	
+	public void onRadioButtonClicked(View view)
+	{
+		
 	}
 	
 	public void onBackPressed()
