@@ -103,10 +103,11 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         }
 
         //Attachments Table
-        private class Attachment{
+        private class Attachments{
+            private static final String tableName = "Attachments";
             private static final String id = "_id";
             private static final String file = "file";
-            private static final String message_id = "message_id";
+            private static final String messageId = "message_id";
         }
 
 
@@ -130,6 +131,9 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
                     + Members.id + " INTEGER(10) PRIMARY KEY," +  Members.name + " VARCHAR(50),"
                     + Members.sipAddress + " VARCHAR(50)," +  Members.publicKey + " INTEGER(10),"
                     + Members.groupId + " INTEGER(10)" + ")";
+            String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
+                    + Attachments.id + " INTEGER(10) PRIMARY KEY," +  Attachments.file + " BLOB,"
+                    + Attachments.messageId  + " INTEGER(10)" + ")";
 
 
 
