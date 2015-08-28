@@ -518,6 +518,16 @@ Each message received by the application will first be intercepted by a \textit{
 \caption[Receive Message Activity Diagram]{This figure shows the action flow for sending a group chat message.}
 \label{ad-receive-message}
 \end{figure}
+
+\section{A Note On The Communication Protocol}
+The existing implementation of the Linphone for Android application makes use of the Session Initiation Protocol (SIP). The documentation for this protocol can be found at \href{https://www.ietf.org/rfc/rfc3261.txt}{https://www.ietf.org/rfc/rfc3261.txt}. While this protocol provides the necessary means for communication between Linphone clients, we will be making use of an informal message protocol for group chat communication. Custom message headers will be added to the message objects before they are sent via SIP. These headers vary and cater for the following events:
+\begin{itemize}
+\item member additions and removals,
+\item group chat name and picture updates,
+\item encryption changes,
+\item and plain text and multimedia messages.
+\end{itemize}
+
 \section{Traceability Matrix}\label{section-trace-matrix}
 The traceability matrix in this section shows the relationships between the design decisions in this document and the requirements specified in the \textbf{Software Requirements Specification} document.\\
 For readability purposes, the matrix has been split into two halves, each with the complete list of items in this document and half the items in the \textbf{Software Requirements Specification}. Figure \ref{tbl-trace-1} shows the first half and figure \ref{tbl-trace-2} shows the second half.
