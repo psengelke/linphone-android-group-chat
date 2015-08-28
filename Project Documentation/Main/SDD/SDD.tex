@@ -150,7 +150,7 @@ This class can be seen in figure \ref{cd-encryption-strategy}.
 \subsection{Linphone Group Chat: Android Classes}
 This section lists and describes a number of classes that extend Android specific implementations for the application, specifically the user interface components. The classes are listed in alphabetical order.
 \subsubsection{GroupChatActivity}\label{subsubsec: groupchatactivity}
-The purpose of the \textit{GroupChatAcitivity} class is to provide all the functionality provided by ChatActivity as well as managing user interface views by activating fragments such as \textit{GroupChatMessagingFragment}, which is a specialisation of \textit{ChatFragment} as well as \textit{GroupChatSettingsFragment}. The \textit{GroupChatMessagingFragment} will host the interface for messaging and the \textit{GroupChatSettingsFragment} will host the interface for manipulation of group-chat settings. This class can be seen in figure ~\ref{cd-group-chat-messaging-ui}.
+The purpose of the \textit{GroupChatAcitivity} class is to launch all new Android fragments such as \textit{GroupChatMessagingFragment}, \textit{GroupChatSettingsFragment} and \textit{GroupChatCreationFragment}. The \textit{GroupChatMessagingFragment} will host the interface for messaging, \textit{GroupChatSettingsFragment} will host the interface for manipulation of group-chat settings and \textit{GroupChatCreationFragment} will host the interface for creating a new group chat. The \textit{GroupChatActivity} class will also be responsible for handling requests from fragments and routing it to the appropriate core implementations. The \textit{GroupChatActivity} class can be seen in figure ~\ref{cd-group-chat-messaging-ui}.
 \subsubsection{GroupChatMessageAdapter}
 The \textit{GroupChatMessageAdapter} will retrieve chat history for the \textit{GroupChatMessagingFragment} so that it can be added to the user interface as clearly separated message bubbles. Each message in the chat history will be converted to a message bubble and added to the \textit{GroupChatMessagingFragment}, which adds it to the displayed user interface. This class can be seen in figure ~\ref{cd-group-chat-messaging-ui}.
 \subsubsection{GroupChatMessagingFragment}
@@ -159,12 +159,12 @@ The \textit{GroupChatMessagingFragment} will host the interface for messaging; i
 This class can be seen in figure ~\ref{cd-group-chat-messaging-ui}.
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in]{./images/class_group_chat_messaging_ui.png}
+\centerline{\includegraphics[width=7in]{./images/class_group_chat_messaging_ui.png}}
 \caption[Android Group Chat Messaging UI Class Diagram]{This diagram shows the implementation design for the \textit{GroupChatActivity}, \textit{GroupChatMessagingFragment} and \textit{GroupChatMessageAdapter} classes along with relevant relationships with other classes and interfaces.}
 \label{cd-group-chat-messaging-ui}
 \end{figure}
 \subsubsection{GroupChatSettingsFragment}
-This fragment is contained by a \textit{ \hyperref[subsubsec: groupchatactivity]{GroupChatActivity}} instance and provides the user interface for group-chat settings manipulation. The fragment (and it's associated user interface view) is activated when the user clicks the group-name displayed in \textit{GroupChatMessagingFragment}. The \textit{GroupChatActivity} class manages this fragment along with the \textit{GroupChatMessagingFragment}. This class can be seen in figure ~\ref{cd-group-chat-settings-ui}.
+This fragment is contained by a \textit{ \hyperref[subsubsec: groupchatactivity]{GroupChatActivity}} instance and provides the user interface for group-chat settings manipulation. The fragment (and it's associated user interface view) is activated when the user clicks the group-info button displayed in \textit{GroupChatMessagingFragment}. The \textit{GroupChatActivity} class manages this fragment along with the \textit{GroupChatMessagingFragment}. This class can be seen in figure ~\ref{cd-group-chat-settings-ui}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/class_group_chat_settings_ui.png}
@@ -172,10 +172,10 @@ This fragment is contained by a \textit{ \hyperref[subsubsec: groupchatactivity]
 \label{cd-group-chat-settings-ui}
 \end{figure}
 \subsubsection{GroupChatCreationFragment}
-This fragment will be contained by a \textit{LinphoneActivity} instance, which is part of the existing Android implementation. The fragment initialises and provides the user interface for group-chat creation. The fragment (and its associated user interface view) is activated when the user clicks on the create-group-chat button to be added to the ChatListing screen. This class can be seen in figure ~\ref{cd-group-chat-creation-ui}.
+This fragment will be contained by the \textit{GroupChatActivity} instance. The fragment initialises and provides the user interface for group-chat creation. The fragment (and its associated user interface view) is activated when the user clicks on the create-group-chat button to be added to the ChatListing screen on the existing ChatListFragment. This class can be seen in figure ~\ref{cd-group-chat-creation-ui}.
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in]{./images/class_groupchat_creation_ui.png}
+\centerline{\includegraphics[width=7in]{./images/class_groupchat_creation_ui.png}}
 \caption[Android Group Chat Creation UI Class Diagram]{This diagram shows the implementation design for the \textit{GroupChatCreationFragment} class along with relevant relationships with other classes and interfaces.}
 \label{cd-group-chat-creation-ui}
 \end{figure}

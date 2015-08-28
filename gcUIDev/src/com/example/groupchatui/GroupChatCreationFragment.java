@@ -39,8 +39,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private EditText groupName, newParticipant;
 	private ListView groupParticipants;
 	private ImageView addParticipant, clearGroupName, clearSipAddress;
-	private TextView removeParticipant, noMembers;
-	private TextView setUpGroup;
+	private TextView noMembers;
 	private RadioButton encryptionNone, encryptionAES;
 	private static GroupChatCreationFragment instance;
 	private LayoutInflater mInflater;

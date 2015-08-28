@@ -32,8 +32,8 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private LinearLayout topBar;
 	private TextView back;
 	private EditText groupName;
-	private TextView groupParticipants;
-	private TextView addParticipant;
+	private ListView groupParticipants;
+	private ImageView addParticipant;
 	private TextView removeParticipant;
 	private TextView leaveGroup;
 	private static GroupChatSettingsFragment instance;
