@@ -31,7 +31,7 @@
 \textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
 \multicolumn{1}{|R{2cm}|}{23/06/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
 \multicolumn{1}{|R{2cm}|}{16/08/2015} & \multicolumn{1}{L{4.5cm}|}{Grammar Correction} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.01} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|R{2cm}|}{28/08/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.0} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
@@ -109,6 +109,15 @@ The class diagram can be seen in figure \ref{cd-encryption-handler}.
 The \textit{GroupChatStorageAndroidImpl} implements the \textit{GroupChatStorage} interface for android devices. This implementation will allow data related to a \textit{LinphoneGroupChatRoom} to be persisted for reuse.\\
 This class will be implemented as a singleton so that the same database connection can be maintained for all group chat instances.\\
 The class diagram can be viewed in figure \ref{cd-chat-storage}.\\
+\subsubsection{GroupChatHelper}
+The \textit{GroupChatHelper} implements \textit{SQLiteOpenHelper} which is an existing class in the Android API. This allows for a database implementation including all CRUD (Create Retrieve Update Delete) operations.\\
+The database design can be viewed in figure  \ref{cd-database-ERD}\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=5in]{./images/database_ERD.png}
+	\caption[Database Entity Relationship Diagram]{A simple database entity relationship diagram.}
+	\label{cd-database-ERD}
+\end{figure}
 \subsubsection{LinphoneGroupChatListener}
 The \textit{LinphoneGroupChatListener} implements the \textit{LinphoneCoreListener} interface and is responsible for ensuring that messages intended for group chats are intercepted and deferred to the \textit{LinphoneGroupChatManager} instance. \\
 The class is referred to in figure \ref{cd-chat-manager}.
