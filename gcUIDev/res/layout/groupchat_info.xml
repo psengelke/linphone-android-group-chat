@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/background"
+	android:orientation="vertical" >
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:contentDescription="@string/content_description_back"
+			android:id="@+id/back"
+			android:background="@drawable/chat_back"
+			android:text="@string/button_back"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/edit_group_chat"
+			android:id="@+id/edit"
+			android:background="@drawable/chat_edit"
+			android:text="@string/button_edit"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:contentDescription="@string/edit_group_chat"
+			android:id="@+id/groupchatinfo_next"
+			android:background="@drawable/chat_next_g"
+			android:text="@string/button_next"
+			android:gravity="center"
+			android:paddingTop="20dp"
+			android:textColor="@drawable/text_button"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:layout_weight="1"
+			android:visibility="gone"/>
+	</LinearLayout>
+
+
+
+	<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+			<TextView
+				android:contentDescription="@string/content_description_all_contacts"
+				android:id="@+id/allContacts"
+				android:background="@drawable/unknown_small"
+				android:gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:adjustViewBounds="true"
+				android:layout_alignParentLeft="true"
+				android:layout_margin="5dp"/>
+
+		<ImageView
+			android:contentDescription="@string/content_description_cancel"
+			android:id="@+id/clearGroupNameFieldEdit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:src="@drawable/list_delete"
+			android:layout_centerVertical="true"
+			android:layout_margin="5dp"
+			android:visibility="gone"
+			android:layout_alignParentRight="true"/>
+
+		<TextView
+			android:id="@+id/strGroupName"
+			android:visibility="visible"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/groupName"
+			android:textColor="@drawable/text_color"
+			android:textAppearance="@android:style/TextAppearance.Medium"
+			android:layout_margin="5dp"
+			android:layout_centerVertical="true"
+			android:gravity="left"
+			android:layout_toLeftOf="@id/clearGroupNameField"
+			android:layout_toRightOf="@id/allContacts"
+			android:layout_weight="1"
+			android:textStyle="bold"/>
+
+		<EditText
+			android:textCursorDrawable="@null"
+			android:id="@+id/GroupChatNameEdit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:hint="@string/groupName"
+			android:textColor="@android:color/black"
+			android:background="@drawable/chat_fast_address_background"
+			android:inputType="text"
+			android:layout_margin="5dp"
+			android:layout_centerVertical="true"
+			android:gravity="center"
+			android:layout_toLeftOf="@id/clearGroupNameField"
+			android:layout_toRightOf="@id/allContacts"
+			android:layout_weight="1"
+			android:visibility="gone"/>
+
+    </RelativeLayout>
+
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1dp"
+		android:background="#d0353535"
+		android:layout_margin="5dp"/>
+
+	<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<TextView
+		android:id="@+id/encTypeLabel"
+		android:visibility="visible"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="top"
+		android:text="Encryption type: "
+		android:textColor="@drawable/text_color"
+		android:textAppearance="@android:style/TextAppearance.Medium"
+		android:layout_margin="5dp"
+		android:textStyle="bold"/>
+
+	<TextView
+		android:id="@+id/encType"
+		android:visibility="visible"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="top"
+		android:text="@string/encType"
+		android:textColor="@drawable/text_color"
+		android:textAppearance="@android:style/TextAppearance.Medium"
+		android:layout_margin="5dp"
+		android:layout_toRightOf="@id/encTypeLabel"/>
+
+
+	<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:visibility="gone"
+		android:id="@+id/groupchatinfo_radioGroup">
+
+		<TextView
+			android:id="@+id/encTypeEdit"
+			android:visibility="visible"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="top"
+			android:text="Select encryption type"
+			android:textColor="@drawable/text_color"
+			android:textAppearance="@android:style/TextAppearance.Medium"
+			android:layout_margin="5dp"/>
+
+
+		<RadioButton
+			android:id="@+id/radio_none"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/radio_none"
+			android:onClick="onRadioButtonClicked"
+			android:layout_gravity="center_vertical"
+			android:textColor="@drawable/text_button"
+			android:layout_weight="1"
+			android:buttonTint="#010101"/>
+
+		<RadioButton
+			android:id="@+id/radio_EncAES"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/radio_EncAES"
+			android:layout_toRightOf="@id/radio_none"
+			android:onClick="onRadioButtonClicked"
+			android:layout_gravity="center_vertical"
+			android:textColor="@drawable/text_button"
+			android:layout_weight="1"
+			android:buttonTint="#010101"/>
+
+	</RadioGroup>
+</RelativeLayout>
+
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1dp"
+		android:background="#c8373737"
+		android:layout_margin="5dp"	/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:id="@+id/groupchatinfo_addMemberLayout">
+
+		<ImageView
+			android:contentDescription="@string/content_description_add"
+			android:id="@+id/addMember"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/list_add"
+			android:layout_margin="25dp"
+			android:layout_centerVertical="true"
+			android:layout_alignParentLeft="true"/>
+
+		<ImageView
+			android:contentDescription="@string/content_description_cancel"
+			android:id="@+id/clearMemberField"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:src="@drawable/list_delete"
+			android:layout_centerVertical="true"
+			android:layout_margin="5dp"
+			android:layout_alignParentRight="true"/>
+
+		<EditText
+            android:textCursorDrawable="@null"
+            android:id="@+id/newMemberGroupChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_fast_chat"
+            android:textColor="@android:color/black"
+            android:background="@drawable/chat_fast_address_background"
+            android:inputType="textEmailAddress"
+            android:layout_margin="5dp"
+            android:gravity="center|center_horizontal"
+			android:layout_gravity="center_vertical"
+			android:layout_toLeftOf="@id/clearMemberField"/>
+
+	</RelativeLayout>
+
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1dp"
+		android:background="#d0353535"
+		android:layout_margin="5dp"
+		android:visibility="gone"/>
+
+	<ListView
+		android:id="@+id/memberList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:divider="@android:color/darker_gray"
+		android:cacheColorHint="@color/transparent"
+		android:dividerHeight="1dp" />
+
+</LinearLayout>

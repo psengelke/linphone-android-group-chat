@@ -84,6 +84,54 @@ Additions:
 - No group History text
 	android:id="@+id/noGroupHistory"
 
+________________________________________________________________________________________________
 
 
+Interface 4 : Group Chat Information
+
+File location: linphone-android-group-chat\res\layout\groupchat_info.xml
+Additions:
+
+- Back Button
+	android:id="@+id/back"
+	
+- Edit Button
+	android:id="@+id/edit"
+	
+- Next Button
+	android:id="@+id/groupchatinfo_next"
+	android:visibility="gone"
+	
+- Profile Picture
+	android:id="@+id/allContacts"
+	
+- Text edit to edit group name
+	android:id="@+id/clearGroupNameFieldEdit"
+	android:visibility="gone"
+	
+- "X" To Clear Edit
+	android:id="@+id/clear_group_list_search_edit"
+	android:visibility="gone"
+	
+- Text label with group name
+	android:id="@+id/strGroupName"
+	
+- Text Label with encryption type
+	android:id="@+id/encTypeLabel"
+	
+- Text Label with encryption type
+	android:id="@+id/encType"
+	
+- Radio group with corresponding radio buttons
+	android:id="@+id/groupchatinfo_radioGroup"
+	android:visibility="gone"
+	
+- Layout with options to add members
+	android:id="@+id/groupchatinfo_addMemberLayout"
+	android:visibility="gone"
+
+- List of members in the group
+	android:id="@+id/memberList"
+	
+	
 
