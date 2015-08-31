@@ -2,10 +2,8 @@ package org.linphone.groupchat.interfaces;
 
 
 import android.graphics.Bitmap;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
-
-import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -23,14 +21,6 @@ import java.util.LinkedList;
  */
 
 public interface GroupChatStorage {
-	
-	/**
-	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
-	 */
-	public class GroupChatMember {
-		public String sip;
-		public String name;
-	}
 	
 	/**
 	 * Public structure for data from a group stored in the database.

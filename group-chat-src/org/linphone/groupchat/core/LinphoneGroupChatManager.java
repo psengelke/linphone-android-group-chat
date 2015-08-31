@@ -18,8 +18,6 @@ import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
-
 
 /**
  * 
@@ -30,6 +28,14 @@ import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
  */
 public class LinphoneGroupChatManager {
 
+	/**
+	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
+	 */
+	public class GroupChatMember {
+		public String sip;
+		public String name;
+	}
+	
 	/**
 	 * This inner class is used to store basic chat information for requests.
 	 */
@@ -67,16 +73,7 @@ public class LinphoneGroupChatManager {
 			throws GroupChatSizeException, InvalidGroupNameException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
-		
-		GroupChatData group = new GroupChatData();
-		group.admin = admin;
-		group.encryption_type = type;
-		group.group_name = name;
-		group.group_id = generateGroupId(admin, name);
-		group.members = members;
-		
-		storage_adapter.createGroupChat(group);
-		
+
 		chats.add(new LinphoneGroupChatRoom(
 				name,
 				generateGroupId(admin, name),
@@ -84,9 +81,16 @@ public class LinphoneGroupChatManager {
 				members,
 				createEncryptionStrategy(type),
 				null,
-				storage_adapter,
-				true
+				storage_adapter
 		));
+		
+		GroupChatData group = new GroupChatData();
+		group.admin = admin;
+		group.encryption_type = type;
+		group.group_name = name;
+		group.group_id = generateGroupId(admin, name);
+		group.members = members;
+		storage_adapter.createGroupChat(group);
 	}
 	
 	/**
@@ -107,8 +111,7 @@ public class LinphoneGroupChatManager {
 				group.members, 
 				createEncryptionStrategy(group.encryption_type), 
 				null, 
-				storage_adapter, 
-				false
+				storage_adapter
 		));
 	}
 	

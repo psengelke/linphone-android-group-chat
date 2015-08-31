@@ -1,5 +1,6 @@
 package org.linphone.groupchat.core;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.linphone.core.LinphoneAddress;
@@ -9,10 +10,12 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
+import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 
 import android.graphics.Bitmap;
 
@@ -31,14 +34,17 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	// we may have to add new headers for the distributed communication protocol for groups,
 	// i.e invite messages, new group member additions and deletions
 	
-	// private LinkedList<GroupChatMember> members
-	private EncryptionStrategy encryption_strategy; // injected by LinphoneGroupChatManager
+	private LinkedList<GroupChatMember> members;
+	
 	private String admin;
 	private String group_id;
 	private String group_name;
 	private String group_image_url; // may change to a BitMap?
-	private LinphoneCore linphone_core; // injected by LinphoneGroupChatManager
-	private GroupChatStorage storage_adapter; // injected by LinphoneGroupChatManager
+	
+	private EncryptionStrategy encryption_strategy;
+	
+	private LinphoneCore linphone_core;
+	private GroupChatStorage storage_adapter;
 	
 	private static final int MAX_MEMBERS = 50;
 	
@@ -49,10 +55,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param admin	The administrator of the group (this client).
 	 * @param members A list of all the initial group members, including administrator.
 	 * @param encryption_strategy The encryption to be used, as specified by the group creator.
-	 * @param linphone_core The {@link LinphoneCore} instance TODO: Might be removed.
+	 * @param lc The {@link LinphoneCore} instance TODO: Might be removed.
 	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed
 	 * to give way to singleton instantiation.
-	 * @param is_new Set as true, if this is a new group else false, if the group exists.
 	 */
 	public LinphoneGroupChatRoom(
 			String name,
@@ -60,24 +65,60 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			String admin, 
 			LinkedList<GroupChatMember> members, 
 			EncryptionStrategy encryption_strategy, 
-			LinphoneCore linphone_core,
-			GroupChatStorage storage_adapter,
-			boolean is_new
+			LinphoneCore lc,
+			GroupChatStorage storage_adapter
 	){
 		
 		this.group_id = group_id;
 		this.group_name = name;
 		this.admin = admin;
 		this.encryption_strategy = encryption_strategy;
-		this.linphone_core = linphone_core;
+		this.linphone_core = lc;
 		this.storage_adapter = storage_adapter;
 
-		if (is_new){
-			// send invites
-		}
+//		if (is_new){
+//			// send invites
+//			
+//			// send invites one at a time
+//		}
 	}
 	
+	public LinphoneGroupChatRoom(GroupChatData group, 
+			EncryptionStrategy encryption_strategy, 
+			GroupChatStorage storage_adapter, 
+			LinphoneCore lc){
+		
+		this.group_id = group.group_id;
+		this.group_name = group.group_name;
+		this.admin = group.admin;
+		this.members = group.members;
+		
+		this.encryption_strategy = encryption_strategy;
+		
+		this.storage_adapter = storage_adapter;
+		this.linphone_core = lc;
+	}
 	
+	public void doInitialization(GroupChatData group) throws GroupChatSizeException {
+		
+		LinkedList<String> uninvited = new LinkedList<>();
+		Iterator<GroupChatMember> it = this.members.iterator();
+		while (it.hasNext()) {
+			GroupChatMember member = (GroupChatMember) it.next();
+			
+			// don't invite self!!!
+			if (!addMember(member)){
+				
+				uninvited.add(member.name);
+				it.remove();
+			}
+		}
+		
+		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
+		if (uninvited.size() > 0) {} // throw new exception
+		
+		storage_adapter.createGroupChat(group);
+	}
 	
 	/**
 	 * A function to add a new member to the group chat. The method creates a new database 
@@ -86,6 +127,11 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @return True if the addition was successful (that is, the invite was successful) and false otherwise.
 	 */
 	public boolean addMember(String address){
+		
+		return false;
+	}
+	
+	private boolean addMember(GroupChatMember member){
 		
 		return false;
 	}

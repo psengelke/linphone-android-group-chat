@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
