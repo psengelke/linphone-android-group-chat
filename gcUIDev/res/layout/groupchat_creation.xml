@@ -132,7 +132,7 @@
 				android:id="@+id/radio_EncAES"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/radio_EncAES256"
+				android:text="@string/radio_EncAES"
 				android:layout_toRightOf="@id/radio_none"
 				android:onClick="onRadioButtonClicked"
 				android:layout_gravity="center_vertical"
