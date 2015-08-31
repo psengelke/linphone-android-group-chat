@@ -28,9 +28,6 @@ public interface GroupChatStorage {
 	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
 	 */
 	public class GroupChatMember {
-		
-//		public SipAddress sip;
-//		public long public_key;
 		public String sip;
 		public String name;
 	}
@@ -54,14 +51,7 @@ public interface GroupChatStorage {
         Incoming, Outgoing
     }
 
-
-    //public GroupChatStorage getInstance();
-
     public void close();
-
-    //public void updateMessageStatus(String to, String message, MessageState status);
-
-    //public void updateMessageStatus(String to, String id, MessageState status);
 
     public void saveTextMessage(String from, String message, MessageDirection direction,
                                        MessageState status, long time);
@@ -71,14 +61,24 @@ public interface GroupChatStorage {
     // not sure bitstream exists TODO: find out what "Bitstream" should be
     public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time);
 
-    // TODO This  should be getMessages() where the id is the group chat id and retrieves all the messages for a group chat --------------------------- >
-    public LinkedList<LinphoneChatMessage> getMessage(String id);
+    /**
+     * Retrieves the messages for a group chat.
+     * @param id The group chat ID.
+     * @return	A list of gruop chat messages.
+     */
+    public LinkedList<LinphoneChatMessage> getMessages(String id);
 
     /**
      * A function that returns a list of all the groups persistent in the database.
      * @return {@link LinkedList} of {@link GroupChatData} objects.
      */
     public LinkedList<GroupChatData> getChatList();
+    
+    /**
+     * Retrieve a list of group chat IDs.
+     * @return A list of string IDs for the existing group chats.
+     */
+    public LinkedList<String> getChatIdList();
 
     /**
      * Deletes the specified group from the database.
@@ -98,7 +98,4 @@ public interface GroupChatStorage {
      * @param data The group chat information in a format understandable by the {@link GroupChatData} implementation.
      */
     public void createGroupChat(GroupChatData data);
-    
-    @Deprecated // remove once sorted out
-    public void updateMemberPublicKey(); // not needed
 }

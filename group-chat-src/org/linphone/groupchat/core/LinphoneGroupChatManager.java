@@ -63,31 +63,30 @@ public class LinphoneGroupChatManager {
 	 * @throws InvalidGroupNameException In the event that the creator chose a name that matches an existing group 
 	 * owned by the creator.
 	 */
-	public void createGroupChat(String name, LinphoneAddress admin, LinkedList<LinphoneAddress> members, EncryptionType type) 
+	public void createGroupChat(String name, String admin, LinkedList<GroupChatMember> members, EncryptionType type) 
 			throws GroupChatSizeException, InvalidGroupNameException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
-		EncryptionStrategy strategy = createEncryptionStrategy(type);
-		
 		GroupChatData group = new GroupChatData();
-		group.admin = admin.asStringUriOnly();
+		group.admin = admin;
 		group.encryption_type = type;
 		group.group_name = name;
-		group.group_id = generateGroupId(admin.asStringUriOnly(), name);
-		group.members = new LinkedList<>();
-		Iterator<LinphoneAddress> it = members.iterator();
-		while (it.hasNext()) {
-			LinphoneAddress address = (LinphoneAddress) it.next();
-			GroupChatMember member = new GroupChatMember();
-			member.sip = address.asStringUriOnly();
-			member.name = address.getDisplayName();
-			group.members.add(member);
-		}
+		group.group_id = generateGroupId(admin, name);
+		group.members = members;
 		
 		storage_adapter.createGroupChat(group);
 		
-		chats.add(new LinphoneGroupChatRoom(name, "", admin, members, strategy, null, null, true));
+		chats.add(new LinphoneGroupChatRoom(
+				name,
+				generateGroupId(admin, name),
+				admin,
+				members,
+				createEncryptionStrategy(type),
+				null,
+				storage_adapter,
+				true
+		));
 	}
 	
 	/**
@@ -99,9 +98,18 @@ public class LinphoneGroupChatManager {
 	 * @param members The list of members in the group.
 	 * @param type The type of encryption to be used.
 	 */
-	private void createGroupChat(String name, String id, String admin, LinkedList<GroupChatMember> members, EncryptionType type){
+	private void createGroupChat(GroupChatData group){
 		
-		
+		chats.add(new LinphoneGroupChatRoom(
+				group.group_name, 
+				group.group_id, 
+				group.admin, 
+				group.members, 
+				createEncryptionStrategy(group.encryption_type), 
+				null, 
+				storage_adapter, 
+				false
+		));
 	}
 	
 	/**
@@ -114,7 +122,16 @@ public class LinphoneGroupChatManager {
 	 */
 	private String generateGroupId(String admin_uri, String group_name) throws InvalidGroupNameException {
 		
-		return null;
+		String id =  + ':' + group_name.replaceAll(" ", "");
+		
+		LinkedList<String> list = storage_adapter.getChatIdList();
+		Iterator<String> it = list.iterator();
+		while (it.hasNext()) {
+			String gid = (String) it.next();
+			if (gid.equals(id)) throw new InvalidGroupNameException("You already have a group with that name.");
+		}
+		
+		return id;
 	}
 	
 	/**
@@ -126,7 +143,7 @@ public class LinphoneGroupChatManager {
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
-			createGroupChat(group.group_name, group.group_id, group.admin, group.members, group.encryption_type);
+			createGroupChat(group);
 		}
 	}
 	
@@ -170,8 +187,11 @@ public class LinphoneGroupChatManager {
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
 		
-		// query database and try to delete the group, else throw exception?
-		throw new GroupDoesNotExistException("Group does not exist!");
+		try {
+			storage_adapter.deleteChat(id);
+		} catch (Exception e){
+			throw new GroupDoesNotExistException("Group does not exist!");
+		}
 	}
 	
 	/**

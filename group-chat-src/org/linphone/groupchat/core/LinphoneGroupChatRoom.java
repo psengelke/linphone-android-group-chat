@@ -12,6 +12,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
 
 import android.graphics.Bitmap;
 
@@ -32,7 +33,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	// private LinkedList<GroupChatMember> members
 	private EncryptionStrategy encryption_strategy; // injected by LinphoneGroupChatManager
-	private LinphoneAddress admin;
+	private String admin;
 	private String group_id;
 	private String group_name;
 	private String group_image_url; // may change to a BitMap?
@@ -56,8 +57,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	public LinphoneGroupChatRoom(
 			String name,
 			String group_id,
-			LinphoneAddress admin, 
-			LinkedList<LinphoneAddress> members, 
+			String admin, 
+			LinkedList<GroupChatMember> members, 
 			EncryptionStrategy encryption_strategy, 
 			LinphoneCore linphone_core,
 			GroupChatStorage storage_adapter,
@@ -84,7 +85,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param address The member to be added.
 	 * @return True if the addition was successful (that is, the invite was successful) and false otherwise.
 	 */
-	public boolean addMember(LinphoneAddress address){
+	public boolean addMember(String address){
 		
 		return false;
 	}
@@ -95,7 +96,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param address The member to be removed.
 	 * @return True if the member was removed, else false.
 	 */
-	public boolean removeMember(LinphoneAddress address){
+	public boolean removeMember(String address){
 		
 		return false;
 	}

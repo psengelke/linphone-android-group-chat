@@ -35,11 +35,12 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		// TODO Auto-generated method stub
 		
 	}
-	
-//    public void updateMessageStatus(String to, String message, MessageState status){
-//    	
-//    	// stub implemented from GroupChatStorage
-//    }
+
+
+    public void deleteChat(String groupId) throws GroupDoesNotExistException {
+    	
+    	throw new GroupDoesNotExistException("Group could not be found in the database!");
+    }
 
     // TODO from is a string and is the sip address of the sender -------------------------------------->
     public void saveTextMessage(String from, String message, MessageDirection direction,
@@ -64,19 +65,21 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	// TODO
 	public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time){}
 
-	// TODO This  should be getMessages() where the id is the group chat id and retrieves all the messages for a group chat --------------------------- >
-    public LinkedList<LinphoneChatMessage> getMessage(String id){
-    	return null;
-    }
-
+	/**
+	 * @return A list of group information containers.
+	 */
     public LinkedList<GroupChatData> getChatList(){
     	return null;
     }
-
-    public void deleteChat(String groupId) throws GroupDoesNotExistException {
-    	
-    	throw new GroupDoesNotExistException("Group could not be found in the database!");
-    }
+    
+    /**
+     * @return A list of group IDs for existing group chats.
+     */
+	@Override
+	public LinkedList<String> getChatIdList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     public void markChatAsRead(String groupId){}
 
@@ -90,10 +93,11 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 	}
 
-    // this method will not be needed now that we understand the encryption a bit better
-    public void updateMemberPublicKey(){}
-
-
+	@Override
+	public LinkedList<LinphoneChatMessage> getMessages(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     
 
