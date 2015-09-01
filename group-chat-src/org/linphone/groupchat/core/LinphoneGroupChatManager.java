@@ -30,8 +30,6 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
  */
 public class LinphoneGroupChatManager {
 	
-
-	
 	private LinkedList<LinphoneGroupChatRoom> chats;
 	private GroupChatStorage storage;
 	
@@ -133,7 +131,7 @@ public class LinphoneGroupChatManager {
 	 * @param type The {@link EncryptionType} to be used by the group chat instance.
 	 * @return A {@link EncryptionStrategy} instance that matches the parameter.
 	 */
-	private EncryptionStrategy createEncryptionStrategy(EncryptionType type){
+	public EncryptionStrategy createEncryptionStrategy(EncryptionType type){
 		switch (type) {
 		case None:
 			return new SomeEncryptionStrategy(new AES256EncryptionHandler());

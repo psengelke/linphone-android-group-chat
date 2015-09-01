@@ -41,10 +41,29 @@ public interface DataExchangeFormat {
 	}
 	
 	/**
-	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
+	 * Stores group member information for group chat instances.
 	 */
 	public class GroupChatMember {
 		public String sip;
 		public String name;
+	}
+	
+	/**
+	 * Stores response information for an initial contact communication session, 
+	 * i.e. when a new member is added to a group.
+	 */
+	public class InitialContactInfo {
+		public GroupChatMember contact;
+		public long public_key;
+		public long secret_key;
+	}
+	
+	/**
+	 *  Stores information about member additions and deletions.
+	 */
+	public class MemberUpdateInfo {
+		
+		public LinkedList<GroupChatMember> added;
+		public LinkedList<GroupChatMember> removed;
 	}
 }

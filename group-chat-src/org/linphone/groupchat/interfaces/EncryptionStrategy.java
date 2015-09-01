@@ -5,7 +5,7 @@ import java.lang.String;
 import java.util.LinkedList;
 
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 
 /**
  *

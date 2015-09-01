@@ -32,8 +32,10 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	public static final String MSG_HEADER_GROUP_ID = "LinphoneGroupChatRoom.group_id";
 	public static final String MSG_HEADER_TYPE_MESSAGE = "LinphoneGroupChatRoom.plain_message";
-	// we may have to add new headers for the distributed communication protocol for groups,
-	// i.e invite messages, new group member additions and deletions
+	public static final String MSG_HEADER_TYPE_INVITE = "LinphoneGroupChatRoom.invite";
+	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGropChatRoom.accept_invite";
+	public static final String MSG_HEADER_TYPE_MEMBER_UPDATE = "LinphoneGropChatRoom.member_update";
+	// more
 	
 	private LinkedList<GroupChatMember> members;
 	
@@ -74,6 +76,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	}
 	
 	public void doInitialization() throws GroupChatSizeException, GroupChatExistsException {
+		
+		// check if the group exists, else continue
 		
 		Iterator<GroupChatMember> it = this.members.iterator();
 		while (it.hasNext()) {
@@ -160,13 +164,14 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		return group_id;
 	}
 	
-	public void setAdmin(LinphoneAddress address){
+	public void setAdmin(String address){
 		
+		admin = address;
 	}
 	
-	public LinphoneAddress getAdmin(){
+	public String getAdmin(){
 		
-		return null;
+		return admin;
 	}
 	
 	public void setEncryptionStrategy(EncryptionStrategy encryption_strategy) {

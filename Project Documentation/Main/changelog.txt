@@ -20,3 +20,9 @@ so that they may be accounted for should any revisions on documentation be neces
 --		Updated GroupChatMember to have two simple string values for an address and display name.
 
 --		Added GroupChatData class for easier data passing and management between the data storage and the manager.
+
++++++++ Communication ++++++++
+
+--		Message types added to LinphoneGroupChatRoom.
+--		Message type is determined by LinphoneGroupChatRoom and passed to appropriate EncryptionStrategy function.
+--		Added MessageParser for parsing structured messages for some forms.
