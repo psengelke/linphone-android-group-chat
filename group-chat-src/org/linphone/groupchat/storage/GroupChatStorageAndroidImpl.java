@@ -48,6 +48,8 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
         //remove all members associated with groupIdToDelete from Members table
         db.delete(GroupChatHelper.Members.tableName, GroupChatHelper.Members.groupId, + " =?",
                 groupIdToDelete);
+
+        // TODO delete messages from Message Table. ?????? Should message table have groupId key????
     }
 
     // TODO from is a string and is the sip address of the sender --------------------------------->
