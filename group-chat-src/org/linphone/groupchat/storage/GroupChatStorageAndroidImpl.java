@@ -38,16 +38,23 @@ public class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 
-    public void deleteChat(String groupId) throws GroupDoesNotExistException {
-    	
-    	throw new GroupDoesNotExistException("Group could not be found in the database!");
+    public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException {
+        SQLiteDatabase db = GroupChatHelper.getWritableDatabase();
+        //delete groupIdToDelete from Groups table
+        if( db.delete(GroupChatHelper.Groups.tableName, GroupChatHelper.Groups.groupId, + " =?",
+                groupIdToDelete) ==0) {
+            throw new GroupDoesNotExistException("Group could not be found in the database!");
+        }
+        //remove all members associated with groupIdToDelete from Members table
+        db.delete(GroupChatHelper.Members.tableName, GroupChatHelper.Members.groupId, + " =?",
+                groupIdToDelete);
     }
 
-    // TODO from is a string and is the sip address of the sender -------------------------------------->
+    // TODO from is a string and is the sip address of the sender --------------------------------->
     public void saveTextMessage(String from, String message, MessageDirection direction,
                                 MessageState status, long time){
 
-        SQLiteDatabase db = this.getWritableDatabase(); // getWritableDatabase() is not a member function of this.
+        SQLiteDatabase db = GroupChatHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         //values.put(GroupChatHelper.Messages.memberId, from);
         values.put(GroupChatHelper.Messages.messageText, message); // store message
