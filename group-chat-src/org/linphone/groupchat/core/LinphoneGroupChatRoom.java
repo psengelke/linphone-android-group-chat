@@ -10,6 +10,7 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
@@ -44,48 +45,21 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	private EncryptionStrategy encryption_strategy;
 	
 	private LinphoneCore linphone_core;
-	private GroupChatStorage storage_adapter;
+	private GroupChatStorage storage;
 	
 	private static final int MAX_MEMBERS = 50;
 	
 	/**
-	 * Constructor: First-time construction
-	 * @param name	The name of the group.
-	 * @param group_id	The group's ID provided by the {@link LinphoneGroupChatManager} instance.
-	 * @param admin	The administrator of the group (this client).
-	 * @param members A list of all the initial group members, including administrator.
-	 * @param encryption_strategy The encryption to be used, as specified by the group creator.
-	 * @param lc The {@link LinphoneCore} instance TODO: Might be removed.
-	 * @param storage_adapter The {@link GroupChatStorage} instance TODO: Might be removed
-	 * to give way to singleton instantiation.
+	 * Constructor.
+	 * 
+	 * @param group Contains the necessary data for group construction.
+	 * @param encryption_strategy The encryption strategy to be used.
+	 * @param storage The storage adapter for persistence purposes.
+	 * @param lc The {@link LinphoneCore} instance for the client.
 	 */
-	public LinphoneGroupChatRoom(
-			String name,
-			String group_id,
-			String admin, 
-			LinkedList<GroupChatMember> members, 
-			EncryptionStrategy encryption_strategy, 
-			LinphoneCore lc,
-			GroupChatStorage storage_adapter
-	){
-		
-		this.group_id = group_id;
-		this.group_name = name;
-		this.admin = admin;
-		this.encryption_strategy = encryption_strategy;
-		this.linphone_core = lc;
-		this.storage_adapter = storage_adapter;
-
-//		if (is_new){
-//			// send invites
-//			
-//			// send invites one at a time
-//		}
-	}
-	
 	public LinphoneGroupChatRoom(GroupChatData group, 
 			EncryptionStrategy encryption_strategy, 
-			GroupChatStorage storage_adapter, 
+			GroupChatStorage storage, 
 			LinphoneCore lc){
 		
 		this.group_id = group.group_id;
@@ -95,11 +69,11 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		this.encryption_strategy = encryption_strategy;
 		
-		this.storage_adapter = storage_adapter;
+		this.storage = storage;
 		this.linphone_core = lc;
 	}
 	
-	public void doInitialization(GroupChatData group) throws GroupChatSizeException {
+	public void doInitialization() throws GroupChatSizeException, GroupChatExistsException {
 		
 		Iterator<GroupChatMember> it = this.members.iterator();
 		while (it.hasNext()) {
@@ -110,7 +84,14 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
-		storage_adapter.createGroupChat(group);
+		GroupChatData data = new GroupChatData();
+		data.group_id = this.group_id;
+		data.group_name = this.group_name;
+		data.admin = this.admin;
+		data.members = this.members;
+		data.encryption_type = this.getEncryptionType();
+		
+		storage.createGroupChat(data);
 	}
 	
 	public void removeSelf(){

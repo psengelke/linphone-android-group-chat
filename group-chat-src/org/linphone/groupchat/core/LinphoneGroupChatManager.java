@@ -3,18 +3,19 @@ package org.linphone.groupchat.core;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.encryption.AES256EncryptionHandler;
 import org.linphone.groupchat.encryption.NoEncryptionStrategy;
 import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
+import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
@@ -29,26 +30,14 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
  */
 public class LinphoneGroupChatManager {
 	
-	/**
-	 * This inner class is used to store basic chat information for requests.
-	 */
-	public class GroupChatInfo {
 
-		public String id;
-		public String name;
-		
-		public GroupChatInfo(String id, String name){
-			this.id = id;
-			this.name = name;
-		}
-	}
 	
 	private LinkedList<LinphoneGroupChatRoom> chats;
-	private GroupChatStorage storage_adapter;
+	private GroupChatStorage storage;
 	
 	private LinphoneGroupChatManager() {
 		
-		storage_adapter = GroupChatStorageAndroidImpl.getInstance(); // use a factory instead
+		storage = GroupChatStorageAndroidImpl.getInstance(); // use a factory instead
 		generateGroupChats();
 	}
 	
@@ -61,34 +50,33 @@ public class LinphoneGroupChatManager {
 	 * @throws GroupChatSizeException In the event that the group size is too small.
 	 * @throws InvalidGroupNameException In the event that the creator chose a name that matches an existing group 
 	 * owned by the creator.
+	 * @throws GroupChatExistsException 
 	 */
 	public void createGroupChat(String name, String admin, LinkedList<GroupChatMember> members, EncryptionType type) 
-			throws GroupChatSizeException, InvalidGroupNameException {
+			throws GroupChatSizeException, InvalidGroupNameException, GroupChatExistsException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 
-		chats.add(new LinphoneGroupChatRoom(
-				name,
-				generateGroupId(admin, name),
-				admin,
-				members,
-				createEncryptionStrategy(type),
-				null,
-				storage_adapter
-		));
-		
 		GroupChatData group = new GroupChatData();
 		group.admin = admin;
-		group.encryption_type = type;
 		group.group_name = name;
 		group.group_id = generateGroupId(admin, name);
 		group.members = members;
-		storage_adapter.createGroupChat(group);
+		LinphoneGroupChatRoom chat = new LinphoneGroupChatRoom(
+				group, 
+				createEncryptionStrategy(type), 
+				storage, 
+				null
+		);
+		
+		chat.doInitialization();
+		
+		chats.add(chat);
 	}
 	
 	/**
 	 * A helper method for {@link #generateGroupChats()} that creates the {@link LinphoneGroupChatRoom} instances and appends 
-	 * them to the {@link #chats} list.
+	 * them to the chat list.
 	 * @param name The name of the group.
 	 * @param id The group ID.
 	 * @param admin The admin of the group.
@@ -98,13 +86,10 @@ public class LinphoneGroupChatManager {
 	private void createGroupChat(GroupChatData group){
 		
 		chats.add(new LinphoneGroupChatRoom(
-				group.group_name, 
-				group.group_id, 
-				group.admin, 
-				group.members, 
+				group, 
 				createEncryptionStrategy(group.encryption_type), 
-				null, 
-				storage_adapter
+				storage, 
+				null
 		));
 	}
 	
@@ -120,7 +105,7 @@ public class LinphoneGroupChatManager {
 		
 		String id =  + ':' + group_name.replaceAll(" ", "");
 		
-		LinkedList<String> list = storage_adapter.getChatIdList();
+		LinkedList<String> list = storage.getChatIdList();
 		Iterator<String> it = list.iterator();
 		while (it.hasNext()) {
 			String gid = (String) it.next();
@@ -135,7 +120,7 @@ public class LinphoneGroupChatManager {
 	 */
 	private void generateGroupChats(){
 		
-		LinkedList<GroupChatData> groups = storage_adapter.getChatList();
+		LinkedList<GroupChatData> groups = storage.getChatList();
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
@@ -186,13 +171,9 @@ public class LinphoneGroupChatManager {
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
 		
-		try {
-			LinphoneGroupChatRoom chat =  getGroupChat(id);
-			chat.removeSelf(); // needs work
-			storage_adapter.deleteChat(id);
-		} catch (Exception e){
-			throw new GroupDoesNotExistException("Group does not exist!");
-		}
+		LinphoneGroupChatRoom chat =  getGroupChat(id);
+		chat.removeSelf(); // needs work
+		storage.deleteChat(id);
 	}
 	
 	/**

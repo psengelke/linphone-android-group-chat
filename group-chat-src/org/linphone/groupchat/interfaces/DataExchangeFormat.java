@@ -27,6 +27,20 @@ public interface DataExchangeFormat {
 	}
 	
 	/**
+	 * Stores simple data about a group for use by the front-end.
+	 */
+	public class GroupChatInfo {
+
+		public String id;
+		public String name;
+		
+		public GroupChatInfo(String id, String name){
+			this.id = id;
+			this.name = name;
+		}
+	}
+	
+	/**
 	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
 	 */
 	public class GroupChatMember {
