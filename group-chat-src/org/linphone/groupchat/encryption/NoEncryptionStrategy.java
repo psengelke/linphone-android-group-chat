@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatMember;
 
-public class NoEncryptionStrategy implements EncryptionStrategy {
+class NoEncryptionStrategy implements EncryptionStrategy {
 
 	public NoEncryptionStrategy() {}
 

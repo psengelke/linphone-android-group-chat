@@ -106,14 +106,21 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	/**
 	 * A function to add a new member to the group chat. The method creates a new database 
-	 * entry for the member and pushes an invite notification to the new member.
-	 * @param address The member to be added.
-	 * @return True if the addition was successful (that is, the invite was successful) and false otherwise.
+	 * entry for the pending message.
+	 * @param member The member to be added.
 	 */
-	public boolean addMember(GroupChatMember member){
+	public void addMember(GroupChatMember member){
 		
-		// add
-		return false;
+		// TODO and throw exception
+	}
+	
+	/**
+	 * A function that updates the status of a pending invite to confirmed.
+	 * @param member The new member to be confirmed as an addition to the group.
+	 */
+	public void updateMember(GroupChatMember member){
+		
+		// TODO and throw exception
 	}
 	
 	/**
@@ -122,9 +129,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param address The member to be removed.
 	 * @return True if the member was removed, else false.
 	 */
-	public boolean removeMember(String address){
-		
-		return false;
+	public void removeMember(String address){
+
+		// TODO and throw exception
 	}
 	
 	/**

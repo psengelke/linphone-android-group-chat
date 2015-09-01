@@ -6,19 +6,18 @@ import java.util.LinkedList;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.encryption.AES256EncryptionHandler;
-import org.linphone.groupchat.encryption.NoEncryptionStrategy;
-import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
+import org.linphone.groupchat.encryption.EncryptionFactory;
+import org.linphone.groupchat.encryption.MessageParser;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
-import org.linphone.groupchat.interfaces.EncryptionStrategy;
+import org.linphone.groupchat.storage.GroupChatStorageFactory;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 /**
@@ -35,7 +34,7 @@ public class LinphoneGroupChatManager {
 	
 	private LinphoneGroupChatManager() {
 		
-		storage = GroupChatStorageAndroidImpl.getInstance(); // use a factory instead
+		storage = GroupChatStorageFactory.getOrCreateGroupChatStorage(GroupChatStorageFactory.StorageAdapterType.SQLite);
 		generateGroupChats();
 	}
 	
@@ -62,7 +61,7 @@ public class LinphoneGroupChatManager {
 		group.members = members;
 		LinphoneGroupChatRoom chat = new LinphoneGroupChatRoom(
 				group, 
-				createEncryptionStrategy(type), 
+				EncryptionFactory.createEncryptionStrategy(type), 
 				storage, 
 				null
 		);
@@ -85,7 +84,7 @@ public class LinphoneGroupChatManager {
 		
 		chats.add(new LinphoneGroupChatRoom(
 				group, 
-				createEncryptionStrategy(group.encryption_type), 
+				EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
 				storage, 
 				null
 		));
@@ -123,20 +122,6 @@ public class LinphoneGroupChatManager {
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
 			createGroupChat(group);
-		}
-	}
-	
-	/**
-	 * Factory method for creating {@link EncryptionStrategy} instances.
-	 * @param type The {@link EncryptionType} to be used by the group chat instance.
-	 * @return A {@link EncryptionStrategy} instance that matches the parameter.
-	 */
-	public EncryptionStrategy createEncryptionStrategy(EncryptionType type){
-		switch (type) {
-		case None:
-			return new SomeEncryptionStrategy(new AES256EncryptionHandler());
-		default:
-			return new NoEncryptionStrategy();
 		}
 	}
 	
@@ -199,14 +184,24 @@ public class LinphoneGroupChatManager {
 	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
+		cr.deleteMessage(message);
+		
 		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE) != null){ // new group
 			
-			// parse group chat
-			// create group chat without persistence, append to a separate list? keep hidden until confirmed
+			InitialContactInfo info = MessageParser.parseInitialContactMessage(message.getText());
+			LinphoneGroupChatRoom group = new LinphoneGroupChatRoom(
+					info.group, 
+					EncryptionFactory.createEncryptionStrategy(info.group.encryption_type), 
+					storage,
+					lc
+			);
+			
+			chats.add(group);
+			group.receiveMessage(message);
+			
 		} else { // existing group
 		
 			String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
-			cr.deleteMessage(message);
 			Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 			while (it.hasNext()) {
 				LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();

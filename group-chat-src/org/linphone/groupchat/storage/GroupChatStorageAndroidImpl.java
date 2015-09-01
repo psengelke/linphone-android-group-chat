@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 
 import org.linphone.core.LinphoneChatMessage;
-import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
@@ -25,7 +25,7 @@ import java.util.LinkedList;
  *	This class uses {@link org.linphone.interfaces.GroupChatStorage} instance.
  */
 
-public class GroupChatStorageAndroidImpl implements GroupChatStorage {
+class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public GroupChatStorageAndroidImpl(){}
 

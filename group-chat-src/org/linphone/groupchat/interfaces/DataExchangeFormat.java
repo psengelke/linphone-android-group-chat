@@ -53,7 +53,8 @@ public interface DataExchangeFormat {
 	 * i.e. when a new member is added to a group.
 	 */
 	public class InitialContactInfo {
-		public GroupChatMember contact;
+		
+		public GroupChatData group;
 		public long public_key;
 		public long secret_key;
 	}

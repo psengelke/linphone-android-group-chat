@@ -2,7 +2,7 @@ package org.linphone.groupchat.encryption;
 
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 
-public class EncryptionHandlerImpl implements EncryptionHandler {
+class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	protected long key_private;
 	protected long key_public;

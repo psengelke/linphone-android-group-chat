@@ -3,10 +3,10 @@ package org.linphone.groupchat.interfaces;
 
 import android.graphics.Bitmap;
 import org.linphone.core.LinphoneChatMessage;
-import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import java.lang.String;
