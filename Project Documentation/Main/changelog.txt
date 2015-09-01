@@ -26,3 +26,7 @@ so that they may be accounted for should any revisions on documentation be neces
 --		Message types added to LinphoneGroupChatRoom.
 --		Message type is determined by LinphoneGroupChatRoom and passed to appropriate EncryptionStrategy function.
 --		Added MessageParser for parsing structured messages for some forms.
+
++++++++ Factory Classes ++++++++
+
+--		Added factory classes for EncryptionStrategy and GroupChatStorage
