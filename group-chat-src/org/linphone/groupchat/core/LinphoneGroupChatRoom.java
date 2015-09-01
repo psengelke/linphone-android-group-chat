@@ -10,12 +10,12 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 
 import android.graphics.Bitmap;
 
@@ -101,23 +101,22 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	public void doInitialization(GroupChatData group) throws GroupChatSizeException {
 		
-		LinkedList<String> uninvited = new LinkedList<>();
 		Iterator<GroupChatMember> it = this.members.iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
 			
 			// don't invite self!!!
-			if (!addMember(member)){
-				
-				uninvited.add(member.name);
-				it.remove();
-			}
 		}
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
-		if (uninvited.size() > 0) {} // throw new exception
 		
 		storage_adapter.createGroupChat(group);
+	}
+	
+	public void removeSelf(){
+		
+		// remove self from group
+		// if admin,  assign new admin : pass as parameter
 	}
 	
 	/**
@@ -126,13 +125,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * @param address The member to be added.
 	 * @return True if the addition was successful (that is, the invite was successful) and false otherwise.
 	 */
-	public boolean addMember(String address){
+	public boolean addMember(GroupChatMember member){
 		
-		return false;
-	}
-	
-	private boolean addMember(GroupChatMember member){
-		
+		// add
 		return false;
 	}
 	
@@ -156,7 +151,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		// parse message content based on message headers
 	}
-	
+
 	/* Getters & Setters */
 	
 	public void setGroupImage(String url){

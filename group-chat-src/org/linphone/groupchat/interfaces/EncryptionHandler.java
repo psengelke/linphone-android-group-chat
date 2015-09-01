@@ -20,5 +20,6 @@ public interface EncryptionHandler {
     public String encrypt(String message, long key);
     public String decrypt(String message);
     public long getPublicKey();
+    public long getSecretKey();
     public EncryptionHandler.EncryptionType getEncryptionType();
 }

@@ -13,11 +13,12 @@ import org.linphone.groupchat.encryption.SomeEncryptionStrategy;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorageAndroidImpl;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
-import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
 
 /**
  * 
@@ -27,14 +28,6 @@ import org.linphone.groupchat.interfaces.GroupChatStorage.GroupChatData;
  *	group chat messages and various other administrative functions.
  */
 public class LinphoneGroupChatManager {
-
-	/**
-	 * Public structure for storing group members for {@link LinphoneGroupChatRoom} instances.
-	 */
-	public class GroupChatMember {
-		public String sip;
-		public String name;
-	}
 	
 	/**
 	 * This inner class is used to store basic chat information for requests.
@@ -187,10 +180,15 @@ public class LinphoneGroupChatManager {
 	 * Removes a group chat from the client.
 	 * @param id The ID of the group chat to be deleted.
 	 * @throws GroupDoesNotExistException
+	 * 
+	 * TODO : work out how to remove self and assign new admin / remove self and prevent messages from other members
+	 * 			if admin can't be reached, try another member (proxy admin)
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
 		
 		try {
+			LinphoneGroupChatRoom chat =  getGroupChat(id);
+			chat.removeSelf(); // needs work
 			storage_adapter.deleteChat(id);
 		} catch (Exception e){
 			throw new GroupDoesNotExistException("Group does not exist!");

@@ -6,6 +6,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatManager.GroupChatMember;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import java.lang.String;
@@ -21,18 +22,6 @@ import java.util.LinkedList;
  */
 
 public interface GroupChatStorage {
-	
-	/**
-	 * Public structure for data from a group stored in the database.
-	 */
-	public class GroupChatData {
-		
-		public String group_id;
-		public String group_name;
-		public LinkedList<GroupChatMember> members;
-		public String admin;
-		public EncryptionType encryption_type;
-	}
 
     public static enum MessageState{
         Read, Unread
