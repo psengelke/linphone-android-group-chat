@@ -14,7 +14,7 @@ import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.EncryptionHandler;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
@@ -178,7 +178,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.encryption_strategy = encryption_strategy;
 	}
 	
-	public EncryptionHandler.EncryptionType getEncryptionType(){
+	public EncryptionType getEncryptionType(){
 		return encryption_strategy.getEncryptionType();
 	}
 	

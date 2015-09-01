@@ -199,14 +199,21 @@ public class LinphoneGroupChatManager {
 	 */
 	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
 		
-		String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
-		cr.deleteMessage(message);
-		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
-		while (it.hasNext()) {
-			LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();
-			if (chat.getGroupId().equals(group_id)){
-				chat.receiveMessage(message);
-				break;
+		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE) != null){ // new group
+			
+			// parse group chat
+			// create group chat without persistence, append to a separate list? keep hidden until confirmed
+		} else { // existing group
+		
+			String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
+			cr.deleteMessage(message);
+			Iterator<LinphoneGroupChatRoom> it = chats.iterator();
+			while (it.hasNext()) {
+				LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();
+				if (chat.getGroupId().equals(group_id)){
+					chat.receiveMessage(message);
+					break;
+				}
 			}
 		}
 	}
