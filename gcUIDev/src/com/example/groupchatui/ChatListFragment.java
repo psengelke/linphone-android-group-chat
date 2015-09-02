@@ -292,7 +292,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.newGroupDiscussion)
 		{
 			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
-			
+			Bundle b = new Bundle();
+			b.putString("fragment", "gcCreationFragment");
+			intent.putExtras(b);
 			startActivity(intent);
 		}
 		else if (id == R.id.allGroups)
@@ -360,6 +362,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		{
 			if (!isEditMode) {
 				//TODO Make Appropriate GroupChatMessagingFragment appear
+				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
+				Bundle b = new Bundle();
+				b.putString("fragment", "gcMessagingFragment");
+				b.putString("groupClicked", (String) view.getTag());
+				intent.putExtras(b);
+				startActivity(intent);
 				
 			}
 			else

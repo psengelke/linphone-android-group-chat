@@ -3,17 +3,13 @@ package com.example.groupchatui;
 
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
@@ -34,7 +30,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		super.onCreate(savedInstanceState);
 		instance = this;
 		
-		View view = inflater.inflate(R.layout.groupchat, container);
+		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
 		
 		back = (TextView) view.findViewById(R.id.back);
@@ -52,7 +48,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	
 	public void onResume()
 	{
-		
+		super.onResume();
 		
 	}
 	
