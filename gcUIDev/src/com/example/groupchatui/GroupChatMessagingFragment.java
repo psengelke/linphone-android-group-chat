@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
 {
-	private static GroupChatMessagingFragment instance;		// Not in documentation
+	private static GroupChatMessagingFragment instance;		
 	
 	private TextView groupName;
 	private ImageView groupPicture;

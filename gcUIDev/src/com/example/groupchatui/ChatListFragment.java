@@ -122,6 +122,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
 		
+		//TODO Harcoded groups here
 		groups = new LinkedList<String>();
 		groups.add("Free Masons");
 		groups.add("Illuminati");

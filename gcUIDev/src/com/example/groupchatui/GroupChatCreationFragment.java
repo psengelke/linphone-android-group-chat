@@ -83,6 +83,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		noMembers.setVisibility(View.VISIBLE);
 		
 		groupParticipants = (ListView) view.findViewById(R.id.memberList);
+		groupParticipants.setVisibility(View.GONE);
 		groupParticipants.setOnItemClickListener(this);
 		
 		groupParticipants.setAdapter(new MembersAdapter());
@@ -159,12 +160,32 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		// TODO Auto-generated method stub
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+	{
+		String member = (String) view.getTag();
+		
+		members.remove(member);
+		
+		refreshParticipantsList();
 		
 	}
 	
+	private void refreshParticipantsList() 
+	{
+		if (members.isEmpty())
+		{
+			groupParticipants.setVisibility(View.GONE);
+			noMembers.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			groupParticipants.setVisibility(View.VISIBLE);
+			noMembers.setVisibility(View.GONE);
+			groupParticipants.setAdapter(new MembersAdapter());
+		}
+		
+	}
+
 	class MembersAdapter extends BaseAdapter
 	{
 

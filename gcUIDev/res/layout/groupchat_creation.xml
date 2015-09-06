@@ -199,6 +199,7 @@
 	<ListView
 		android:id="@+id/memberList"
 		android:layout_width="match_parent"
+		android:visibility="gone"
 		android:layout_height="match_parent"
 		android:divider="@android:color/darker_gray"
 		android:cacheColorHint="@color/transparent"
@@ -206,7 +207,7 @@
 
 	<TextView
 		android:id="@+id/noGroupMembers"
-		android:visibility="gone"
+		android:visibility="visible"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center"
