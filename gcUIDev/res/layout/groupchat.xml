@@ -30,7 +30,7 @@
             android:contentDescription="@string/content_description_group_info"
             android:id="@+id/group_info"
 			android:text="@string/button_group_info"
-            android:background="@drawable/toolsbar_background"
+			android:background="@drawable/chat_info"
             android:gravity="center"
             android:enabled="true"
             android:paddingTop="20dp"
