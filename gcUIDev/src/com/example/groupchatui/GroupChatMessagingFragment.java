@@ -19,7 +19,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	private TextView groupName;
 	private ImageView groupPicture;
 	private TextView remoteMemberComposing;
-	private TextView back;
+	private TextView back, info;
 	
 //	private LinphoneGroupChatRoom chatroom;
 //	private GroupChatMessageAdapter groupChatMessageAdapter;
@@ -35,6 +35,9 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		back = (TextView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
+		
+		info = (TextView) view.findViewById(R.id.group_info);
+		info.setOnClickListener(this);
 		
 		return view;
 		
@@ -86,6 +89,11 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		{
 			//getFragmentManager().popBackStackImmediate();
 			getActivity().finish();
+		}
+		else if (id == R.id.group_info)
+		{
+			GroupChatActivity activity =  (GroupChatActivity) getActivity();
+			activity.changeFragment("gcSettingsFragment");
 		}
 	}
 	

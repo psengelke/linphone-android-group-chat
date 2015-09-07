@@ -7,6 +7,7 @@ import java.util.List;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,6 +52,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		
 		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.groupchat_info, container, false);
@@ -66,7 +68,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		groupName = (TextView) view.findViewById(R.id.strGroupName);
 		encryptionType = (TextView) view.findViewById(R.id.encType);
 		
-		clearGroupName = (ImageView) view.findViewById(R.id.clearGroupNameField);
+		clearGroupName = (ImageView) view.findViewById(R.id.clearGroupNameFieldEdit);
 		clearGroupName.setOnClickListener(this);
 		
 		groupParticipants = (ListView) view.findViewById(R.id.memberList);
@@ -83,7 +85,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	
 	public void onResume()
 	{
-		super.onPause();
+		super.onResume();
 	}
 	
 	public void displayGroupName()
@@ -114,8 +116,12 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		int id = v.getId();
 		
+		if (id == R.id.back)
+		{
+			getActivity().getSupportFragmentManager().popBackStack();
+		}
 	}
 
 	@Override
