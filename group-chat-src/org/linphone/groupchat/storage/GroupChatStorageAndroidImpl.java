@@ -33,8 +33,18 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	@Override
 	public void createGroupChat(GroupChatData data) {
-		// TODO Auto-generated method stub
-		
+        SQLiteDatabase db = GroupChatHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(GroupChatHelper.Groups.groupId, data.group_id);
+        values.put(GroupChatHelper.Groups.groupName, data.group_name);
+        values.put(GroupChatHelper.Groups.adminId, data.admin);
+        values.put(GroupChatHelper.Groups.encryptionType, data.encryption_type); //Encyption type to string possible conflict
+
+        db.insert(GroupChatHelper.Groups.tableName, null, values);
+        db.close();
+
+		// TODO loop through data.members and add them to members table
 	}
 
 
@@ -109,7 +119,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		return null;
 	}
 
-    
+
 
 
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
@@ -171,16 +181,16 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
                     + Groups.groupName + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
                     +  Groups.adminId + " INTEGER(10) " + ")";
             String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
-                    + Messages.id + " INTEGER(10) PRIMARY KEY  AUTOINCREMENT," +  Messages.messageText + " TEXT,"
+                    + Messages.id + " INTEGER(10) PRIMARY KEY AUTOINCREMENT," +  Messages.messageText + " TEXT,"
                     + Messages.memberId + " INTEGER(10)," +  Messages.messageState + " INTEGER(1),"
                     + Messages.messageDirection + " INTEGER(1)," + Messages.timeSent + " DATETIME "
                     + ")";
             String createMembersTable = "CREATE TABLE " + Members.tableName + "("
-                    + Members.id + " INTEGER(10) PRIMARY KEY  AUTOINCREMENT," +  Members.name + " VARCHAR(50),"
+                    + Members.id + " INTEGER(10) PRIMARY KEY AUTOINCREMENT," +  Members.name + " VARCHAR(50),"
                     + Members.sipAddress + " VARCHAR(50)," +  Members.publicKey + " INTEGER(10),"
                     + Members.groupId + " INTEGER(10)" + ")";
             String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
-                    + Attachments.id + " INTEGER(10) PRIMARY KEY," +  Attachments.file + " BLOB,"
+                    + Attachments.id + " INTEGER(10) PRIMARY KEY AUTOINCREMENT," +  Attachments.file + " BLOB,"
                     + Attachments.messageId  + " INTEGER(10)" + ")";
 
 
