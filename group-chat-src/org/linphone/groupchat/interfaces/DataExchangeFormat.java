@@ -46,6 +46,12 @@ public interface DataExchangeFormat {
 	public class GroupChatMember {
 		public String sip;
 		public String name;
+		
+		public GroupChatMember(String name, String sip){
+			
+			this.name = name;
+			this.sip = sip;
+		}
 	}
 	
 	/**
