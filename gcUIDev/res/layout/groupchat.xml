@@ -58,7 +58,7 @@
        
 	        
         <TextView
-            android:id="@+id/contactName"
+            android:id="@+id/groupName"
             android:paddingLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,6 +135,7 @@
 	            android:layout_height="wrap_content"
 	            android:adjustViewBounds="true"
 	            android:layout_alignParentRight="true"
+	            android:visibility="gone"
 	            android:padding="20dp" />
 	        
 	        <LinearLayout 
@@ -152,6 +153,7 @@
 		            android:layout_height="wrap_content"
 	            	android:gravity="center"
 	                android:text="@string/uploading_image"
+	                android:visibility="gone"
 	            	android:textColor="@android:color/black"/>
 	            
 		        <ProgressBar
@@ -161,6 +163,7 @@
 		     		style="@android:style/Widget.ProgressBar.Horizontal"
 		            android:paddingTop="2dp"
 		            android:paddingLeft="2dp"
+		            android:visibility="gone"
 		            android:paddingRight="2dp" />
 	        
 	        </LinearLayout>
@@ -176,18 +179,20 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
     	android:textColor="@color/text_contrast"
         android:text="@string/remote_composing"
+        android:visibility="gone"
         android:layout_above="@id/footer"/>
 
 	<ListView
-		android:id="@+id/group_message_list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:divider="@android:color/transparent"
-		android:stackFromBottom="true"
-		android:transcriptMode="alwaysScroll"
-		android:cacheColorHint="@color/transparent"
-		android:dividerHeight="1dp"
-		android:layout_above="@id/remoteComposing"
-		android:layout_below="@id/header"/>
+	    android:id="@+id/group_message_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@id/remoteComposing"
+	    android:layout_below="@id/header"
+	    android:cacheColorHint="@color/transparent"
+	    android:divider="@android:color/transparent"
+	    android:dividerHeight="1dp"
+	    android:stackFromBottom="true"
+	    android:transcriptMode="alwaysScroll"
+	    android:visibility="visible" />
     
 </RelativeLayout>

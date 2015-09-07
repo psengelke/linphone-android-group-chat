@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -19,6 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 //import org.linphone.core.LinphoneBuffer;
 //import org.linphone.core.LinphoneChatMessage;
@@ -40,24 +44,35 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private String pictureUri;	
 	
 	private LinearLayout topBar;
-	private TextView back, edit, groupName, encryptionType;
+	private TextView back, edit, next;
+	private TextView groupNameView, encryptionType;
 	private ListView groupParticipants;
 	private ImageView clearGroupName, addParticipant;
+	private EditText groupNameEdit, newMember;
+	private RadioGroup editEncryptionGroup;
+	private RadioButton encryptionNone, encryptionAES;
+	private RelativeLayout addMemberLayout;
 	private TextView removeParticipant;
 	private TextView leaveGroup;
 	private LayoutInflater mInflater;
 	private List<String> members = new LinkedList<String>();
+	private boolean isEditMode;
+	private String groupName;
+	private TextView encryptionTypeLbl;
 	private static GroupChatSettingsFragment instance;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		
+		Bundle args = getArguments();
 		super.onCreate(savedInstanceState);
 		instance = this;
 		View view = inflater.inflate(R.layout.groupchat_info, container, false);
 		setRetainInstance(true);
 		mInflater = inflater;
+		
+		groupName = args.getString("groupName");
+		isEditMode = false;
 		
 		back = (TextView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
@@ -65,14 +80,35 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		edit = (TextView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 		
-		groupName = (TextView) view.findViewById(R.id.strGroupName);
+		next = (TextView) view.findViewById(R.id.groupchatinfo_next);
+		next.setOnClickListener(this);
+		
+		groupNameView = (TextView) view.findViewById(R.id.strGroupName);
+		groupNameView.setText(args.getString("groupName"));
 		encryptionType = (TextView) view.findViewById(R.id.encType);
+		encryptionTypeLbl = (TextView) view.findViewById(R.id.encTypeLabel);
+		
+		newMember = (EditText) view.findViewById(R.id.newMemberGroupChat);
+		groupNameEdit = (EditText) view.findViewById(R.id.GroupChatNameEdit);
+		editEncryptionGroup = (RadioGroup) view.findViewById(R.id.groupchatinfo_radioGroup);
+		addMemberLayout = (RelativeLayout) view.findViewById(R.id.groupchatinfo_addMemberLayout);
 		
 		clearGroupName = (ImageView) view.findViewById(R.id.clearGroupNameFieldEdit);
 		clearGroupName.setOnClickListener(this);
 		
+		//TODO Adjust this mock list of members:
+				members = new LinkedList<String>();
+				members.add("Piotr Tchaikovsky");
+				members.add("WA Mozart");
+				members.add("Shostakovich");
+		
 		groupParticipants = (ListView) view.findViewById(R.id.memberList);
 		groupParticipants.setOnItemClickListener(this);
+		groupParticipants.setAdapter(new MembersAdapter());
+		
+		//TODO Get handle to appropriate GroupChatStorage interface to retrieve parameters
+		
+		
 		
 		return view;
 	}
@@ -122,13 +158,60 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			getActivity().getSupportFragmentManager().popBackStack();
 		}
+		else if (id == R.id.edit)
+		{
+			isEditMode = true;
+			edit.setVisibility(View.GONE);
+			next.setVisibility(View.VISIBLE);
+			groupNameEdit.setVisibility(View.VISIBLE);
+			groupNameView.setVisibility(View.GONE);
+			groupNameEdit.setText(groupName);
+			editEncryptionGroup.setVisibility(View.VISIBLE);
+			addMemberLayout.setVisibility(View.VISIBLE);
+			encryptionType.setVisibility(View.GONE);
+			encryptionTypeLbl.setVisibility(View.GONE);
+			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		}
+		else if (id == R.id.groupchatinfo_next)
+		{
+			isEditMode = false;
+			edit.setVisibility(View.VISIBLE);
+			next.setVisibility(View.GONE);
+			groupNameView.setVisibility(View.VISIBLE);
+			groupNameEdit.setVisibility(View.GONE);
+			editEncryptionGroup.setVisibility(View.GONE);
+			addMemberLayout.setVisibility(View.GONE);
+			encryptionType.setVisibility(View.VISIBLE);
+			encryptionTypeLbl.setVisibility(View.VISIBLE);
+			if (groupNameEdit.getText().toString().equals(groupName) == false)
+			{
+				groupName = groupNameEdit.getText().toString();
+				groupNameView.setText(groupName);
+				//TODO Update group name via appropriate GroupChatStorage interface
+			}
+			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		}
+		else if (id == R.id.addMember)
+		{
+			String newSip = newMember.getText().toString();
+			newMember.setText("");
+			if (!newSip.isEmpty())
+			{
+				//TODO test valid sip address or contact
+				members.add(newSip);
+				groupParticipants.setAdapter(new MembersAdapter());
+			}
+		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
-		
+		if (isEditMode)
+		{
+			members.remove(view.getTag());
+			groupParticipants.setAdapter(new MembersAdapter());
+		}
 	}
 
 //	@Override

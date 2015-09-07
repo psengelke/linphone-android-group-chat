@@ -40,10 +40,6 @@ public class GroupChatActivity extends FragmentActivity
 		
 		if (frag.equals(GROUP_CHAT_CREATION_FRAGMENT))
 		{
-			GroupChatCreationFragment gFragment = new GroupChatCreationFragment();
-			//gFragment.setArguments(extras);
-			getSupportFragmentManager().beginTransaction().add(R.id.gcactivity, gFragment, GROUP_CHAT_CREATION_FRAGMENT).commit();
-			
 			FragmentManager fm = getSupportFragmentManager();
 			gcCreationFragment = (GroupChatCreationFragment) fm.findFragmentByTag(GROUP_CHAT_CREATION_FRAGMENT);
 
@@ -57,11 +53,6 @@ public class GroupChatActivity extends FragmentActivity
 		}
 		else if (frag.equals(GROUP_CHAT_MSG_FRAGMENT))
 		{
-			String whichGroup = getIntent().getExtras().getString("groupClicked");
-			GroupChatMessagingFragment gFragment = new GroupChatMessagingFragment();
-			//gFragment.setArguments(extras);
-			getSupportFragmentManager().beginTransaction().add(R.id.gcactivity, gFragment, GROUP_CHAT_MSG_FRAGMENT).commit();
-			
 			FragmentManager fm = getSupportFragmentManager();
 			gcMessagingFragment = (GroupChatMessagingFragment) fm.findFragmentByTag(GROUP_CHAT_MSG_FRAGMENT);
 
@@ -69,6 +60,7 @@ public class GroupChatActivity extends FragmentActivity
 		    // retained across a configuration change.
 			if (gcMessagingFragment == null) {
 				gcMessagingFragment = new GroupChatMessagingFragment();
+				gcMessagingFragment.setArguments(getIntent().getExtras());
 				//gcCreationFragment.setArguments(extras);
 				fm.beginTransaction().add(R.id.gcactivity, gcMessagingFragment, GROUP_CHAT_MSG_FRAGMENT).commit();
 		    }
@@ -76,37 +68,23 @@ public class GroupChatActivity extends FragmentActivity
 		
 	}
 	
-	public void changeFragment(String fragment)
+	public void changeFragment(String fragment, Bundle extras)
 	{
 		if (fragment.equals(GROUP_CHAT_SETTINGS_FRAGMENT))
 		{
-			GroupChatSettingsFragment gFragment = new GroupChatSettingsFragment();
-			
-			FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
-			tr.replace(R.id.gcactivity, gFragment, GROUP_CHAT_SETTINGS_FRAGMENT);
-			tr.addToBackStack(GROUP_CHAT_SETTINGS_FRAGMENT);
-			tr.commit();
-			
 			FragmentManager fm = getSupportFragmentManager();
 			gcSettingsFragment = (GroupChatSettingsFragment) fm.findFragmentByTag(GROUP_CHAT_SETTINGS_FRAGMENT);
-			
+
 		    // If the Fragment is non-null, then it is currently being
 		    // retained across a configuration change.
 			if (gcSettingsFragment == null) {
 				gcSettingsFragment = new GroupChatSettingsFragment();
-				fm.beginTransaction().replace(R.id.gcactivity, gcSettingsFragment, GROUP_CHAT_SETTINGS_FRAGMENT)
-					.addToBackStack(GROUP_CHAT_SETTINGS_FRAGMENT).commit();
+				gcSettingsFragment.setArguments(extras);
+				fm.beginTransaction().replace(R.id.gcactivity, gcSettingsFragment, GROUP_CHAT_SETTINGS_FRAGMENT).addToBackStack(null).commit();
 		    }
 		}
 		else if (fragment.equals(GROUP_CHAT_MSG_FRAGMENT))
 		{
-//			GroupChatSettingsFragment gFragment = new GroupChatSettingsFragment();
-//			
-//			FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
-//			tr.replace(R.id.gcactivity, gFragment, GROUP_CHAT_SETTINGS_FRAGMENT);
-//			tr.addToBackStack(GROUP_CHAT_SETTINGS_FRAGMENT);
-//			tr.commit();
-			
 			FragmentManager fm = getSupportFragmentManager();
 			gcMessagingFragment = (GroupChatMessagingFragment) fm.findFragmentByTag(GROUP_CHAT_MSG_FRAGMENT);
 			

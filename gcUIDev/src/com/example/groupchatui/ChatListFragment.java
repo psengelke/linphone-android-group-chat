@@ -366,7 +366,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 				Bundle b = new Bundle();
 				b.putString("fragment", "gcMessagingFragment");
-				b.putString("groupClicked", (String) view.getTag());
+				b.putString("groupName", (String) view.getTag());
 				intent.putExtras(b);
 				startActivity(intent);
 				

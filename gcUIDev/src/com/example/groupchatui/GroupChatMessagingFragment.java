@@ -3,23 +3,29 @@ package com.example.groupchatui;
 
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
 {
 	private static GroupChatMessagingFragment instance;		
 	
-	private TextView groupName;
+	private TextView groupNameView;
 	private ImageView groupPicture;
 	private TextView remoteMemberComposing;
 	private TextView back, info;
+	private ListView msgList;
+	private String groupName;
 	
 //	private LinphoneGroupChatRoom chatroom;
 //	private GroupChatMessageAdapter groupChatMessageAdapter;
@@ -33,11 +39,22 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
 		
+		groupName = getArguments().getString("groupName");
+		
+		groupNameView = (TextView) view.findViewById(R.id.groupName);
+		groupNameView.setText(groupName);
+		
 		back = (TextView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
 		
 		info = (TextView) view.findViewById(R.id.group_info);
 		info.setOnClickListener(this);
+		
+		msgList = (ListView) view.findViewById(R.id.group_message_list);
+		
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		//TODO Get handle to appropriate GroupChatStorage interface to retrieve parameters and messages
 		
 		return view;
 		
@@ -93,29 +110,30 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		else if (id == R.id.group_info)
 		{
 			GroupChatActivity activity =  (GroupChatActivity) getActivity();
-			activity.changeFragment("gcSettingsFragment");
+			Bundle extras = new Bundle();
+			extras.putString("groupName", groupName);
+			activity.changeFragment("gcSettingsFragment", extras);
 		}
 	}
 	
-//	public class GroupChatMessageAdapter extends BaseAdapter
-//	{
+	public class GroupChatMessageAdapter extends BaseAdapter
+	{
 //		LinphoneChatMessage[] history;
-//		Context context;
-//		
-//		public GroupChatMessageAdapter(Context context, LinphoneChatMessage[] history) 
-//		{
+		Context context;
+		
+		public GroupChatMessageAdapter(Context context/*,LinphoneChatMessage[] history*/) 
+		{
 //			this.history = history;
-//			this.context = context;
-//		}
-//		
-//		public void refreshHistory()
-//		{
-//			
-//		}
-//		
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent)
-//		{
+			this.context = context;
+		}
+		
+		public void refreshHistory()
+		{
+			
+		}
+		
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
 //			LinphoneChatMessage message = history[position];
 //			
 //			BubbleChat bubble = new BubbleChat(context, message, GroupChatMessagingFragment.this);
@@ -126,26 +144,22 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 //			rlayout.addView(v);
 //			
 //			return rlayout;
-//		}
-//
-//		@Override
-//		public int getCount() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//
-//		@Override
-//		public Object getItem(int position) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public long getItemId(int position) {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//
-//		
-//	}
+			return null;
+		}
+
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	}
 }
