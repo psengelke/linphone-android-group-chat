@@ -24,6 +24,10 @@ public interface DataExchangeFormat {
 		public LinkedList<GroupChatMember> members;
 		public String admin;
 		public EncryptionType encryption_type;
+		
+		public GroupChatData(){
+			members = new LinkedList<>();
+		}
 	}
 	
 	/**
@@ -72,5 +76,10 @@ public interface DataExchangeFormat {
 		
 		public LinkedList<GroupChatMember> added;
 		public LinkedList<GroupChatMember> removed;
+		
+		public MemberUpdateInfo(){
+			added = new LinkedList<>();
+			removed = new LinkedList<>();
+		}
 	}
 }

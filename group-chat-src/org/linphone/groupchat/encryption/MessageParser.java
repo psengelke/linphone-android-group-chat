@@ -20,6 +20,7 @@ import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 public class MessageParser {
 	
 	private static final String SEPARATOR = ",";
+	private static final String SEPARATOR2 = ";";
 
 	private MessageParser(){}
 	
@@ -55,17 +56,36 @@ public class MessageParser {
 	 */
 	public static String stringifyMemberUpdateMessage(MemberUpdateInfo info){
 		
-		return null;
+		String message = "";
+		
+		Iterator<GroupChatMember> it = info.added.iterator();
+		GroupChatMember member = it.next();
+		message += member.name + SEPARATOR + member.sip;
+		while (it.hasNext()) {
+			member = (GroupChatMember) it.next();
+			message += member.name + SEPARATOR + member.sip;
+		}
+		message += SEPARATOR2;
+		
+		it = info.removed.iterator();
+		member = it.next();
+		message += member.name + SEPARATOR + member.sip;
+		while (it.hasNext()) {
+			member = (GroupChatMember) it.next();
+			message += member.name + SEPARATOR + member.sip;
+		}
+		
+		return message;
 	}
 
 	/**
 	 * Converts the passed object to a formatted string.
-	 * @param info The object to be converted.
+	 * @param admin The object to be converted.
 	 * @return A formatted string.
 	 */
-	public static String stringifyAdminChange(String message){
+	public static String stringifyAdminChange(GroupChatMember admin){
 		
-		return null;
+		return admin.name + SEPARATOR + admin.sip;
 	}
 	
 	/* parse functions */
@@ -93,9 +113,7 @@ public class MessageParser {
 		int i = 6;
 		while (i < parts.length){
 			
-			GroupChatMember member = new GroupChatMember();
-			member.name = parts[i++];
-			member.sip = parts[i++];
+			info.group.members.add(new GroupChatMember(parts[i++], parts[i++]));
 		}
 		
 		return info;
@@ -108,11 +126,34 @@ public class MessageParser {
 	 */
 	public static MemberUpdateInfo parseMemberUpdateMessage(String message){
 		
-		return null;
+		MemberUpdateInfo info = new MemberUpdateInfo();
+		
+		String[] lists = message.split(SEPARATOR2);
+		String[] added = lists[0].split(SEPARATOR);
+		String[] removed = lists[1].split(SEPARATOR);
+		
+		int i = 0;
+		while (i < added.length){
+			info.added.add(new GroupChatMember(added[i++], added[i++]));
+		}
+		
+		i = 0;
+		while (i < removed.length){
+			info.removed.add(new GroupChatMember(removed[i++], removed[i++]));
+		}
+		
+		return info;
 	}
 	
+	/**
+	 * Parses a message containing a new admin.
+	 * @param message The message to be parsed.
+	 * @return A structured object containing data.
+	 */
 	public static GroupChatMember parseAdminChange(String message){
 		
-		return null;
+		String[] admin = message.split(SEPARATOR);
+		
+		return new GroupChatMember(admin[0], admin[1]);
 	}
 }
