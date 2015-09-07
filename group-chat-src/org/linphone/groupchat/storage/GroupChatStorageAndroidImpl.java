@@ -111,10 +111,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     
 
-    // A note on database tables:
-    
-    // The  _id field should be auto-incremented by the DBMS and not inserted when a new row is added.
-
 
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
     // this class extends a class provided by the android sdk, SQLiteOpenHelper
@@ -171,16 +167,16 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         @Override
         public void onCreate(SQLiteDatabase db){
             String createGroupsTable = "CREATE TABLE " + Groups.tableName + "("
-                    + Groups.id + " INTEGER(10) PRIMARY KEY," +  Groups.groupId + " VARCHAR(255),"
+                    + Groups.id + " INTEGER(10) PRIMARY KEY AUTOINCREMENT," +  Groups.groupId + " VARCHAR(255),"
                     + Groups.groupName + " VARCHAR(50)," +  Groups.encryptionType + " VARCHAR(50),"
                     +  Groups.adminId + " INTEGER(10) " + ")";
             String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
-                    + Messages.id + " INTEGER(10) PRIMARY KEY," +  Messages.messageText + " TEXT,"
+                    + Messages.id + " INTEGER(10) PRIMARY KEY  AUTOINCREMENT," +  Messages.messageText + " TEXT,"
                     + Messages.memberId + " INTEGER(10)," +  Messages.messageState + " INTEGER(1),"
                     + Messages.messageDirection + " INTEGER(1)," + Messages.timeSent + " DATETIME "
                     + ")";
             String createMembersTable = "CREATE TABLE " + Members.tableName + "("
-                    + Members.id + " INTEGER(10) PRIMARY KEY," +  Members.name + " VARCHAR(50),"
+                    + Members.id + " INTEGER(10) PRIMARY KEY  AUTOINCREMENT," +  Members.name + " VARCHAR(50),"
                     + Members.sipAddress + " VARCHAR(50)," +  Members.publicKey + " INTEGER(10),"
                     + Members.groupId + " INTEGER(10)" + ")";
             String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
