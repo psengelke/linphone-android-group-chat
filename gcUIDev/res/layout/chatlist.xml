@@ -27,7 +27,7 @@
         <TextView
             android:contentDescription="@string/content_description_new_group_discussion"
             android:id="@+id/newGroupDiscussion"
-            android:background="@drawable/contacts_all_defaultfull"
+            android:background="@drawable/create_group"
             android:text="@string/button_new_group_chat"
             android:gravity="center"
             android:paddingTop="25dp"
@@ -103,7 +103,7 @@
             android:background="@drawable/groups_all"
             android:text="@string/button_group_chats"
             android:gravity="center"
-            android:paddingTop="16dp"
+            android:paddingTop="25dp"
             android:textSize="13sp"
             android:textColor="@drawable/text_switch_button_color"
             android:layout_width="match_parent"
