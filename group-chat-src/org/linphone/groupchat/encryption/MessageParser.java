@@ -63,7 +63,7 @@ public class MessageParser {
 		message += member.name + SEPARATOR + member.sip;
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
-			message += member.name + SEPARATOR + member.sip;
+			message += SEPARATOR + member.name + SEPARATOR + member.sip;
 		}
 		message += SEPARATOR2;
 		
@@ -72,7 +72,7 @@ public class MessageParser {
 		message += member.name + SEPARATOR + member.sip;
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
-			message += member.name + SEPARATOR + member.sip;
+			message += SEPARATOR + member.name + SEPARATOR + member.sip;
 		}
 		
 		return message;

@@ -7,6 +7,7 @@ import org.linphone.groupchat.encryption.MessageParser;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import junit.framework.TestCase;
@@ -54,12 +55,23 @@ public class MessageParserTester extends TestCase {
 				+ "Jess@linphone.org", 
 				MessageParser.stringifyInitialContactMessage(info)
 		);
-		
-		//fail("Not yet implemented");
 	}
 
 	public void testStringifyMemberUpdateMessage() {
-		fail("Not yet implemented");
+
+		MemberUpdateInfo info = new MemberUpdateInfo();
+		info.added = new LinkedList<>();
+		info.added.add(new GroupChatMember("Steve", "steve@linphone.org"));
+		info.added.add(new GroupChatMember("Bob", "bob@linphone.org"));
+		info.removed = new LinkedList<>();
+		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org"));
+		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org"));
+		
+		String test = MessageParser.stringifyMemberUpdateMessage(info);
+		assertEquals(
+				"Steve,steve@linphone.org,Bob,bob@linphone.org;Ginger,souless@linphone.org,Scott,gibson@linphone.org", 
+				test
+		);
 	}
 
 	public void testStringifyAdminChange() {
@@ -106,7 +118,40 @@ public class MessageParserTester extends TestCase {
 	}
 
 	public void testParseMemberUpdateMessage() {
-		fail("Not yet implemented");
+
+		MemberUpdateInfo info = new MemberUpdateInfo();
+		info.added = new LinkedList<>();
+		info.added.add(new GroupChatMember("Steve", "steve@linphone.org"));
+		info.added.add(new GroupChatMember("Bob", "bob@linphone.org"));
+		info.removed = new LinkedList<>();
+		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org"));
+		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org"));
+		
+		MemberUpdateInfo parsed = 
+				MessageParser.parseMemberUpdateMessage(MessageParser.stringifyMemberUpdateMessage(info));
+		
+		assertEquals(info.added.size(), parsed.added.size());
+		assertEquals(info.removed.size(), info.removed.size());
+		
+		Iterator<GroupChatMember> it1 = parsed.added.iterator();
+		Iterator<GroupChatMember> it2 = parsed.added.iterator();
+		while (it1.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+		}
+		
+		it1 = parsed.removed.iterator();
+		it2 = parsed.removed.iterator();
+		while (it1.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+		}
 	}
 
 	public void testParseAdminChange() {
