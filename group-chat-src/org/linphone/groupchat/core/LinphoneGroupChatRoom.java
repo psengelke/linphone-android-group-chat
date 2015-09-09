@@ -33,8 +33,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	public static final String MSG_HEADER_GROUP_ID = "LinphoneGroupChatRoom.group_id";
 	public static final String MSG_HEADER_TYPE_MESSAGE = "LinphoneGroupChatRoom.plain_message";
 	public static final String MSG_HEADER_TYPE_INVITE = "LinphoneGroupChatRoom.invite";
-	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGropChatRoom.accept_invite";
-	public static final String MSG_HEADER_TYPE_MEMBER_UPDATE = "LinphoneGropChatRoom.member_update";
+	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGroupChatRoom.accept_invite";
+	public static final String MSG_HEADER_TYPE_MEMBER_UPDATE = "LinphoneGroupChatRoom.member_update";
+	public static final String MSG_HEADER_TYPE_ADMIN_CHANGE = "LinphoneGroupChatRoom.admin_update";
 	// more
 	
 	private LinkedList<GroupChatMember> members;
@@ -75,18 +76,21 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.linphone_core = lc;
 	}
 	
-	public void doInitialization() throws GroupChatSizeException, GroupChatExistsException {
+	public void doInitialization() throws GroupChatExistsException {
 		
-		// check if the group exists, else continue
+//		Iterator<GroupChatMember> it = this.members.iterator();
+//		while (it.hasNext()) {
+//			GroupChatMember member = (GroupChatMember) it.next();
+//			
+//			if (member.sip.compareTo(admin) != 0){
+//				
+//				encryption_strategy.sendMessage(null, members, null);
+//			}
+//		}
 		
-		Iterator<GroupChatMember> it = this.members.iterator();
-		while (it.hasNext()) {
-			GroupChatMember member = (GroupChatMember) it.next();
-			
-			// don't invite self!!!
-		}
 		
-		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
+		
+		//if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
 		
 		GroupChatData data = new GroupChatData();
 		data.group_id = this.group_id;
@@ -96,6 +100,8 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		data.encryption_type = this.getEncryptionType();
 		
 		storage.createGroupChat(data);
+		
+		
 	}
 	
 	public void removeSelf(){

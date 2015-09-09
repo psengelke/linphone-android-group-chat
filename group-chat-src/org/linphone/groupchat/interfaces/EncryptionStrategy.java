@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 
 /**
@@ -20,7 +21,37 @@ import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 
 public interface EncryptionStrategy {
 
+	/**
+	 * Sends a plain text message to the group.
+	 * @param message The message to be sent.
+	 * @param members The members of the group.
+	 * @param lc The {@link LinphoneCore} instance.
+	 */
     public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc);
+    
+    /**
+     * Sends a message containing initial contact information.
+     * @param info The initial contact information.
+     * @param member The communicating member, i.e. the admin or the invitee.
+     * @param lc The {@link LinphoneCore} instance.
+     */
+	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc);
+	
+	/**
+	 * Sends a message containing new additions or removals from the group.
+	 * @param info The information object containing member changes.
+	 * @param members The group chat members.
+	 * @param lc The {@link LinphoneCore} instance.
+	 */
+	public void sendMessage(MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc);
+	
+	/**
+	 * Sends a message containing an admin change.
+	 * @param info The new admin information.
+	 * @param members The group chat members.
+	 * @param lc The {@link LinphoneCore} instance.
+	 */
+	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc);
     
     /**
      * Handler for initial contact messages (when a new member is added).

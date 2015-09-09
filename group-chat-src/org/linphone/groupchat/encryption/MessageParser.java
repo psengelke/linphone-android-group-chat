@@ -43,7 +43,7 @@ public class MessageParser {
 		Iterator<GroupChatMember> it = info.group.members.iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
-			message += SEPARATOR + member.name + SEPARATOR + member.sip;
+			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		}
 		
 		return message;
@@ -60,19 +60,19 @@ public class MessageParser {
 		
 		Iterator<GroupChatMember> it = info.added.iterator();
 		GroupChatMember member = it.next();
-		message += member.name + SEPARATOR + member.sip;
+		message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
-			message += SEPARATOR + member.name + SEPARATOR + member.sip;
+			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		}
 		message += SEPARATOR2;
 		
 		it = info.removed.iterator();
 		member = it.next();
-		message += member.name + SEPARATOR + member.sip;
+		message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
-			message += SEPARATOR + member.name + SEPARATOR + member.sip;
+			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		}
 		
 		return message;
@@ -85,7 +85,7 @@ public class MessageParser {
 	 */
 	public static String stringifyAdminChange(GroupChatMember admin){
 		
-		return admin.name + SEPARATOR + admin.sip;
+		return admin.name + SEPARATOR + admin.sip + SEPARATOR + admin.pending;
 	}
 	
 	/* parse functions */
@@ -113,7 +113,8 @@ public class MessageParser {
 		int i = 6;
 		while (i < parts.length){
 			
-			info.group.members.add(new GroupChatMember(parts[i++], parts[i++]));
+			info.group.members
+				.add(new GroupChatMember(parts[i++], parts[i++], Boolean.parseBoolean(parts[i++])));
 		}
 		
 		return info;
@@ -134,12 +135,12 @@ public class MessageParser {
 		
 		int i = 0;
 		while (i < added.length){
-			info.added.add(new GroupChatMember(added[i++], added[i++]));
+			info.added.add(new GroupChatMember(added[i++], added[i++], Boolean.parseBoolean(added[i++])));
 		}
 		
 		i = 0;
 		while (i < removed.length){
-			info.removed.add(new GroupChatMember(removed[i++], removed[i++]));
+			info.removed.add(new GroupChatMember(removed[i++], removed[i++], Boolean.parseBoolean(removed[i++])));
 		}
 		
 		return info;
@@ -154,6 +155,6 @@ public class MessageParser {
 		
 		String[] admin = message.split(SEPARATOR);
 		
-		return new GroupChatMember(admin[0], admin[1]);
+		return new GroupChatMember(admin[0], admin[1], Boolean.parseBoolean(admin[2]));
 	}
 }

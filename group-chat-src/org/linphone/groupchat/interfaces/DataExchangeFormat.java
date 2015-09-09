@@ -51,10 +51,13 @@ public interface DataExchangeFormat {
 		public String sip;
 		public String name;
 		
-		public GroupChatMember(String name, String sip){
+		public boolean pending;
+		
+		public GroupChatMember(String name, String sip, boolean pending){
 			
 			this.name = name;
 			this.sip = sip;
+			this.pending = pending;
 		}
 	}
 	
