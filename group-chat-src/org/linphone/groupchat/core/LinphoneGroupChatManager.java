@@ -63,31 +63,12 @@ public class LinphoneGroupChatManager {
 				group, 
 				EncryptionFactory.createEncryptionStrategy(type), 
 				storage, 
-				null
+				LinphoneGroupChatListener.getLinphoneCore()
 		);
 		
 		chat.doInitialization();
 		
 		chats.add(chat);
-	}
-	
-	/**
-	 * A helper method for {@link #generateGroupChats()} that creates the {@link LinphoneGroupChatRoom} instances and appends 
-	 * them to the chat list.
-	 * @param name The name of the group.
-	 * @param id The group ID.
-	 * @param admin The admin of the group.
-	 * @param members The list of members in the group.
-	 * @param type The type of encryption to be used.
-	 */
-	private void createGroupChat(GroupChatData group){
-		
-		chats.add(new LinphoneGroupChatRoom(
-				group, 
-				EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
-				storage, 
-				null
-		));
 	}
 	
 	/**
@@ -121,7 +102,12 @@ public class LinphoneGroupChatManager {
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
-			createGroupChat(group);
+			chats.add(new LinphoneGroupChatRoom(
+					group, 
+					EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
+					storage, 
+					LinphoneGroupChatListener.getLinphoneCore()
+			));
 		}
 	}
 	
@@ -154,9 +140,19 @@ public class LinphoneGroupChatManager {
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
 		
-		LinphoneGroupChatRoom chat =  getGroupChat(id);
-		chat.removeSelf(); // needs work
-		storage.deleteChat(id);
+		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
+		while (it.hasNext()) {
+			LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();
+			if (chat.getGroupId().equals(id)){
+				
+				it.remove();
+				chat.removeSelf();
+				storage.deleteChat(id);
+				return;
+			}
+		}
+		
+		throw new GroupDoesNotExistException("Group does not exist!");
 	}
 	
 	/**
@@ -195,6 +191,8 @@ public class LinphoneGroupChatManager {
 					storage,
 					lc
 			);
+			
+			storage.createGroupChat(info.group);
 			
 			chats.add(group);
 			group.receiveMessage(message);

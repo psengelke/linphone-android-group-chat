@@ -12,7 +12,7 @@ public class EncryptionFactory {
 	 */
 	public static EncryptionStrategy createEncryptionStrategy(EncryptionType type){
 		switch (type) {
-		case None:
+		case AES256:
 			return new SomeEncryptionStrategy(new AES256EncryptionHandler());
 		default:
 			return new NoEncryptionStrategy();

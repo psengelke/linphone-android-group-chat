@@ -44,6 +44,15 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	}
 	
 	/**
+	 * Getter for the {@link LinphoneCore} instance.
+	 * @return
+	 */
+	public static LinphoneCore getLinphoneCore(){
+		
+		return LinphoneManager.getLc();
+	}
+	
+	/**
 	 * Getter method for the singleton.
 	 * @return The {@link LinphoneCoreListener} singleton instance.
 	 */
