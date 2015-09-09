@@ -4,6 +4,7 @@ package org.linphone.groupchat.interfaces;
 import android.graphics.Bitmap;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
@@ -76,5 +77,5 @@ public interface GroupChatStorage {
      * Persists a new group chat to the database.
      * @param data The group chat information in a format understandable by the {@link GroupChatData} implementation.
      */
-    public void createGroupChat(GroupChatData data);
+    public void createGroupChat(GroupChatData data) throws GroupChatExistsException;
 }

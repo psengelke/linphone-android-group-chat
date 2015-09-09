@@ -11,9 +11,9 @@ import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.exception.GroupChatExistsException;
-import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
@@ -76,38 +76,37 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.linphone_core = lc;
 	}
 	
+	/**
+	 * Sends invites to all group members. Call only when this is a new group.
+	 * @throws GroupChatExistsException In the case that the group has already been initialised.
+	 */
 	public void doInitialization() throws GroupChatExistsException {
 		
-//		Iterator<GroupChatMember> it = this.members.iterator();
-//		while (it.hasNext()) {
-//			GroupChatMember member = (GroupChatMember) it.next();
-//			
-//			if (member.sip.compareTo(admin) != 0){
-//				
-//				encryption_strategy.sendMessage(null, members, null);
-//			}
-//		}
+		GroupChatData group = new GroupChatData();
+		group.group_id = this.group_id;
+		group.group_name = this.group_name;
+		group.admin = this.admin;
+		group.members = this.members;
+		group.encryption_type = this.getEncryptionType();
 		
+		storage.createGroupChat(group);
 		
+		InitialContactInfo info = new InitialContactInfo();
+		info.group = group;
 		
-		//if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
-		
-		GroupChatData data = new GroupChatData();
-		data.group_id = this.group_id;
-		data.group_name = this.group_name;
-		data.admin = this.admin;
-		data.members = this.members;
-		data.encryption_type = this.getEncryptionType();
-		
-		storage.createGroupChat(data);
-		
-		
+		Iterator<GroupChatMember> it = members.iterator();
+		while (it.hasNext()) {
+			GroupChatMember member = (GroupChatMember) it.next();
+			encryption_strategy.sendMessage(info, member, linphone_core);
+		}
 	}
 	
+	/**
+	 * Used to remove the client from the group upon deletion.
+	 */
 	public void removeSelf(){
 		
-		// remove self from group
-		// if admin,  assign new admin : pass as parameter
+		
 	}
 	
 	/**
@@ -200,107 +199,107 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	@Override
 	public LinphoneAddress getPeerAddress() {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void sendMessage(String message) {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void sendMessage(LinphoneChatMessage message, StateListener listener) {
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage createLinphoneChatMessage(String message) {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage[] getHistory() {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage[] getHistory(int limit) {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage[] getHistoryRange(int begin, int end) {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void destroy() {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int getUnreadMessagesCount() {
 
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int getHistorySize() {
 
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteHistory() {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void compose() {
-	
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean isRemoteComposing() {
 
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void markAsRead() {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteMessage(LinphoneChatMessage message) {
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage createLinphoneChatMessage(String message, String url, State state, long timestamp,
 			boolean isRead, boolean isIncoming) {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneCore getCore() {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public LinphoneChatMessage createFileTransferMessage(LinphoneContent content) {
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void sendChatMessage(LinphoneChatMessage message) {
-
+		throw new UnsupportedOperationException();
 	}
 }
