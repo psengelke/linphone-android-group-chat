@@ -51,7 +51,7 @@ public class MessageParserTester extends TestCase {
 				+ "John,john@linphone.org,true,"
 				+ "Bob,bob@linphone.org,false,"
 				+ "Jess,Jess@linphone.org,false", 
-				MessageParser.stringifyInitialContactMessage(info)
+				MessageParser.stringifyInitialContactInfo(info)
 		);
 	}
 
@@ -65,7 +65,7 @@ public class MessageParserTester extends TestCase {
 		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
 		
-		String test = MessageParser.stringifyMemberUpdateMessage(info);
+		String test = MessageParser.stringifyMemberUpdateInfo(info);
 		assertEquals(
 				"Steve,steve@linphone.org,false,"
 				+ "Bob,bob@linphone.org,false;"
@@ -79,7 +79,7 @@ public class MessageParserTester extends TestCase {
 
 		assertEquals(
 				"Adam,adam@linphone.org,false", 
-				MessageParser.stringifyAdminChange(new GroupChatMember("Adam", "adam@linphone.org", false))
+				MessageParser.stringifyGroupChatMember(new GroupChatMember("Adam", "adam@linphone.org", false))
 		);
 	}
 
@@ -99,7 +99,7 @@ public class MessageParserTester extends TestCase {
 		info.group.members.add(new GroupChatMember("Jess", "Jess@linphone.org", false));
 		
 		InitialContactInfo parsed_info = 
-				MessageParser.parseInitialContactMessage(MessageParser.stringifyInitialContactMessage(info));
+				MessageParser.parseInitialContactInfo(MessageParser.stringifyInitialContactInfo(info));
 		
 		assertEquals(parsed_info.secret_key, info.secret_key);
 		assertEquals(parsed_info.public_key, info.public_key);
@@ -130,7 +130,7 @@ public class MessageParserTester extends TestCase {
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
 		
 		MemberUpdateInfo parsed = 
-				MessageParser.parseMemberUpdateMessage(MessageParser.stringifyMemberUpdateMessage(info));
+				MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
 		
 		assertEquals(info.added.size(), parsed.added.size());
 		assertEquals(info.removed.size(), info.removed.size());
@@ -161,7 +161,7 @@ public class MessageParserTester extends TestCase {
 	public void testParseAdminChange() {
 
 		GroupChatMember orig = new GroupChatMember("Adam", "adam@linphone.org", false);
-		GroupChatMember parsed = MessageParser.parseAdminChange(MessageParser.stringifyAdminChange(orig));
+		GroupChatMember parsed = MessageParser.parseGroupChatMember(MessageParser.stringifyGroupChatMember(orig));
 		assertEquals(orig.name, parsed.name);
 		assertEquals(orig.sip, parsed.sip);
 		assertEquals(orig.pending, parsed.pending);

@@ -27,11 +27,11 @@ public class MessageParser {
 	/* stringify functions */
 	
 	/**
-	 * Converts the passed object to a formatted string.
+	 * Converts the passed {@link InitialContactInfo} object to a formatted string.
 	 * @param info The object to be converted.
 	 * @return A formatted string.
 	 */
-	public static String stringifyInitialContactMessage(InitialContactInfo info){
+	public static String stringifyInitialContactInfo(InitialContactInfo info){
 		
 		String message = "" + info.secret_key 
 				+ SEPARATOR + info.public_key 
@@ -50,11 +50,11 @@ public class MessageParser {
 	}
 
 	/**
-	 * Converts the passed object to a formatted string.
+	 * Converts the passed {@link MemberUpdateInfo} object to a formatted string.
 	 * @param info The object to be converted.
 	 * @return A formatted string.
 	 */
-	public static String stringifyMemberUpdateMessage(MemberUpdateInfo info){
+	public static String stringifyMemberUpdateInfo(MemberUpdateInfo info){
 		
 		String message = "";
 		
@@ -79,23 +79,23 @@ public class MessageParser {
 	}
 
 	/**
-	 * Converts the passed object to a formatted string.
-	 * @param admin The object to be converted.
+	 * Converts the passed {@link GroupChatMember} to a formatted string.
+	 * @param member The object to be converted.
 	 * @return A formatted string.
 	 */
-	public static String stringifyAdminChange(GroupChatMember admin){
+	public static String stringifyGroupChatMember(GroupChatMember member){
 		
-		return admin.name + SEPARATOR + admin.sip + SEPARATOR + admin.pending;
+		return member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 	}
 	
 	/* parse functions */
 	
 	/**
-	 * Parses a message containing information about the initial contact communication session.
+	 * Parses a message containing an {@link InitialContactInfo} object.
 	 * @param message The message to be parsed.
 	 * @return A structured object containing the information.
 	 */
-	public static InitialContactInfo parseInitialContactMessage(String message){
+	public static InitialContactInfo parseInitialContactInfo(String message){
 
 		String[] parts = message.split(SEPARATOR);
 		InitialContactInfo info = new InitialContactInfo();
@@ -121,11 +121,11 @@ public class MessageParser {
 	}
 	
 	/**
-	 * Parses a message containing member additions and removals.
+	 * Parses a message containing a {@link MemberUpdateInfo} object.
 	 * @param message The message to be parsed.
 	 * @return A structured object containing the data.
 	 */
-	public static MemberUpdateInfo parseMemberUpdateMessage(String message){
+	public static MemberUpdateInfo parseMemberUpdateInfo(String message){
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		
@@ -147,11 +147,11 @@ public class MessageParser {
 	}
 	
 	/**
-	 * Parses a message containing a new admin.
+	 * Parses a message containing a {@link GroupChatMember}.
 	 * @param message The message to be parsed.
 	 * @return A structured object containing data.
 	 */
-	public static GroupChatMember parseAdminChange(String message){
+	public static GroupChatMember parseGroupChatMember(String message){
 		
 		String[] admin = message.split(SEPARATOR);
 		

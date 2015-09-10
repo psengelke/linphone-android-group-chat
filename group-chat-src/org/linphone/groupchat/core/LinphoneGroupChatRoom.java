@@ -10,6 +10,7 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.encryption.MessageParser;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
@@ -30,7 +31,8 @@ import android.graphics.Bitmap;
 @SuppressWarnings("deprecation")
 public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
-	public static final String MSG_HEADER_GROUP_ID = "LinphoneGroupChatRoom.group_id";
+	public static final String MSG_HEADER_GROUP_ID = "GROUP-CHAT-ID";
+	public static final String MSG_HEADER_TYPE  = "GROUP-CHAT-MESSAGE-TYPE";
 	public static final String MSG_HEADER_TYPE_MESSAGE = "LinphoneGroupChatRoom.plain_message";
 	public static final String MSG_HEADER_TYPE_INVITE = "LinphoneGroupChatRoom.invite";
 	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGroupChatRoom.accept_invite";
@@ -120,12 +122,16 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	}
 	
 	/**
-	 * A function that updates the status of a pending invite to confirmed.
-	 * @param member The new member to be confirmed as an addition to the group.
+	 * A function that updates the status of a pending invite to confirmed and 
+	 * broadcast to the rest of the group.
+	 * @param message The text body containing the member's details.
 	 */
-	public void updateMember(GroupChatMember member){
+	private void updateMember(String message){
 		
-		// TODO and throw exception
+		GroupChatMember member = MessageParser.parseGroupChatMember(message);
+		storage.updateMemberStatus(member);
+		
+		// now tell the group of the update.
 	}
 	
 	/**
@@ -146,7 +152,26 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void receiveMessage(LinphoneChatMessage message){
 		
-		// parse message content based on message headers
+		String  type = message.getCustomHeader(MSG_HEADER_TYPE);
+		switch (type) {
+		case MSG_HEADER_TYPE_MESSAGE:
+			encryption_strategy.handlePlainTextMessage(message.getText(), group_id, storage);
+			break;
+		case MSG_HEADER_TYPE_INVITE:
+			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage);
+			break;
+		case MSG_HEADER_TYPE_INVITE_ACCEPT:
+			updateMember(message.getText());
+			break;
+		case MSG_HEADER_TYPE_MEMBER_UPDATE:
+			encryption_strategy.handleMemberUpdate(message.getText(), group_id, storage);
+			break;
+		case MSG_HEADER_TYPE_ADMIN_CHANGE:
+			encryption_strategy.handleAdminChange(message.getText(), group_id, storage);
+			break;
+		default:
+			break;
+		}
 	}
 
 	/* Getters & Setters */

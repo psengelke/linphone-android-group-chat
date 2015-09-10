@@ -8,6 +8,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 /**
  *
@@ -95,7 +96,7 @@ public interface EncryptionStrategy {
      * @param storage The storage adapter instance.
      * @return The new group chat admin.
      */
-    public GroupChatMember handleAdminChange(String message, String id, String storage);
+    public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage);
     
     /**
      * Handler for encryption type changes.
@@ -106,9 +107,13 @@ public interface EncryptionStrategy {
      */
     public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage);
     
+    /**
+     * Getter for the hidden {@link EncryptionHandler}'s {@link EncryptionType}.
+     * @return {@link EncryptionType} of the strategy.
+     */
+    public EncryptionType getEncryptionType();
+    
     @Deprecated
     public String receiveMessage(String message);
-    
-    public EncryptionHandler.EncryptionType getEncryptionType();
 
 }

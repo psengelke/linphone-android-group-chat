@@ -61,21 +61,32 @@ public interface GroupChatStorage {
     public LinkedList<String> getChatIdList();
 
     /**
-     * Deletes the specified group from the database.
-     * @param groupId The identification of the group chat.
-     * @throws GroupDoesNotExistException Where the chat could not be found or deleted from the database.
+     * Retrieves a list of members for a group.
+     * @param groupId The id of the group in question.
+     * @return A list of {@link GroupChatMember} items.
      */
-    public void deleteChat(String groupId) throws GroupDoesNotExistException;
-
-    public void markChatAsRead(String groupId);
-
     public LinkedList<GroupChatMember> getMembers(String groupId);
-
-    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
 
     /**
      * Persists a new group chat to the database.
      * @param data The group chat information in a format understandable by the {@link GroupChatData} implementation.
      */
     public void createGroupChat(GroupChatData data) throws GroupChatExistsException;
+
+    public void markChatAsRead(String groupId);
+
+    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
+    
+    /**
+     * Updates the pending status of a group member.
+     * @param member The member to be updated.
+     */
+    public void updateMemberStatus(GroupChatMember member);
+    
+    /**
+     * Deletes the specified group from the database.
+     * @param groupId The identification of the group chat.
+     * @throws GroupDoesNotExistException Where the chat could not be found or deleted from the database.
+     */
+    public void deleteChat(String groupId) throws GroupDoesNotExistException;
 }
