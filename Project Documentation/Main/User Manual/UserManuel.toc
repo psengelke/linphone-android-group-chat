@@ -6,5 +6,6 @@
 \contentsline {section}{\numberline {6}Installation}{4}{section.6}
 \contentsline {section}{\numberline {7}Getting Started}{4}{section.7}
 \contentsline {section}{\numberline {8}Using The System}{4}{section.8}
-\contentsline {section}{\numberline {9}Troubleshooting}{4}{section.9}
-\contentsline {section}{\numberline {10}Appendix B}{4}{section.10}
+\contentsline {subsubsection}{\numberline {8.0.1}Using the Group Chat functionality}{4}{subsubsection.8.0.1}
+\contentsline {section}{\numberline {9}Troubleshooting}{5}{section.9}
+\contentsline {section}{\numberline {10}Appendix B}{5}{section.10}
