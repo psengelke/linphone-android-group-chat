@@ -103,7 +103,7 @@
             android:background="@drawable/groups_all"
             android:text="@string/button_group_chats"
             android:gravity="center"
-            android:paddingTop="16dp"
+            android:paddingTop="25dp"
             android:textSize="13sp"
             android:textColor="@drawable/text_switch_button_color"
             android:layout_width="match_parent"
