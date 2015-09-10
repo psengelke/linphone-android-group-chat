@@ -33,18 +33,38 @@ public interface GroupChatStorage {
 
     public void close();
 
+    /**
+     * Persists a text message.
+     * @param from The sender.
+     * @param message The text message.
+     * @param direction The direction of the message (incoming, outgoing)
+     * @param status The status of the message (read, unread)
+     * @param time The time of sending.
+     */
     public void saveTextMessage(String from, String message, MessageDirection direction,
                                        MessageState status, long time);
-
+    /**
+     * Persists an image to the database.
+     * @param from The sender.
+     * @param image The image.
+     * @param url The image url. TODO url might be redundant.
+     * @param time The time of receiving.
+     */
     public void saveImageMessage(String from, Bitmap image, String url, long time);
 
-    // not sure bitstream exists TODO: find out what "Bitstream" should be
+    /**
+     * Persists a voice recording to the database.
+     * @param from The sender of the voice message.
+     * @param time The time at which the message was received.
+     * 
+     * TODO: determine the correct data structure to use.
+     */
     public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time);
 
     /**
      * Retrieves the messages for a group chat.
      * @param id The group chat ID.
-     * @return	A list of gruop chat messages.
+     * @return	A list of group chat messages.
      */
     public LinkedList<LinphoneChatMessage> getMessages(String id);
 
@@ -72,16 +92,46 @@ public interface GroupChatStorage {
      * @param data The group chat information in a format understandable by the {@link GroupChatData} implementation.
      */
     public void createGroupChat(GroupChatData data) throws GroupChatExistsException;
+    
+    /**
+     * Adds a new member to the group.
+     * @param id The id of the group chat.
+     * @param member The member to be added.
+     */
+    public void addMember(String id, GroupChatMember member);
 
+    /**
+     * Marks all the new group messages as read.
+     * @param groupId
+     */
     public void markChatAsRead(String groupId);
+    
+    /**
+     * Changes the name of the group.
+     * @param name The new group name.
+     * @param grouId The group's id.
+     */
+    public void updateGroupName(String grouId, String name);
 
-    public void updateEncryptionType(String id, EncryptionHandler.EncryptionType type);
+    /**
+     * Changes the encryption type used by the group.
+     * @param id The group id.
+     * @param type The encryption type to be used.
+     */
+    public void updateEncryptionType(String id, EncryptionType type);
     
     /**
      * Updates the pending status of a group member.
      * @param member The member to be updated.
      */
     public void updateMemberStatus(GroupChatMember member);
+    
+    /**
+     * Removes a member from a group.
+     * @param id The group id.
+     * @param member The member to be removed.
+     */
+    public void removeMember(String id, GroupChatMember member);
     
     /**
      * Deletes the specified group from the database.

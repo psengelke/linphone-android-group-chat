@@ -12,9 +12,12 @@ import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.encryption.MessageParser;
 import org.linphone.groupchat.exception.GroupChatExistsException;
+import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.exception.PermissionRequiredException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
@@ -45,7 +48,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	private String admin;
 	private String group_id;
 	private String group_name;
-	private String group_image_url; // may change to a BitMap?
+	private Bitmap image;
 	
 	private EncryptionStrategy encryption_strategy;
 	
@@ -104,21 +107,45 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	}
 	
 	/**
-	 * Used to remove the client from the group upon deletion.
+	 * Removes self from the group if self is not the admin.
+	 * @return True if not the admin, else false.
 	 */
-	public void removeSelf(){
+	public boolean removeSelf(){
 		
+		if ("" == admin) return false;
 		
+		MemberUpdateInfo info = new MemberUpdateInfo();
+		info.removed.add(new GroupChatMember(null, admin, false));
+		encryption_strategy.sendMessage(info, members, linphone_core);
+		
+		return true;
 	}
 	
 	/**
 	 * A function to add a new member to the group chat. The method creates a new database 
 	 * entry for the pending message.
 	 * @param member The member to be added.
+	 * @throws PermissionRequiredException If not the admin.
+	 * @throws GroupChatSizeException If the new member addition exceeds the maximum group size.
 	 */
-	public void addMember(GroupChatMember member){
+	public void addMember(GroupChatMember member) throws PermissionRequiredException, GroupChatSizeException {
 		
-		// TODO and throw exception
+		if (!"".equals(admin)) throw new PermissionRequiredException();
+		
+		if (members.size() == MAX_MEMBERS) throw new GroupChatSizeException("Exceeds group chat size.");
+		
+		member.pending = true;
+		storage.addMember(group_id, member);
+		members.add(member);
+		
+		InitialContactInfo info = new InitialContactInfo();
+		info.group = new GroupChatData();
+		info.group.group_id = group_id;
+		info.group.group_name = group_name;
+		info.group.members = members;
+		info.group.encryption_type = encryption_strategy.getEncryptionType();
+		
+		encryption_strategy.sendMessage(info, member, linphone_core);
 	}
 	
 	/**
@@ -138,11 +165,11 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 * A function to remove a member from the group chat. This may be done by a member removing themselves 
 	 * or in the event that the admin wishes to remove a member.
 	 * @param address The member to be removed.
-	 * @return True if the member was removed, else false.
 	 */
-	public void removeMember(String address){
+	public void removeMember(String address) throws PermissionRequiredException {
 
 		// TODO and throw exception
+		if (!"".equals(admin)) throw new PermissionRequiredException();
 	}
 	
 	/**
@@ -176,19 +203,25 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 
 	/* Getters & Setters */
 	
-	public void setGroupImage(String url){
+	public void setGroupImage(Bitmap image) throws PermissionRequiredException{
 		
-		this.group_image_url = url;
+		if (!"".equals(admin)) throw new PermissionRequiredException();
+		
+		this.image = image;
 	}
 	
 	public Bitmap getGroupImage(){
 		
-		return null;
+		return image;
 	}
 	
-	public void setName(String name){
+	public void setName(String name) throws PermissionRequiredException{
+		
+		if (!"".equals(admin)) throw new PermissionRequiredException();
 		
 		this.group_name = name;
+		
+		// broadcast name change
 	}
 	
 	public String getName(){
@@ -201,9 +234,38 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		return group_id;
 	}
 	
-	public void setAdmin(String address){
+	/**
+	 * Getter for the group's members.
+	 * @return A list of {@link GroupChatMember}s.
+	 */
+	public LinkedList<GroupChatMember> getMembers(){
 		
-		admin = address;
+		LinkedList<GroupChatMember> members = new LinkedList<>();
+		
+		Iterator<GroupChatMember> it = this.members.iterator();
+		while (it.hasNext()){
+			
+			GroupChatMember m = it.next();
+			members.add(new GroupChatMember(m.name, m.sip, m.pending));
+		}
+		
+		return members;
+	}
+	
+	/**
+	 * Sets the admin of the group.
+	 * @param member The new admin.
+	 * @throws PermissionRequiredException If not the admin.
+	 */
+	public void setAdmin(GroupChatMember member) throws PermissionRequiredException {
+		
+		// TODO access this user's sip address
+		if (!"".equals(admin)) throw new PermissionRequiredException();
+		
+		LinkedList<GroupChatMember> members = new LinkedList<>();
+		members.add(member);
+		
+		encryption_strategy.sendMessage(member, members, linphone_core);
 	}
 	
 	public String getAdmin(){
