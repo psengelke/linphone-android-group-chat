@@ -59,9 +59,10 @@ public interface EncryptionStrategy {
      * @param message The message to be parsed and analysed.
      * @param id The group id for persistence purposes.
      * @param storage The storage adapter instance.
+     * @param encrypted Whether or not the message is encrypted.
      * @return Information on the member communicating.
      */
-    public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage);
+    public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage, boolean encrypted);
     
     /**
      * Handler for member updates (additions and removals).

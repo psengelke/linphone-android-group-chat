@@ -37,7 +37,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	public static final String MSG_HEADER_GROUP_ID = "GROUP-CHAT-ID";
 	public static final String MSG_HEADER_TYPE  = "GROUP-CHAT-MESSAGE-TYPE";
 	public static final String MSG_HEADER_TYPE_MESSAGE = "LinphoneGroupChatRoom.plain_message";
-	public static final String MSG_HEADER_TYPE_INVITE = "LinphoneGroupChatRoom.invite";
+	public static final String MSG_HEADER_TYPE_INVITE_STAGE_1 = "LinphoneGroupChatRoom.invite_stage_1";
+	public static final String MSG_HEADER_TYPE_INVITE_STAGE_2 = "LinphoneGroupChatRoom.invite_stage_2";
+	public static final String MSG_HEADER_TYPE_INVITE_STAGE_3 = "LinphoneGroupChatRoom.invite_stage_3";
 	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGroupChatRoom.accept_invite";
 	public static final String MSG_HEADER_TYPE_MEMBER_UPDATE = "LinphoneGroupChatRoom.member_update";
 	public static final String MSG_HEADER_TYPE_ADMIN_CHANGE = "LinphoneGroupChatRoom.admin_update";
@@ -184,8 +186,12 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		case MSG_HEADER_TYPE_MESSAGE:
 			encryption_strategy.handlePlainTextMessage(message.getText(), group_id, storage);
 			break;
-		case MSG_HEADER_TYPE_INVITE:
-			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage);
+		case MSG_HEADER_TYPE_INVITE_STAGE_1:
+		case MSG_HEADER_TYPE_INVITE_STAGE_2:
+			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, false);
+			break;
+		case MSG_HEADER_TYPE_INVITE_STAGE_3:
+			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, true);
 			break;
 		case MSG_HEADER_TYPE_INVITE_ACCEPT:
 			updateMember(message.getText());
