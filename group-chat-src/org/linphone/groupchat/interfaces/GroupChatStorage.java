@@ -113,6 +113,13 @@ public interface GroupChatStorage {
      */
     public void updateGroupName(String grouId, String name);
 
+	/**
+	* Sets the secret key for the group chat where encryption is used.
+	* @param id The group chat id.
+	* @param key The new secret key.
+	*/
+	public void updateSecretKey(String id, Long key);
+	
     /**
      * Changes the encryption type used by the group.
      * @param id The group id.
