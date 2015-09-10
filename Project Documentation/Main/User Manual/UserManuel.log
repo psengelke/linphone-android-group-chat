@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.26)  10 SEP 2015 16:02
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.26)  10 SEP 2015 16:39
 entering extended mode
 **UserManuel.tex
 
@@ -335,34 +335,53 @@ Overfull \hbox (54.93767pt too wide) in paragraph at lines 47--54
  []
 
 [2]
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 66.
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 66.
+ [3]
+<./images/icon.jpg, id=46, 134.00063pt x 134.00063pt>
+File: ./images/icon.jpg Graphic file (type jpg)
+ <use ./images/icon.jpg>
+Package pdftex.def Info: ./images/icon.jpg used on input line 87.
+(pdftex.def)             Requested size: 10.03754pt x 10.03734pt.
+
 ("C:\Users\Jess\Desktop\linphone-android-group-chat\Project Documentation\Main\
 User Manual\UserManuel.lof")
 \tf@lof=\write4
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 73.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 73.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 102.
+ [4 <C:/Users/Jess/Desktop/linphone-android-group-chat/Project Documentation/Ma
+in/User Manual/images/icon.jpg>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 102.
 
 ("C:\Users\Jess\Desktop\linphone-android-group-chat\Project Documentation\Main\
 User Manual\UserManuel.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 73.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 73.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 73.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 102.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 102.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 102.
  ) 
 Here is how much of TeX's memory you used:
- 6274 strings out of 493921
- 93073 string characters out of 3147285
+ 6305 strings out of 493921
+ 93514 string characters out of 3147285
  188038 words of memory out of 3000000
- 9509 multiletter control sequences out of 15000+200000
+ 9527 multiletter control sequences out of 15000+200000
  8819 words of font info for 31 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 30i,10n,30p,933b,378s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 30i,10n,30p,933b,425s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-Output written on UserManuel.pdf (4 pages, 278131 bytes).
+X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on UserManuel.pdf (5 pages, 301166 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
- 16 named destinations out of 1000 (max. 500000)
- 86 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 111 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
+ 91 words of extra memory for PDF output out of 10000 (max. 10000000)
 

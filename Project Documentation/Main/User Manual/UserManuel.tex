@@ -55,11 +55,40 @@
 
 \newpage
 \section{Introduction}
+Linphone is the leading open source implementation of Voice over IP (VoIP) and Instant messaging functionalities, and is compatible with iOS, Android, Blackberry, Windows Phone, Windows desktop and web browser clients. This user manual will be focused specifically on the Android aspect. 
 \section{Systems Overview}
 
 \section{Systems Configuration}
+Linphone has inside a separation between the user interfaces and the core engine, allowing to create various kinds of user interface on top of the same functionalities.\\
+
+The user interface frontends:
+\begin{itemize}
+\item Gtk+ interface for windows, mac and linux
+\item The console interface (linphonec, linphonecsh)
+\item The iPhone application built in objective C
+\item The Android application running in java
+\item The Windows Phone application written in C\#
+\end{itemize}
+Liblinphone, the core engine: this is the library that implements all the functionalities of Linphone. \\
+Liblinphone is a powerful SIP VoIP video SDK that anyone can use to add audio or video call capabilities to an application. It provides a high level api to initiate, receive, terminate audio and video calls.\\
+Liblinphone relies on the following software components:
+\begin{itemize}
+\item Mediastreamer2, a powerful multimedia SDK to make audio/video streaming and processing.
+\item oRTP, a simple RTP library.
+\item belle-sip the SIP library.
+\end{itemize}
+Liblinphone and all its dependencies are written in pure C
 
 \section{Installation}
+To install the Linphone application simply follow the steps below:
+\begin{enumerate}
+\item Locate your Android device's Play store
+\item Under the search tab, search for "Linphone"
+\item Locate the Linphone application and click on it \includegraphics[width=10px]{./images/icon.jpg}
+\item Follow you device's guidline to install the application
+\item Once installed, launch the application by clicking on the Linphone icon in your applications list on you device
+\item Folow the prompts further to register if you are a new user or to log in if you already have an account.
+\end{enumerate}
 
 \section{Getting Started}
 
