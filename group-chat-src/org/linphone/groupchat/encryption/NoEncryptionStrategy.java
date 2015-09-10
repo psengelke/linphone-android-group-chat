@@ -6,8 +6,11 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.interfaces.EncryptionStrategy;
+import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 class NoEncryptionStrategy implements EncryptionStrategy {
 
@@ -17,7 +20,7 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		for (GroupChatMember member : members) {
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
-			chatRoom.compose();
+//			chatRoom.compose();
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
 			chatRoom.sendChatMessage(newMessage);
 			chatRoom.deleteMessage(newMessage);
@@ -32,5 +35,62 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 	@Override
 	public EncryptionType getEncryptionType() {
 		return EncryptionType.None;
+	}
+
+	@Override
+	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc) {
+		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
+		String message=MessageParser.stringifyInitialContactInfo(info);
+		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
+		chatRoom.sendChatMessage(newMessage);
+		chatRoom.deleteMessage(newMessage);
+	}
+
+	@Override
+	public void sendMessage(MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+		String message=MessageParser.stringifyMemberUpdateInfo(info);
+		sendMessage(message, members, lc);
+	}
+
+	@Override
+	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+		String message=MessageParser.stringifyGroupChatMember(info);
+		sendMessage(message, members, lc);
+	}
+
+	@Override
+	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage) {
+		InitialContactInfo ic=MessageParser.parseInitialContactInfo(message);
+		
+	}
+
+	@Override
+	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

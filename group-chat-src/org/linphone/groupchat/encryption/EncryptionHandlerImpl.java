@@ -32,4 +32,9 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	public EncryptionType getEncryptionType() {
 		return encryption_type;
 	}
+
+	@Override
+	public long getSecretKey() {
+		return 0;
+	}
 }
