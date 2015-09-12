@@ -64,13 +64,17 @@ public class MessageParserTester extends TestCase {
 		info.removed = new LinkedList<>();
 		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
 		
 		String test = MessageParser.stringifyMemberUpdateInfo(info);
 		assertEquals(
 				"Steve,steve@linphone.org,false,"
 				+ "Bob,bob@linphone.org,false;"
 				+ "Ginger,souless@linphone.org,false,"
-				+ "Scott,gibson@linphone.org,false", 
+				+ "Scott,gibson@linphone.org,false;"
+				+ "Fred,freddy@linphone.org,false,"
+				+ "Fred,freddy@linphone.org,false",
 				test
 		);
 	}
@@ -128,6 +132,8 @@ public class MessageParserTester extends TestCase {
 		info.removed = new LinkedList<>();
 		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
 		
 		MemberUpdateInfo parsed = 
 				MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
@@ -148,6 +154,17 @@ public class MessageParserTester extends TestCase {
 		
 		it1 = parsed.removed.iterator();
 		it2 = parsed.removed.iterator();
+		while (it1.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+			assertEquals(e.pending, a.pending);
+		}
+		
+		it1 = parsed.confirmed.iterator();
+		it2 = parsed.confirmed.iterator();
 		while (it1.hasNext()){
 			
 			GroupChatMember a = it1.next();

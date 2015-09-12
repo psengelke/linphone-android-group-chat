@@ -79,9 +79,11 @@ public interface DataExchangeFormat {
 		
 		public LinkedList<GroupChatMember> added;
 		public LinkedList<GroupChatMember> removed;
+		public LinkedList<GroupChatMember> confirmed;
 		
 		public MemberUpdateInfo(){
 			added = new LinkedList<>();
+			confirmed = new LinkedList<>();
 			removed = new LinkedList<>();
 		}
 	}

@@ -6,6 +6,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -131,7 +132,7 @@ public interface GroupChatStorage {
      * Updates the pending status of a group member.
      * @param member The member to be updated.
      */
-    public void updateMemberStatus(GroupChatMember member);
+    public void updateMemberStatus(GroupChatMember member) throws MemberDoesNotExistException;
     
     /**
      * Removes a member from a group.

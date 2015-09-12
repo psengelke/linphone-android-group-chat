@@ -12,6 +12,7 @@ import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
+import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
@@ -139,8 +140,9 @@ public class LinphoneGroupChatManager {
 	 * 
 	 * TODO : work out how to remove self and assign new admin / remove self and prevent messages from other members
 	 * 			if admin can't be reached, try another member (proxy admin)
+	 * @throws IsAdminException If the admin tries to delete the chat before assigning a new admin.
 	 */
-	public void deleteGroupChat(String id) throws GroupDoesNotExistException {
+	public void deleteGroupChat(String id) throws GroupDoesNotExistException, IsAdminException {
 		
 		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 		while (it.hasNext()) {
@@ -184,17 +186,22 @@ public class LinphoneGroupChatManager {
 		
 		cr.deleteMessage(message);
 		
-		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE) != null){ // new group
+		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT) != null){ // new group
 			
-			InitialContactInfo info = MessageParser.parseInitialContactMessage(message.getText());
+			InitialContactInfo info = MessageParser.parseInitialContactInfo(message.getText());
+			
+			try {
+				storage.createGroupChat(info.group);
+			} catch (GroupChatExistsException e) {
+				return; // something went wrong in the network, ignore message.
+			}
+			
 			LinphoneGroupChatRoom group = new LinphoneGroupChatRoom(
 					info.group, 
 					EncryptionFactory.createEncryptionStrategy(info.group.encryption_type), 
 					storage,
 					lc
 			);
-			
-			storage.createGroupChat(info.group);
 			
 			chats.add(group);
 			group.receiveMessage(message);

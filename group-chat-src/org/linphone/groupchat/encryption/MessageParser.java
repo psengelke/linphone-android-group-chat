@@ -59,17 +59,37 @@ public class MessageParser {
 		String message = "";
 		
 		Iterator<GroupChatMember> it = info.added.iterator();
-		GroupChatMember member = it.next();
-		message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		GroupChatMember member;
+		
+		// stringify added members
+		if (it.hasNext()){
+			member = it.next();
+			message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		}
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
 			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 		}
 		message += SEPARATOR2;
 		
+		// stringify removed members
 		it = info.removed.iterator();
-		member = it.next();
-		message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		if (it.hasNext()){
+			member = it.next();
+			message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		}
+		while (it.hasNext()) {
+			member = (GroupChatMember) it.next();
+			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		}
+		message += SEPARATOR2;
+		
+		// stringify confirmed members
+		it = info.confirmed.iterator();
+		if (it.hasNext()){
+			member = it.next();
+			message += member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		}
 		while (it.hasNext()) {
 			member = (GroupChatMember) it.next();
 			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
@@ -132,6 +152,7 @@ public class MessageParser {
 		String[] lists = message.split(SEPARATOR2);
 		String[] added = lists[0].split(SEPARATOR);
 		String[] removed = lists[1].split(SEPARATOR);
+		String[] confirmed = lists[2].split(SEPARATOR);
 		
 		int i = 0;
 		while (i < added.length){
@@ -141,6 +162,11 @@ public class MessageParser {
 		i = 0;
 		while (i < removed.length){
 			info.removed.add(new GroupChatMember(removed[i++], removed[i++], Boolean.parseBoolean(removed[i++])));
+		}
+		
+		i = 0;
+		while (i < confirmed.length){
+			info.confirmed.add(new GroupChatMember(confirmed[i++], confirmed[i++], Boolean.parseBoolean(confirmed[i++]))); 
 		}
 		
 		return info;
