@@ -13,13 +13,12 @@ import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 /**
- *
- * @author David Breetzke
- * @author Paul Engelke
- *
  *	This class serves as an interface for use by an {@link LinphoneGroupChatRoom} instance. The 
  *	strategy will provide functionality for the group chat dependent on the type of encryption chosen 
  *	by the group admin.
+ *
+ * @author David Breetzke
+ * @author Paul Engelke
  */
 
 public interface EncryptionStrategy {

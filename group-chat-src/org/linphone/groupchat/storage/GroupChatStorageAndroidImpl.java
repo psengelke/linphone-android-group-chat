@@ -19,10 +19,9 @@ import java.security.PrivateKey;
 import java.util.LinkedList;
 
 /**
+ * This class uses {@link org.linphone.interfaces.GroupChatStorage} instance.
  *
  * @author David Breetzke
- *
- *	This class uses {@link org.linphone.interfaces.GroupChatStorage} instance.
  */
 
 class GroupChatStorageAndroidImpl implements GroupChatStorage {

@@ -10,12 +10,10 @@ import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 /**
- * 
- * @author Paul Engelke
- * 
  * This class provides functionality for parsing string message objects and converting such 
  * objects to strings such that they may be passed in messages.
- *
+ * 
+ * @author Paul Engelke
  */
 public class MessageParser {
 	

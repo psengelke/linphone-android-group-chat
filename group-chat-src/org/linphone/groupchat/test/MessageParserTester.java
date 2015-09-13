@@ -12,6 +12,13 @@ import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import junit.framework.TestCase;
 
+/**
+ * 
+ * Test class for {@link MessageParser}
+ * 
+ * @author Paul Engelke
+ *
+ */
 public class MessageParserTester extends TestCase {
 
 	public MessageParserTester(String name) {

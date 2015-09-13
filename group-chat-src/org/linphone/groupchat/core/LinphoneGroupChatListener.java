@@ -25,13 +25,12 @@ import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 
 /**
- * 
- * @author Paul Engelke
- *
  *	This class serves as an intercepter for group chat messages and defers those messages 
  *	to the {@link LinphoneGroupChatManager} instance. It also serves as a wrapper class for 
  *	the {@link LinphoneManager} instance, to which responsibility for it's purpose as a 
  *	{@link LinphoneCoreListener} is delegated.
+ *
+ * @author Paul Engelke
  */
 public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	

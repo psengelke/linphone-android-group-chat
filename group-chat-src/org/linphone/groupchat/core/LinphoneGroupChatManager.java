@@ -22,11 +22,10 @@ import org.linphone.groupchat.storage.GroupChatStorageFactory;
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 /**
- * 
- * @author Paul Engelke
- *
  *	This class is responsible for handling the creation and deletion of groups, handling incoming 
  *	group chat messages and various other administrative functions.
+ *
+ * @author Paul Engelke
  */
 public class LinphoneGroupChatManager {
 	

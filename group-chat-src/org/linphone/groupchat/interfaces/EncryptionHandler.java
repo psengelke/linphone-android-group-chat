@@ -3,12 +3,11 @@ package org.linphone.groupchat.interfaces;
 import java.lang.String;
 
 /**
+ *	This class serves as an interface for handling encryption and is used by a
+ *	{@link LinphoneGroupChatRoom} instance.
  *
  * @author David Breetzke
  * @author Paul Engelke
- *
- *	This class serves as an interface for handling encryption and is used by a
- *	{@link LinphoneGroupChatRoom} instance.
  */
 
 public interface EncryptionHandler {

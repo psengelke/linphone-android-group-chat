@@ -13,6 +13,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.encryption.MessageParser;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.exception.PermissionRequiredException;
@@ -28,11 +29,10 @@ import org.linphone.groupchat.interfaces.GroupChatStorage;
 import android.graphics.Bitmap;
 
 /**
- * 
- * @author Paul Engelke
- *
  * This class serves as the chat {@link LinphoneChatRoom} for group chats. It provides all the functionality 
  * required for Linphone users to interact with groups of which they are members.
+ * 
+ * @author Paul Engelke
  */
 @SuppressWarnings("deprecation")
 public class LinphoneGroupChatRoom implements LinphoneChatRoom {
@@ -160,7 +160,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		GroupChatMember member = MessageParser.parseGroupChatMember(message);
 		try {
-			storage.updateMemberStatus(member);
+			storage.updateMemberStatus(group_id, member);
 			
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
@@ -229,25 +229,68 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		}
 	}
 	
+	/**
+	 * Handles the storage of a plain text message.
+	 * @param message The message to be parsed and stored.
+	 */
 	private void handlePlainTextMessage(LinphoneChatMessage message){
 		
 		GroupChatMessage m = encryption_strategy.handlePlainTextMessage(message);
 		
-		// do something
+		storage.saveTextMessage(group_id, m.sender, m.message, m.direction, m.state, m.time.getTime());
 	}
 	
+	/**
+	 * Handles the persistence of member updates.
+	 * @param message The message to be parsed.
+	 */
 	private void handleMemberUpdate(String message){
 		
 		MemberUpdateInfo info = encryption_strategy.handleMemberUpdate(message);
 		
-		// do something.
+		Iterator<GroupChatMember> it;
+
+		it = info.added.iterator();
+		while (it.hasNext()){
+			storage.addMember(group_id, it.next());
+		}
+
+		it = info.removed.iterator();
+		while (it.hasNext()){
+			GroupChatMember m = it.next();
+			storage.removeMember(group_id, m);
+			
+			if (linphone_core.isMyself(m.sip)){
+				
+				members = new LinkedList<>();
+				try {
+					LinphoneGroupChatManager.getInstance().deleteGroupChat(group_id);
+				} catch (GroupDoesNotExistException | IsAdminException e) {}
+			}
+		}
+		
+		it = info.confirmed.iterator();
+		while (it.hasNext()) {
+			try {
+				storage.updateMemberStatus(group_id, it.next());
+			} catch (MemberDoesNotExistException e) {}
+		}
+		
+		members = storage.getMembers(group_id); // get updated versions from database.
 	}
 	
+	/**
+	 * Handles the event in which the admin of the group has changed.
+	 * @param message The message to be parsed.
+	 */
 	private void handleAdminChange(String message){
 		
 		GroupChatMember m = encryption_strategy.handleAdminChange(message);
 		
-		//do something
+		try {
+			storage.updateAdmin(group_id, m);
+			admin = m.sip;
+		} catch (GroupDoesNotExistException e) {}
 	}
 
 	/* Getters & Setters */

@@ -2,6 +2,13 @@ package org.linphone.groupchat.storage;
 
 import org.linphone.groupchat.interfaces.GroupChatStorage;
 
+/**
+ * 
+ * This factory class provides a service for creating or getting storage instances.
+ * 
+ * @author Paul Engelke
+ *
+ */
 public class GroupChatStorageFactory {
 
 	public static enum StorageAdapterType {

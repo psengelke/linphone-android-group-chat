@@ -15,12 +15,11 @@ import java.lang.String;
 import java.util.LinkedList;
 
 /**
- *
- * @author David Breetzke
- * @author Paul Engelke
- *
  *	This class serves as an interface for interaction between the persistence tool and a
  *	{@link LinphoneGroupChatRoom} instance.
+ *
+ *  @author David Breetzke
+ *  @author Paul Engelke
  */
 
 public interface GroupChatStorage {
@@ -36,31 +35,34 @@ public interface GroupChatStorage {
 
     /**
      * Persists a text message.
+     * @param id The group id.
      * @param from The sender.
      * @param message The text message.
      * @param direction The direction of the message (incoming, outgoing)
      * @param status The status of the message (read, unread)
      * @param time The time of sending.
      */
-    public void saveTextMessage(String from, String message, MessageDirection direction,
+    public void saveTextMessage(String id, String from, String message, MessageDirection direction,
                                        MessageState status, long time);
     /**
      * Persists an image to the database.
+     * @param id The group id.
      * @param from The sender.
      * @param image The image.
      * @param url The image url. TODO url might be redundant.
      * @param time The time of receiving.
      */
-    public void saveImageMessage(String from, Bitmap image, String url, long time);
+    public void saveImageMessage(String id, String from, Bitmap image, String url, long time);
 
     /**
      * Persists a voice recording to the database.
+     * @param id The group id.
      * @param from The sender of the voice message.
      * @param time The time at which the message was received.
      * 
      * TODO: determine the correct data structure to use.
      */
-    public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time);
+    public void saveVoiceRecording(String id, String from, /*Bitstream voiceNote,*/ long time);
 
     /**
      * Retrieves the messages for a group chat.
@@ -132,7 +134,15 @@ public interface GroupChatStorage {
      * Updates the pending status of a group member.
      * @param member The member to be updated.
      */
-    public void updateMemberStatus(GroupChatMember member) throws MemberDoesNotExistException;
+    public void updateMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException;
+    
+    /**
+     * Changes the admin of the group.
+     * @param id The group id.
+     * @param member The new admin.
+     * @throws GroupDoesNotExistException If the group id matches no group in the database.
+     */
+    public void updateAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException;
     
     /**
      * Removes a member from a group.

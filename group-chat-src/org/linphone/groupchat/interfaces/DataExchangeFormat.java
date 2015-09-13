@@ -8,12 +8,10 @@ import org.linphone.groupchat.interfaces.GroupChatStorage.MessageDirection;
 import org.linphone.groupchat.interfaces.GroupChatStorage.MessageState;
 
 /**
- * 
- * @author Paul Engelke
- *
- *
  *	This interface serves as a description of data exchange formats for communication 
  *	between core interfaces and attempts to minimise coupling.
+ *
+ * @author Paul Engelke
  */
 public interface DataExchangeFormat {
 
