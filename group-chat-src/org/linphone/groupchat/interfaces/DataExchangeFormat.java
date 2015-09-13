@@ -1,8 +1,11 @@
 package org.linphone.groupchat.interfaces;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.interfaces.GroupChatStorage.MessageDirection;
+import org.linphone.groupchat.interfaces.GroupChatStorage.MessageState;
 
 /**
  * 
@@ -26,7 +29,11 @@ public interface DataExchangeFormat {
 		public EncryptionType encryption_type;
 		
 		public GroupChatData(){
+			group_id = "";
+			group_name = "";
+			admin = "";
 			members = new LinkedList<>();
+			encryption_type = EncryptionType.None;
 		}
 	}
 	
@@ -70,6 +77,13 @@ public interface DataExchangeFormat {
 		public GroupChatData group;
 		public long public_key;
 		public long secret_key;
+		
+		public InitialContactInfo() {
+			
+			group = new GroupChatData();
+			public_key = 0;
+			secret_key = 0;
+		}
 	}
 	
 	/**
@@ -86,5 +100,15 @@ public interface DataExchangeFormat {
 			confirmed = new LinkedList<>();
 			removed = new LinkedList<>();
 		}
+	}
+	
+	public class GroupChatMessage {
+		
+		public int id;
+		public String sender;
+		public String message;
+		public Date time;
+		public MessageState state;
+		public MessageDirection direction;
 	}
 }

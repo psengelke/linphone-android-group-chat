@@ -4,8 +4,10 @@ package org.linphone.groupchat.interfaces;
 import java.lang.String;
 import java.util.LinkedList;
 
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -31,7 +33,7 @@ public interface EncryptionStrategy {
     public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc);
     
     /**
-     * Sends a message containing initial contact information.
+     * Sends a message containing initial contact information. (An invite to the group.)
      * @param info The initial contact information.
      * @param member The communicating member, i.e. the admin or the invitee.
      * @param lc The {@link LinphoneCore} instance.
@@ -39,7 +41,7 @@ public interface EncryptionStrategy {
 	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc);
 	
 	/**
-	 * Sends a message containing new additions or removals from the group.
+	 * Sends a message containing new additions or removals from the group, also confirmed members.
 	 * @param info The information object containing member changes.
 	 * @param members The group chat members.
 	 * @param lc The {@link LinphoneCore} instance.
@@ -54,50 +56,53 @@ public interface EncryptionStrategy {
 	 */
 	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc);
     
+	/**
+	 * Handler for Stage 1 and 2 initial contact messages. 
+	 * (When a user receives an invite and when the admin gets a public encryption key)
+	 * @param message The message to be parsed and analysed.
+	 * @param lc The {@link LinphoneCore} for sending replies.
+	 */
+	public void handleInitialContactMessage(String message, LinphoneCore lc);
+	
     /**
-     * Handler for initial contact messages (when a new member is added).
+     * Handler for Stage 3 initial contact messages. (When the secret key has been received)
      * @param message The message to be parsed and analysed.
      * @param id The group id for persistence purposes.
      * @param storage The storage adapter instance.
+     * @param lc The {@link LinphoneCore} to be used for sending a reply.
      * @param encrypted Whether or not the message is encrypted.
-     * @return Information on the member communicating.
      */
-    public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage, boolean encrypted);
+    public void handleInitialContactMessage(String message, String id, GroupChatStorage storage, LinphoneCore lc);
     
     /**
      * Handler for member updates (additions and removals).
      * @param message The message to be parsed and analysed.
-     * @param id The group id for persistence purposes.
-     * @param storage The storage adapter instance.
      * @return An object containing the members added and removed.
      */
-    public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage);
+    public MemberUpdateInfo handleMemberUpdate(String message);
     
     /**
      * Handler for plain text messages.
      * @param message The message to be parsed.
      * @param id The group chat id for persistence purposes.
      * @param storage The storage adapter instance.
-     * @return The string value of the parsed message.
+     * @return A message object.
      */
-    public String handlePlainTextMessage(String message, String id, GroupChatStorage storage);
+    public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message);
     
     /**
      * Handler for media messages.
      * @param message The message to be parsed.
-     * @param id The group id for storage purposes.
-     * @param storage The storage adapter instance.
+     * @return A message object.
      */
-    public void handleMediaMessage(String message, String id, GroupChatStorage storage);
+    public GroupChatMessage handleMediaMessage(LinphoneChatMessage message);
     
     /**
      * Handler for admin changes.
      * @param message The message to be parsed.
-     * @param id The group chat id for persistence purposes.
-     * @param storage The storage adapter instance.
      * @return The new group chat admin.
      */
-    public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage);
+    public GroupChatMember handleAdminChange(String message);
     
     /**
      * Handler for encryption type changes.
@@ -113,8 +118,4 @@ public interface EncryptionStrategy {
      * @return {@link EncryptionType} of the strategy.
      */
     public EncryptionType getEncryptionType();
-    
-    @Deprecated
-    public String receiveMessage(String message);
-
 }

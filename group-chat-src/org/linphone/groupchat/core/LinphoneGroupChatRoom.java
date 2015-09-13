@@ -18,6 +18,7 @@ import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.exception.PermissionRequiredException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
@@ -205,27 +206,48 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		String  type = message.getCustomHeader(MSG_HEADER_TYPE);
 		switch (type) {
 		case MSG_HEADER_TYPE_MESSAGE:
-			encryption_strategy.handlePlainTextMessage(message.getText(), group_id, storage);
+			handlePlainTextMessage(message);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, false);
+			encryption_strategy.handleInitialContactMessage(message.getText(), linphone_core);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
-			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, true);
+			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, linphone_core);
 			break;
 		case MSG_HEADER_TYPE_INVITE_ACCEPT:
 			updateMember(message.getText());
 			break;
 		case MSG_HEADER_TYPE_MEMBER_UPDATE:
-			encryption_strategy.handleMemberUpdate(message.getText(), group_id, storage);
+			handleMemberUpdate(message.getText());
 			break;
 		case MSG_HEADER_TYPE_ADMIN_CHANGE:
-			encryption_strategy.handleAdminChange(message.getText(), group_id, storage);
+			handleAdminChange(message.getText());
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void handlePlainTextMessage(LinphoneChatMessage message){
+		
+		GroupChatMessage m = encryption_strategy.handlePlainTextMessage(message);
+		
+		// do something
+	}
+	
+	private void handleMemberUpdate(String message){
+		
+		MemberUpdateInfo info = encryption_strategy.handleMemberUpdate(message);
+		
+		// do something.
+	}
+	
+	private void handleAdminChange(String message){
+		
+		GroupChatMember m = encryption_strategy.handleAdminChange(message);
+		
+		//do something
 	}
 
 	/* Getters & Setters */
