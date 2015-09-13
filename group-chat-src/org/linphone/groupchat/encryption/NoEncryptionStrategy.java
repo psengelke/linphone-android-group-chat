@@ -59,38 +59,42 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 	}
 
 	@Override
-	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage) {
-		InitialContactInfo ic=MessageParser.parseInitialContactInfo(message);
-		
-	}
-
-	@Override
 	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
-		// TODO Auto-generated method stub
-		return null;
+		return MessageParser.parseMemberUpdateInfo(message);
 	}
 
 	@Override
 	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
 
 	@Override
 	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
-		// TODO Auto-generated method stub
-		return null;
+		return MessageParser.parseGroupChatMember(handler.decrypt(message));
 	}
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
-		// TODO Auto-generated method stub
-		return null;
+		
+	}
+
+	@Override
+	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
+			boolean encrypted) {
+		try{
+			if (encrypted)
+				throw new Exception();
+			InitialContactInfo ic=MessageParser.parseInitialContactInfo(message);
+			
+		}
+		catch(Exception e){
+			System.err.println("Encrypted message passed to NoEncryptionStrategy");
+			return null;
+		}
 	}
 }

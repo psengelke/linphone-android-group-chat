@@ -35,6 +35,6 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 
 	@Override
 	public long getSecretKey() {
-		return 0;
+		return key_private;
 	}
 }
