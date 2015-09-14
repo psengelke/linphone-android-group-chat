@@ -1,14 +1,12 @@
 package org.linphone.groupchat.interfaces;
 
-
-import android.graphics.Bitmap;
-import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import java.lang.String;
@@ -36,40 +34,32 @@ public interface GroupChatStorage {
     /**
      * Persists a text message.
      * @param id The group id.
-     * @param from The sender.
-     * @param message The text message.
-     * @param direction The direction of the message (incoming, outgoing)
-     * @param status The status of the message (read, unread)
-     * @param time The time of sending.
+     * @param message The message object.
      */
-    public void saveTextMessage(String id, String from, String message, MessageDirection direction,
-                                       MessageState status, long time);
+    public void saveTextMessage(String id, GroupChatMessage message);
+    
     /**
      * Persists an image to the database.
      * @param id The group id.
-     * @param from The sender.
-     * @param image The image.
-     * @param url The image url. TODO url might be redundant.
-     * @param time The time of receiving.
+     * @param message The message object.
      */
-    public void saveImageMessage(String id, String from, Bitmap image, String url, long time);
+    public void saveImageMessage(String id, GroupChatMessage message);
 
     /**
      * Persists a voice recording to the database.
      * @param id The group id.
-     * @param from The sender of the voice message.
-     * @param time The time at which the message was received.
+     * @param message The message object.
      * 
      * TODO: determine the correct data structure to use.
      */
-    public void saveVoiceRecording(String id, String from, /*Bitstream voiceNote,*/ long time);
+    public void saveVoiceRecording(String id, GroupChatMessage message);
 
     /**
      * Retrieves the messages for a group chat.
      * @param id The group chat ID.
      * @return	A list of group chat messages.
      */
-    public LinkedList<LinphoneChatMessage> getMessages(String id);
+    public LinkedList<GroupChatMessage> getMessages(String id);
 
     /**
      * A function that returns a list of all the groups persistent in the database.
