@@ -173,19 +173,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time){}
 
 
-    
-
-
-    
-
-
-
-
-
-
-
-
-
+	
+	
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
     // this class extends a class provided by the android sdk, SQLiteOpenHelper
     private class GroupChatHelper extends SQLiteOpenHelper{
@@ -315,10 +304,5 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         private static final GroupChatStorageAndroidImpl INSTANCE = new GroupChatStorageAndroidImpl();
     }
-
-
-	
-
-
 
 }
