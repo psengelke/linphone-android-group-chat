@@ -5,13 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.widget.TextView;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.CheckBoxPreference;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -143,6 +146,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			// TODO Test for valid sip address before adding
 			String newContact = newParticipant.getText().toString();
 			newParticipant.setText("");
+			closeKeyboard(getActivity(), newParticipant.getWindowToken());
 			
 			if (!newContact.isEmpty())
 			{
@@ -157,6 +161,17 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		else if (id == R.id.clearMemberField)
 			newParticipant.setText("");
 		
+	}
+	
+
+	/**
+	 * Usage: closeKeyboard(getActivity(), yourEditText.getWindowToken());
+	 * @param c
+	 * @param windowToken
+	 */
+	public static void closeKeyboard(Context c, IBinder windowToken) {
+	    InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+	    mgr.hideSoftInputFromWindow(windowToken, 0);
 	}
 
 	@Override

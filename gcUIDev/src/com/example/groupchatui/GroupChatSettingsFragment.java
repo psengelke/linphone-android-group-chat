@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.widget.TextView;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -47,7 +50,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private TextView back, edit, next;
 	private TextView groupNameView, encryptionType;
 	private ListView groupParticipants;
-	private ImageView clearGroupName, addParticipant;
+	private ImageView clearGroupName, addMember, clearMemberField;
 	private EditText groupNameEdit, newMember;
 	private RadioGroup editEncryptionGroup;
 	private RadioButton encryptionNone, encryptionAES;
@@ -95,6 +98,12 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		
 		clearGroupName = (ImageView) view.findViewById(R.id.clearGroupNameFieldEdit);
 		clearGroupName.setOnClickListener(this);
+		
+		addMember = (ImageView) view.findViewById(R.id.addMember);
+		addMember.setOnClickListener(this);
+		
+		clearMemberField = (ImageView) view.findViewById(R.id.clearMemberField);
+		clearMemberField.setOnClickListener(this);
 		
 		//TODO Adjust this mock list of members:
 				members = new LinkedList<String>();
@@ -189,18 +198,25 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 				groupNameView.setText(groupName);
 				//TODO Update group name via appropriate GroupChatStorage interface
 			}
-			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			closeKeyboard(getActivity(), groupNameEdit.getWindowToken());
 		}
 		else if (id == R.id.addMember)
 		{
 			String newSip = newMember.getText().toString();
 			newMember.setText("");
+			newMember.clearFocus();
+			closeKeyboard(getActivity(), newMember.getWindowToken());
+			
 			if (!newSip.isEmpty())
 			{
 				//TODO test valid sip address or contact
 				members.add(newSip);
 				groupParticipants.setAdapter(new MembersAdapter());
 			}
+		}
+		else if (id == R.id.clearMemberField)
+		{
+			newMember.setText("");
 		}
 	}
 
@@ -212,6 +228,21 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			members.remove(view.getTag());
 			groupParticipants.setAdapter(new MembersAdapter());
 		}
+	}
+	
+	public void resetAdapter()
+	{
+		groupParticipants.setAdapter(new MembersAdapter());
+	}
+	
+	/**
+	 * Usage: closeKeyboard(getActivity(), yourEditText.getWindowToken());
+	 * @param c
+	 * @param windowToken
+	 */
+	public static void closeKeyboard(Context c, IBinder windowToken) {
+	    InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+	    mgr.hideSoftInputFromWindow(windowToken, 0);
 	}
 
 //	@Override
@@ -279,7 +310,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			sipUri.setText(contact);
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
-			delete.setVisibility(view.VISIBLE);
+			if (isEditMode)
+				delete.setVisibility(View.VISIBLE);
+			else
+				delete.setVisibility(view.GONE);
 			
 			return view;
 		}
