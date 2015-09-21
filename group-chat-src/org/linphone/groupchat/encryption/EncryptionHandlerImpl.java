@@ -1,11 +1,14 @@
 package org.linphone.groupchat.encryption;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.linphone.groupchat.interfaces.EncryptionHandler;
 
 class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	protected long key_private;
 	protected long key_public;
+	protected SecretKeySpec sks;
 	protected EncryptionType encryption_type;
 
 	
