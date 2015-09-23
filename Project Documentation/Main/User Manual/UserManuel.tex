@@ -59,9 +59,9 @@
 Linphone is the leading open source implementation of Voice over IP (VoIP) and Instant messaging functionalities, and is compatible with iOS, Android, Blackberry, Windows Phone, Windows desktop and web browser clients. This user manual will be focused specifically on the Android aspect. 
 
 \section{Systems Configuration}
-Linphone has inside a separation between the user interfaces and the core engine, allowing to create various kinds of user interface on top of the same functionalities.\\
+Linphone provides a separation between the user interfaces and the core engine, allowing creation of various kinds of user interfaces for the same core functionality.\\
 
-The user interface frontends:
+\textbf{The user interface frontends:}
 \begin{itemize}
 \item Gtk+ interface for windows, mac and linux
 \item The console interface (linphonec, linphonecsh)
@@ -69,9 +69,11 @@ The user interface frontends:
 \item The Android application running in java
 \item The Windows Phone application written in C\#
 \end{itemize}
-Liblinphone, the core engine: this is the library that implements all the functionalities of Linphone. \\
-Liblinphone is a powerful SIP VoIP video SDK that anyone can use to add audio or video call capabilities to an application. It provides a high level api to initiate, receive, terminate audio and video calls.\\
-Liblinphone relies on the following software components:
+
+\textbf{Liblinphone, the core engine} \newline\newline
+This is the library that implements all the functionalities of Linphone. \\
+Liblinphone is a powerful SIP VoIP video SDK that anyone can use to add audio or video call capabilities to an application. It provides a high level API to initiate, receive, terminate audio and video calls.\\
+\newline Liblinphone relies on the following software components:
 \begin{itemize}
 \item Mediastreamer2, a powerful multimedia SDK to make audio/video streaming and processing.
 \item oRTP, a simple RTP library.
@@ -91,9 +93,9 @@ To install the Linphone application simply follow the steps below:
 \item Under the search tab, search for "Linphone"
 \item Locate the Linphone application and click on it
  \includegraphics[width=10px]{./images/icon.jpg}
-\item Follow you device's guidline to install the application
-\item Once installed, launch the application by clicking on the Linphone icon in your applications list on you device
-\item Follow the prompts further to register if you are a new user or to log in if you already have an account.
+\item Follow your device's guidelines to install the application
+\item Once installed, launch the application by clicking on the Linphone icon which should be listed in the applications list on your device.
+\item Once launched, follow the prompts to register if you are a new user or to log in if you already have an account.
 \end{enumerate}
 
 \section{Getting Started}
@@ -101,11 +103,11 @@ In order to make use of the application one needs to have a linphone.org account
 \begin{enumerate}
 \item Launch the application
 \item Click the "Start" button located on the bottom right of the screen
-\item Click on "Create an account on linphone.org" if a new user 
-\subitem Follow the prompts on the screen to further creat an account
-\item Click on "I have already a linphone.org account" if one already has an account
+\item Click on "Create an account on linphone.org" if you are a new user 
+\subitem Follow the prompts on the screen to create an account
+\item Click on "I have already a linphone.org account" if you already have an account
 \subitem Enter the neccessary account information and click "Sign in"
-\item Click on "I already have a SIP account" if one already has a SIP address to use
+\item Click on "I already have an SIP account" if you already have a SIP address to use
 \subitem Enter the neccessary account information and click "Sign in"
 \item Once logged in you will be presented with the application user interface
 \end{enumerate}
@@ -115,11 +117,11 @@ In order to make use of the application one needs to have a linphone.org account
 Below is a diagram showing how one can navigate through the interfaces involved in the group chat functionality. \\
 \begin{figure}[H]
 \includegraphics[width=300px]{./images/flow.png}
- \caption{Image showing navigation through out system}
+ \caption{Image showing navigation throughout system}
  \label{flow}
  \end{figure}
 
-When on the "Chat" user interface, one will be presented with the following options on the top panel of the screen:
+When viewing the "Chat" user interface, one will be presented with the following options on the top panel of the screen:
 \begin{itemize}
 \item New Conversation
 \item New Group Chat
@@ -129,17 +131,17 @@ When on the "Chat" user interface, one will be presented with the following opti
 \subsection{Guidelines}
 Below are guidelines on how to use the system. Guidelines are provided for various sections. The sections covered by the guidelines are as follows:
 \begin{itemize}
-\item Locate list of group chats
-\item Create new group chat.
-\item Chat in the group chat
-\item View group chat information
-\item Edit existing group chat.
-\item Add/remove members from existing group chat.
+\item Locate list of group chats \ref{locate}
+\item Create new group chat. \ref{create}
+\item Chat in the group chat \ref{chat}
+\item View group chat information \ref{info}
+\item Edit existing group chat. \ref{edit}
+\item Add/remove members from existing group chat. \ref{add}
 %\item Green Path - from the flow diagram.
 %\item Orange Path - from the flow diagram. 
 \end{itemize}
 
-\subsubsection{Locate list of group chats}
+\subsubsection{Locate list of group chats} \label{locate}
 Follow the steps below to locate the location/list of all your current group chats:
 \begin{enumerate}
 \item Start the application
@@ -157,8 +159,8 @@ Follow the steps below to locate the location/list of all your current group cha
 \includegraphics[width=50px]{images/GrouplistNav.png}
 \end{enumerate}
 
-\subsubsection{Create New Group Chat}
-Follow the steps below to create an launch a new group chat:
+\subsubsection{Create New Group Chat} \label{create}
+Follow the steps below to create and launch a new group chat:
 \begin{enumerate}
 \item Start the application
 \item On the "Home" screen click the "Chat" option as shown in the diagram\\
@@ -181,7 +183,7 @@ Follow the steps below to create an launch a new group chat:
 \includegraphics[width=50px]{images/groupchat.png}
 \end{enumerate}
 
-\subsubsection{Chat in Group Chat}
+\subsubsection{Chat in Group Chat}  \label{chat}
 Follow the steps below to participate in a group chat in which you are a member:
 \begin{enumerate}
 \item Start the application
@@ -212,7 +214,7 @@ Follow the steps below to participate in a group chat in which you are a member:
 \end{enumerate}
 \end{enumerate}
 
-\subsubsection{View Group Chat Information}
+\subsubsection{View Group Chat Information}  \label{info}
 Follow the steps below to view a group chat's details and information:
 \begin{enumerate}
 \item Start the application
@@ -230,7 +232,7 @@ Follow the steps below to view a group chat's details and information:
 \includegraphics[width=50px]{images/groupchatInfoDisp.png}
 \end{enumerate}
 
-\subsubsection{Edit Existing Group}
+\subsubsection{Edit Existing Group}  \label{edit}
 Follow the steps below to edit a group chat's details and information:
 \begin{enumerate}
 \item Follow the steps listed in the section \textbf{View Group Chat Information} to navigate to the group chat's information screen
@@ -249,7 +251,7 @@ Follow the steps below to edit a group chat's details and information:
 \end{enumerate}
 
 
-\subsubsection{Add/Remove Members from Existing Group}
+\subsubsection{Add/Remove Members from Existing Group}  \label{add}
 Follow the steps below to add/remove members from a group chat:
 \begin{enumerate}
 \item Follow the steps listed in the section \textbf{Edit Existing Group} to navigate to the group chat's information screen and make the information editable
