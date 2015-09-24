@@ -3,12 +3,12 @@ package org.linphone.groupchat.test;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.linphone.groupchat.encryption.MessageParser;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 
 import junit.framework.TestCase;
 

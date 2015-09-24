@@ -10,21 +10,21 @@ import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.encryption.MessageParser;
+import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.encryption.EncryptionStrategy;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.exception.PermissionRequiredException;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.interfaces.EncryptionStrategy;
-import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.storage.GroupChatStorage;
 
 import android.graphics.Bitmap;
 
@@ -237,7 +237,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		
 		GroupChatMessage m = encryption_strategy.handlePlainTextMessage(message);
 		
-		storage.saveTextMessage(group_id, m.sender, m.message, m.direction, m.state, m.time.getTime());
+		storage.saveTextMessage(group_id, m);
 	}
 	
 	/**

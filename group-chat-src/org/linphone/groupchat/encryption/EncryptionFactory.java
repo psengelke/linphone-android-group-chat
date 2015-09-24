@@ -1,7 +1,6 @@
 package org.linphone.groupchat.encryption;
 
-import org.linphone.groupchat.interfaces.EncryptionStrategy;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 
 public class EncryptionFactory {
 

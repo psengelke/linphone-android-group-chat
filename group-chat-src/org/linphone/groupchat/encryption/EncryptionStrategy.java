@@ -1,4 +1,4 @@
-package org.linphone.groupchat.interfaces;
+package org.linphone.groupchat.encryption;
 
 
 import java.lang.String;
@@ -6,11 +6,12 @@ import java.util.LinkedList;
 
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.storage.GroupChatStorage;
 
 /**
  *	This class serves as an interface for use by an {@link LinphoneGroupChatRoom} instance. The 

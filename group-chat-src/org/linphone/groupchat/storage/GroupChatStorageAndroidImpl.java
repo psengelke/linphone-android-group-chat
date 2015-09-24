@@ -8,13 +8,12 @@ import android.graphics.Bitmap;
 
 import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 import java.lang.Override;
 import java.lang.String;
@@ -22,7 +21,7 @@ import java.security.PrivateKey;
 import java.util.LinkedList;
 
 /**
- * This class uses {@link org.linphone.interfaces.GroupChatStorage} instance.
+ * This class uses {@link org.linphone.groupchat.storage.interfaces.GroupChatStorage} instance.
  *
  * @author David Breetzke
  */

@@ -1,7 +1,5 @@
 package org.linphone.groupchat.storage;
 
-import org.linphone.groupchat.interfaces.GroupChatStorage;
-
 /**
  * 
  * This factory class provides a service for creating or getting storage instances.
@@ -18,6 +16,7 @@ public class GroupChatStorageFactory {
 	public static GroupChatStorage getOrCreateGroupChatStorage(StorageAdapterType type){
 		
 		switch (type) {
+			case SQLite :
 			default : return GroupChatStorageAndroidImpl.getInstance();
 		}
 	}

@@ -1,6 +1,5 @@
 package org.linphone.groupchat.encryption;
 
-import org.linphone.groupchat.interfaces.EncryptionHandler;
 import java.security.AlgorithmParameters;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

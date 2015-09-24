@@ -16,7 +16,7 @@ import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
-import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.storage.GroupChatStorage;
 import org.linphone.core.LinphoneChatMessage.LinphoneChatMessageListener;
 
 public class GroupChatSettingsFragment extends Fragment implements OnClickListener, LinphoneChatMessageListener

@@ -1,4 +1,4 @@
-package org.linphone.groupchat.interfaces;
+package org.linphone.groupchat.encryption;
 
 import java.lang.String;
 

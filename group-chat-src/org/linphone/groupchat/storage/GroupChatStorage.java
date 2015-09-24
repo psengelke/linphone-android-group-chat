@@ -1,13 +1,13 @@
-package org.linphone.groupchat.interfaces;
+package org.linphone.groupchat.storage;
 
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
 
 import java.lang.String;
 import java.util.LinkedList;

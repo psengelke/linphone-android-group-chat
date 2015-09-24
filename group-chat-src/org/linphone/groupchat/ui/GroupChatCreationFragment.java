@@ -18,7 +18,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.groupchat.core.LinphoneGroupChatListener;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 
 public class GroupChatCreationFragment  extends Fragment
 {

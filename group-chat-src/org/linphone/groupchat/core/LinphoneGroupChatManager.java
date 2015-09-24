@@ -6,20 +6,20 @@ import java.util.LinkedList;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatInfo;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.encryption.EncryptionFactory;
-import org.linphone.groupchat.encryption.MessageParser;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
 import org.linphone.groupchat.exception.IsAdminException;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatInfo;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.storage.GroupChatStorage;
 import org.linphone.groupchat.storage.GroupChatStorageFactory;
-import org.linphone.groupchat.interfaces.GroupChatStorage;
 
 /**
  *	This class is responsible for handling the creation and deletion of groups, handling incoming 

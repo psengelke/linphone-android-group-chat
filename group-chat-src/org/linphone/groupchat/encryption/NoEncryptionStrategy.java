@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.GroupChatMember;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.InitialContactInfo;
-import org.linphone.groupchat.interfaces.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.interfaces.EncryptionStrategy;
-import org.linphone.groupchat.interfaces.GroupChatStorage;
+import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
+import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.storage.GroupChatStorage;
 
 class NoEncryptionStrategy implements EncryptionStrategy {
 

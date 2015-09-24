@@ -1,11 +1,13 @@
-package org.linphone.groupchat.interfaces;
+package org.linphone.groupchat.communication;
 
 import java.util.Date;
 import java.util.LinkedList;
 
-import org.linphone.groupchat.interfaces.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.interfaces.GroupChatStorage.MessageDirection;
-import org.linphone.groupchat.interfaces.GroupChatStorage.MessageState;
+import org.linphone.groupchat.encryption.EncryptionHandler;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.storage.GroupChatStorage;
+import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
+import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 
 /**
  *	This interface serves as a description of data exchange formats for communication 
