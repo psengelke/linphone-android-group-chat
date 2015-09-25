@@ -167,6 +167,30 @@ The next layer is Liblinphone which is a library which implements all functional
 \\
 Liblinphone relies on following parallel layers to provide software components to the library. These layers consist of a multimedia SDK to process and stream audio/video (Mediastreamer2), a simple real-time transport protocol for delivering audio/video over IP networks, and a Session Initiation Protocol library for signalling and controlling multimedia communication sessions.
 
+\subsection{Extension Architecture}
+\subsubsection{Preface}
+It is our intention to develop the Linphone Group Chat extension as a subsystem that is decoupled from the existing system to the greatest extent possible. Hence, our aim is to write a subsystem using an architecture that is effectively hides the extension from the rest of the architecture with minimal changes to existing code to incorporate the extension.
+
+\subsubsection{Decentralisation}
+To maintain Linphone's server independence, we have elected to develop the extension to behave as a distributed system such that no changes need to be made to server functionality to incorporate the additions to the client. While this may be more complex than centralising the group chat subsystem as a server level, we have had to factor in the constraints we have on time as changing a server would increase the scope of the project drastically as well as risk to project success.
+
+\subsubsection{Related Architecture}
+We are focused on developing a modular system, and a component-based architecture suits our needs. While some of the core functionality requires knowledge of the existing Linphone system, we aim to implement our low level components as completely decoupled from the extension core and thus the Linphone core. Figure \ref{figure-architecture} shows the general design for the subsystem.
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in]{./images/architecture.png}
+\caption[Architecture UML]{A diagram showing the general design of the Linhpone Group Chat Extension.}
+\label{figure-architecture}
+\end{figure}
+
+\subsubsection{Patterns}
+\paragraph{Inversion of Control}
+We will be making use of dependency inject to further decouple the components from some of the core functionality. 
+\paragraph{Factory Pattern}
+Construction of components will be delegated to factory classes in each of the component modules. The use of these factories will also facilitate mandatory conformance of component implementations to the interfaces they realise as well as hide concrete implementations from the client components.
+\paragraph{Strategy Pattern}
+Strategies will be used to provide different implementations of encryption algorithms to allow flexibility and accommodate user needs or preferences.
+
 \section{Certification Considerations}
 The project will be developed according to DO-178 certification requirements, for level D certification. Justification for level D is not dependent on safety considerations as is usually the case, but rather on limited time and the limited experience the team has with DO-178. \\ \\
 This project is not intended for avionics applications and is not safety critical, but rather serves as a case study on DO-178 software development.
