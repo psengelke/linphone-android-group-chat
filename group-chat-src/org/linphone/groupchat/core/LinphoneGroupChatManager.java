@@ -8,7 +8,6 @@ import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
-import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.encryption.EncryptionFactory;
@@ -136,9 +135,6 @@ public class LinphoneGroupChatManager {
 	 * Removes a group chat from the client.
 	 * @param id The ID of the group chat to be deleted.
 	 * @throws GroupDoesNotExistException
-	 * 
-	 * TODO : work out how to remove self and assign new admin / remove self and prevent messages from other members
-	 * 			if admin can't be reached, try another member (proxy admin)
 	 * @throws IsAdminException If the admin tries to delete the chat before assigning a new admin.
 	 */
 	public void deleteGroupChat(String id) throws GroupDoesNotExistException, IsAdminException {

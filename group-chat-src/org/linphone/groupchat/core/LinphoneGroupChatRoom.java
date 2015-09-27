@@ -100,7 +100,7 @@ public class LinphoneGroupChatRoom {
 		group.group_id = this.group_id;
 		group.group_name = this.group_name;
 		group.admin = this.admin;
-		group.members = this.members;
+		group.members = getMembers();
 		group.encryption_type = this.getEncryptionType();
 		
 		storage.createGroupChat(group);
@@ -108,7 +108,7 @@ public class LinphoneGroupChatRoom {
 		InitialContactInfo info = new InitialContactInfo();
 		info.group = group;
 		
-		Iterator<GroupChatMember> it = members.iterator();
+		Iterator<GroupChatMember> it = getOtherMembers().iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
 			encryption_strategy.sendMessage(info, member, lc);
@@ -122,7 +122,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void requestGroupInfo(){
 		
-		Iterator<GroupChatMember> it = members.iterator();
+		Iterator<GroupChatMember> it = getOtherMembers().iterator();
 		while (it.hasNext()){
 			GroupChatMember m = it.next();
 			if (!lc.isMyself(m.sip)){
@@ -140,12 +140,14 @@ public class LinphoneGroupChatRoom {
 	 * @throws IsAdminException  If the admin tries to remove themselves without assigning a new admin.
 	 */
 	public void removeSelf() throws IsAdminException {
+
+		//TODO: Figure out how the bloody hell to get this client's sip address.
 		
 		if (lc.isMyself(admin)) throw new IsAdminException("You must assign a new admin first.");
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
-		info.removed.add(new GroupChatMember(null, admin, false));
-		encryption_strategy.sendMessage(info, members, lc);
+		info.removed.add(new GroupChatMember(null, null, false));
+		encryption_strategy.sendMessage(info, getOtherMembers(), lc);
 	}
 	
 	/**
@@ -189,7 +191,7 @@ public class LinphoneGroupChatRoom {
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
-			encryption_strategy.sendMessage(info, members, lc);
+			encryption_strategy.sendMessage(info, getOtherMembers(), lc);
 		} catch (MemberDoesNotExistException e) {
 			
 			// member was removed before adding, send remove to user.
@@ -209,6 +211,8 @@ public class LinphoneGroupChatRoom {
 	 */
 	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException {
 
+		//TODO: Need to possibly call remove group function from {@link LinphoneGroupChatManager}.
+		
 		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		if (lc.isMyself(member.sip)) throw new IsAdminException("You must assign a new admin first.");
 		
@@ -217,7 +221,7 @@ public class LinphoneGroupChatRoom {
 		//now tell the group
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(member);
-		encryption_strategy.sendMessage(info, members, lc);
+		encryption_strategy.sendMessage(info, getOtherMembers(), lc);
 	}
 	
 	/**
@@ -252,7 +256,11 @@ public class LinphoneGroupChatRoom {
 			handleGroupInfoRequest(message);
 			break;
 		case MSG_HEADER_TYPE_RECEIVE_GROUP_INFO:
-			handleGroupInfoReceived(message);
+			try {
+				handleGroupInfoReceived(message);
+			} catch (GroupDoesNotExistException e) {
+				// handle error
+			}
 			break;
 		default:
 			break;
@@ -322,9 +330,16 @@ public class LinphoneGroupChatRoom {
 		try {
 			storage.updateAdmin(group_id, m);
 			admin = m.sip;
-		} catch (GroupDoesNotExistException e) {}
+		} catch (GroupDoesNotExistException e) {
+			//TODO: handle error
+		}
 	}
 	
+	/**
+	 * Sends the group info to the client requesting it.
+	 * @param message A {@link LinphoneChatMessage} object used 
+	 * to obtain the sender's address.
+	 */
 	private void handleGroupInfoRequest(LinphoneChatMessage message){
 		
 		GroupChatData group = new GroupChatData();
@@ -344,12 +359,72 @@ public class LinphoneGroupChatRoom {
 	/**
 	 * Handles potentially new group information after requesting upon start up.
 	 * @param message The message containing the group information.
+	 * @throws GroupDoesNotExistException If the accessed group id is invalid.
 	 */
-	private void handleGroupInfoReceived(LinphoneChatMessage message){
+	private void handleGroupInfoReceived(LinphoneChatMessage message) throws GroupDoesNotExistException {
 		
 		if (updated) return;
 		
+		GroupChatData group = MessageParser.parseGroupChatData(message.getText());
 		
+		if (!group.group_id.equals(group_id)) return; // not meant for this group
+		
+		// compare details
+		
+		if (!group.admin.equals(admin)){
+			admin = group.admin;
+			storage.updateAdmin(group_id, new GroupChatMember("", admin, false));
+		}
+		
+		if (!group.group_name.equals(group_name)){
+			group_name = group.group_name;
+			storage.updateGroupName(group_id, group_name);
+		}
+		
+		// copy members
+		LinkedList<GroupChatMember> tmp = getMembers();
+		Iterator<GroupChatMember> it1;
+		
+		// remove like members from lists, remaining are either new or removed.
+		it1 = tmp.iterator();
+		Iterator<GroupChatMember> it2;
+		while (it1.hasNext()){
+			it2 = group.members.iterator();
+			GroupChatMember m1 = it1.next();
+			while (it2.hasNext()){
+				GroupChatMember m2 = it2.next();
+				if (m1.sip.equals(m2.sip)){
+					it1.remove();
+					it2.remove();
+					break;
+				}
+			}
+		}
+		
+		if (tmp.size() == 0 && group.members.size() == 0) return; // members are the same.
+		
+		// remove members that were not matched with the new group
+		it1 = tmp.iterator();
+		while (it1.hasNext()){
+			
+			GroupChatMember m = it1.next();
+			
+			if (lc.isMyself(m.sip)){
+				// TODO: remove this group.
+				return;
+			}
+			
+			storage.removeMember(group_id, m);
+			it1.remove();
+		}
+		
+		// add members
+		it2 = group.members.iterator();
+		while (it2.hasNext()){
+			storage.addMember(group_id, it2.next());
+		}
+		
+		members = storage.getMembers(group_id);
 	}
 
 	/* Getters & Setters */
@@ -366,7 +441,7 @@ public class LinphoneGroupChatRoom {
 		return image;
 	}
 	
-	public void setName(String name) throws PermissionRequiredException{
+	public void setName(String name) throws PermissionRequiredException {
 		
 		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
@@ -386,7 +461,7 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
-	 * Getter for the group's members.
+	 * Creates and returns a deep copy of the group members.
 	 * @return A list of {@link GroupChatMember}s.
 	 */
 	public LinkedList<GroupChatMember> getMembers(){
@@ -404,6 +479,27 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
+	 * Creates and returns a deep copy of the group's members, excluding self.
+	 * Used specifically for sending messages.
+	 * @return A list of {@link GroupChatMember}s.
+	 */
+	private LinkedList<GroupChatMember> getOtherMembers(){
+		
+		LinkedList<GroupChatMember> members = new LinkedList<>();
+		
+		Iterator<GroupChatMember> it = this.members.iterator();
+		while (it.hasNext()){
+			
+			GroupChatMember m = it.next();
+			if (!lc.isMyself(m.sip)){
+				members.add(new GroupChatMember(m.name, m.sip, m.pending));
+			}
+		}
+		
+		return members;
+	}
+	
+	/**
 	 * Sets the admin of the group.
 	 * @param member The new admin.
 	 * @throws PermissionRequiredException If not the admin.
@@ -412,10 +508,7 @@ public class LinphoneGroupChatRoom {
 		
 		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
-		LinkedList<GroupChatMember> members = new LinkedList<>();
-		members.add(member);
-		
-		encryption_strategy.sendMessage(member, members, lc);
+		encryption_strategy.sendMessage(member, getOtherMembers(), lc);
 	}
 	
 	public String getAdmin(){
@@ -437,7 +530,7 @@ public class LinphoneGroupChatRoom {
 
 	public void sendMessage(String message) {
 
-		encryption_strategy.sendMessage(message, members, lc);
+		encryption_strategy.sendMessage(message, getOtherMembers(), lc);
 	}
 	
 	public void sendMedia(LinphoneContent content) {
