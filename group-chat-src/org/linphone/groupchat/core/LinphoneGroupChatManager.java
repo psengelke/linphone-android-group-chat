@@ -147,10 +147,10 @@ public class LinphoneGroupChatManager {
 		while (it.hasNext()) {
 			LinphoneGroupChatRoom chat = (LinphoneGroupChatRoom) it.next();
 			if (chat.getGroupId().equals(id)){
-				
-				it.remove();
+
 				chat.removeSelf();
 				storage.deleteChat(id);
+				it.remove();
 				return;
 			}
 		}
@@ -159,17 +159,17 @@ public class LinphoneGroupChatManager {
 	}
 	
 	/**
-	 * Function returns a LinkedList object containing the identification information of the group chats.
-	 * @return LinkedList containing group chat identification.
+	 * Function returns all the group chats handled by the manager.
+	 * @return LinkedList containing the group chats.
 	 */
-	public LinkedList<GroupChatInfo> getGroupChatList(){
+	public LinkedList<LinphoneGroupChatRoom> getGroupChatList(){
 		
-		LinkedList<GroupChatInfo> list = new LinkedList<>();
+		LinkedList<LinphoneGroupChatRoom> list = new LinkedList<>();
 		
 		Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 		while (it.hasNext()) {
-			LinphoneGroupChatRoom room = (LinphoneGroupChatRoom) it.next();
-			list.add(new GroupChatInfo(room.getGroupId(), room.getName()));
+			LinphoneGroupChatRoom cr = it.next();
+			list.add(cr);
 		}
 		
 		return list;

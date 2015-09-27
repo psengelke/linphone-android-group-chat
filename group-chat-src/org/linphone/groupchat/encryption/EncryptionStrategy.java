@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;

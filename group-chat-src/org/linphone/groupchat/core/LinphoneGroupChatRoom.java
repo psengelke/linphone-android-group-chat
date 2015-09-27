@@ -3,10 +3,7 @@ package org.linphone.groupchat.core;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatMessage.State;
-import org.linphone.core.LinphoneChatMessage.StateListener;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
@@ -35,7 +32,7 @@ import android.graphics.Bitmap;
  * @author Paul Engelke
  */
 @SuppressWarnings("deprecation")
-public class LinphoneGroupChatRoom implements LinphoneChatRoom {
+public class LinphoneGroupChatRoom {
 	
 	public static final String MSG_HEADER_GROUP_ID = "GROUP-CHAT-ID";
 	public static final String MSG_HEADER_TYPE  = "GROUP-CHAT-MESSAGE-TYPE";
@@ -46,10 +43,15 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	public static final String MSG_HEADER_TYPE_INVITE_ACCEPT = "LinphoneGroupChatRoom.accept_invite";
 	public static final String MSG_HEADER_TYPE_MEMBER_UPDATE = "LinphoneGroupChatRoom.member_update";
 	public static final String MSG_HEADER_TYPE_ADMIN_CHANGE = "LinphoneGroupChatRoom.admin_update";
-	// more
+	public static final String MSG_HEADER_TYPE_GET_GROUP_INFO = "LinphoneGroupChatRoom.get_group_info";
+	public static final String MSG_HEADER_TYPE_RECEIVE_GROUP_INFO = "LinphoneGroupChatRoom.receive_group_info";
+	
+	/*Add new headers here*/
+	
+	// this variable is set to true once the client has received the group information after logging in to Linphone.
+	private boolean updated = false;
 	
 	private LinkedList<GroupChatMember> members;
-	
 	private String admin;
 	private String group_id;
 	private String group_name;
@@ -57,7 +59,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	private EncryptionStrategy encryption_strategy;
 	
-	private LinphoneCore linphone_core;
+	private LinphoneCore lc;
 	private GroupChatStorage storage;
 	
 	private static final int MAX_MEMBERS = 50;
@@ -83,7 +85,9 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		this.encryption_strategy = encryption_strategy;
 		
 		this.storage = storage;
-		this.linphone_core = lc;
+		this.lc = lc;
+		
+		requestGroupInfo();
 	}
 	
 	/**
@@ -107,7 +111,27 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		Iterator<GroupChatMember> it = members.iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
-			encryption_strategy.sendMessage(info, member, linphone_core);
+			encryption_strategy.sendMessage(info, member, lc);
+		}
+	}
+	
+	/**
+	 * This function sends a broadcast message to all group members, requesting the latest 
+	 * group chat state.
+	 * Called by the constructor once the group has been initialised.
+	 */
+	private void requestGroupInfo(){
+		
+		Iterator<GroupChatMember> it = members.iterator();
+		while (it.hasNext()){
+			GroupChatMember m = it.next();
+			if (!lc.isMyself(m.sip)){
+				LinphoneChatRoom cr = lc.getOrCreateChatRoom(m.sip);
+				LinphoneChatMessage message = cr.createLinphoneChatMessage("");
+				message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_GET_GROUP_INFO);
+				cr.sendChatMessage(message);
+				cr.deleteMessage(message);
+			}
 		}
 	}
 	
@@ -117,11 +141,11 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void removeSelf() throws IsAdminException {
 		
-		if (linphone_core.isMyself(admin)) throw new IsAdminException("You must assign a new admin first.");
+		if (lc.isMyself(admin)) throw new IsAdminException("You must assign a new admin first.");
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(new GroupChatMember(null, admin, false));
-		encryption_strategy.sendMessage(info, members, linphone_core);
+		encryption_strategy.sendMessage(info, members, lc);
 	}
 	
 	/**
@@ -133,7 +157,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void addMember(GroupChatMember member) throws PermissionRequiredException, GroupChatSizeException {
 		
-		if (!linphone_core.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
 		if (members.size() == MAX_MEMBERS) throw new GroupChatSizeException("Exceeds group chat size.");
 		
@@ -148,7 +172,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		info.group.members = members;
 		info.group.encryption_type = encryption_strategy.getEncryptionType();
 		
-		encryption_strategy.sendMessage(info, member, linphone_core);
+		encryption_strategy.sendMessage(info, member, lc);
 	}
 	
 	/**
@@ -165,7 +189,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
-			encryption_strategy.sendMessage(info, members, linphone_core);
+			encryption_strategy.sendMessage(info, members, lc);
 		} catch (MemberDoesNotExistException e) {
 			
 			// member was removed before adding, send remove to user.
@@ -173,7 +197,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			m.add(member);
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
-			encryption_strategy.sendMessage(info, m, linphone_core);
+			encryption_strategy.sendMessage(info, m, lc);
 		}
 	}
 	
@@ -185,15 +209,15 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException {
 
-		if (!linphone_core.isMyself(admin)) throw new PermissionRequiredException();
-		if (linphone_core.isMyself(member.sip)) throw new IsAdminException("You must assign a new admin first.");
+		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
+		if (lc.isMyself(member.sip)) throw new IsAdminException("You must assign a new admin first.");
 		
 		storage.removeMember(group_id, member);
 		
 		//now tell the group
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(member);
-		encryption_strategy.sendMessage(info, members, linphone_core);
+		encryption_strategy.sendMessage(info, members, lc);
 	}
 	
 	/**
@@ -210,10 +234,10 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			encryption_strategy.handleInitialContactMessage(message.getText(), linphone_core);
+			encryption_strategy.handleInitialContactMessage(message.getText(), lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
-			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, linphone_core);
+			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_ACCEPT:
 			updateMember(message.getText());
@@ -224,10 +248,18 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		case MSG_HEADER_TYPE_ADMIN_CHANGE:
 			handleAdminChange(message.getText());
 			break;
+		case MSG_HEADER_TYPE_GET_GROUP_INFO:
+			handleGroupInfoRequest(message);
+			break;
+		case MSG_HEADER_TYPE_RECEIVE_GROUP_INFO:
+			handleGroupInfoReceived(message);
+			break;
 		default:
 			break;
 		}
 	}
+	
+	/* Message Handlers */
 	
 	/**
 	 * Handles the storage of a plain text message.
@@ -260,7 +292,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			GroupChatMember m = it.next();
 			storage.removeMember(group_id, m);
 			
-			if (linphone_core.isMyself(m.sip)){
+			if (lc.isMyself(m.sip)){
 				
 				members = new LinkedList<>();
 				try {
@@ -292,12 +324,39 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 			admin = m.sip;
 		} catch (GroupDoesNotExistException e) {}
 	}
+	
+	private void handleGroupInfoRequest(LinphoneChatMessage message){
+		
+		GroupChatData group = new GroupChatData();
+		group.admin = admin;
+		group.group_id = group_id;
+		group.group_name = group_name;
+		group.encryption_type = encryption_strategy.getEncryptionType();
+		group.members = members;
+		
+		LinphoneChatRoom cr = lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
+		LinphoneChatMessage _message = cr.createLinphoneChatMessage("");
+		_message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_RECEIVE_GROUP_INFO);
+		cr.sendChatMessage(_message);
+		cr.deleteMessage(_message);
+	}
+	
+	/**
+	 * Handles potentially new group information after requesting upon start up.
+	 * @param message The message containing the group information.
+	 */
+	private void handleGroupInfoReceived(LinphoneChatMessage message){
+		
+		if (updated) return;
+		
+		
+	}
 
 	/* Getters & Setters */
 	
 	public void setGroupImage(Bitmap image) throws PermissionRequiredException{
 		
-		if (!linphone_core.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
 		this.image = image;
 	}
@@ -309,7 +368,7 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	
 	public void setName(String name) throws PermissionRequiredException{
 		
-		if (!linphone_core.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
 		this.group_name = name;
 		
@@ -351,13 +410,12 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 	 */
 	public void setAdmin(GroupChatMember member) throws PermissionRequiredException {
 		
-		// TODO access this user's sip address
-		if (!"".equals(admin)) throw new PermissionRequiredException();
+		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
 		
 		LinkedList<GroupChatMember> members = new LinkedList<>();
 		members.add(member);
 		
-		encryption_strategy.sendMessage(member, members, linphone_core);
+		encryption_strategy.sendMessage(member, members, lc);
 	}
 	
 	public String getAdmin(){
@@ -373,113 +431,48 @@ public class LinphoneGroupChatRoom implements LinphoneChatRoom {
 		return encryption_strategy.getEncryptionType();
 	}
 	
-	/* LinphoneChatRoom Implementation*/ 
-	
-	@Override
-	public LinphoneAddress getPeerAddress() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void sendMessage(String message) {
-
-		encryption_strategy.sendMessage(message, members, linphone_core);
-	}
-
-	@Override
-	public void sendMessage(LinphoneChatMessage message, StateListener listener) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage createLinphoneChatMessage(String message) {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage[] getHistory() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage[] getHistory(int limit) {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage[] getHistoryRange(int begin, int end) {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void destroy() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+	public void sendMessage(String message) {
+
+		encryption_strategy.sendMessage(message, members, lc);
+	}
+	
+	public void sendMedia(LinphoneContent content) {
+
+		throw new UnsupportedOperationException();
+	}
+
+	public LinkedList<GroupChatMessage> getHistory() {
+
+		throw new UnsupportedOperationException();
+	}
+
+	public LinkedList<GroupChatMessage> getHistory(int limit) {
+
+		throw new UnsupportedOperationException();
+	}
+
 	public int getUnreadMessagesCount() {
 
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public int getHistorySize() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void deleteHistory() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
 	public void compose() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public boolean isRemoteComposing() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void markAsRead() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void deleteMessage(LinphoneChatMessage message) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage createLinphoneChatMessage(String message, String url, State state, long timestamp,
-			boolean isRead, boolean isIncoming) {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneCore getCore() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public LinphoneChatMessage createFileTransferMessage(LinphoneContent content) {
-
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void sendChatMessage(LinphoneChatMessage message) {
+	public void deleteMessage(GroupChatMessage message) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,7 +1,6 @@
 package org.linphone.groupchat.communication;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
@@ -42,6 +41,27 @@ public class MessageParser {
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
 			message += SEPARATOR + member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
+		}
+		
+		return message;
+	}
+	
+	/**
+	 * Converts {@link GroupChatData} into a formatted string.
+	 * @param group The group object to be converted.
+	 * @return The formated string.
+	 */
+	public static String stringifyGroupChatData(GroupChatData group){
+		
+		String message = "" + group.group_id
+				+ SEPARATOR + group.group_name
+				+ SEPARATOR + group.admin
+				+ SEPARATOR + group.encryption_type.ordinal();
+		
+		Iterator<GroupChatMember> it = group.members.iterator();
+		while (it.hasNext()){
+			GroupChatMember m = it.next();
+			message += SEPARATOR + m.name + SEPARATOR + m.sip + SEPARATOR + m.pending;
 		}
 		
 		return message;
@@ -127,7 +147,6 @@ public class MessageParser {
 		info.group.admin = parts[4];
 		info.group.encryption_type = EncryptionType.values()[Integer.parseInt(parts[5])];
 		
-		info.group.members = new LinkedList<>();
 		int i = 6;
 		while (i < parts.length){
 			
@@ -136,6 +155,30 @@ public class MessageParser {
 		}
 		
 		return info;
+	}
+	
+	/**
+	 * Parses a string containing a group chat 
+	 * @param message The message to be parsed.
+	 * @return A structured object containing the data.
+	 */
+	public static GroupChatData parseGroupChatData(String message){
+		
+		String[] parts = message.split(SEPARATOR);
+		GroupChatData group = new GroupChatData();
+		
+		group.group_id = parts[0];
+		group.group_name = parts[1];
+		group.admin = parts[2];
+		group.encryption_type = EncryptionType.values()[(Integer.parseInt(parts[3]))];
+		
+		int i = 4;
+		while (i < parts.length){
+			
+			group.members.add(new GroupChatMember(parts[i++], parts[i++], Boolean.parseBoolean(parts[i++])));
+		}
+		
+		return group;
 	}
 	
 	/**

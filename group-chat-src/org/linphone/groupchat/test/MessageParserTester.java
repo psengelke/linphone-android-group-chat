@@ -43,7 +43,6 @@ public class MessageParserTester extends TestCase {
 		info.group.group_name = "Group Name";
 		info.group.admin = "admin@linphone.org";
 		info.group.encryption_type = EncryptionType.None;
-		info.group.members = new LinkedList<>();
 		info.group.members.add(new GroupChatMember("John", "john@linphone.org", true));
 		info.group.members.add(new GroupChatMember("Bob", "bob@linphone.org", false));
 		info.group.members.add(new GroupChatMember("Jess", "Jess@linphone.org", false));
@@ -61,14 +60,35 @@ public class MessageParserTester extends TestCase {
 				MessageParser.stringifyInitialContactInfo(info)
 		);
 	}
+	
+	public void testStringifyGroupChatData(){
+		
+		GroupChatData group = new GroupChatData();
+		group.group_id = "sip@linphone.org:GroupName";
+		group.group_name = "Group Name";
+		group.admin = "admin@linphone.org";
+		group.encryption_type = EncryptionType.None;
+		group.members.add(new GroupChatMember("John", "john@linphone.org", true));
+		group.members.add(new GroupChatMember("Bob", "bob@linphone.org", false));
+		group.members.add(new GroupChatMember("Jess", "Jess@linphone.org", false));
+		
+		assertEquals(
+				"sip@linphone.org:GroupName,"
+				+ "Group Name,"
+				+ "admin@linphone.org,"
+				+ "0,"
+				+ "John,john@linphone.org,true,"
+				+ "Bob,bob@linphone.org,false,"
+				+ "Jess,Jess@linphone.org,false", 
+				MessageParser.stringifyGroupChatData(group)
+		);
+	}
 
 	public void testStringifyMemberUpdateMessage() {
 
 		MemberUpdateInfo info = new MemberUpdateInfo();
-		info.added = new LinkedList<>();
 		info.added.add(new GroupChatMember("Steve", "steve@linphone.org", false));
 		info.added.add(new GroupChatMember("Bob", "bob@linphone.org", false));
-		info.removed = new LinkedList<>();
 		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
 		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
@@ -127,6 +147,35 @@ public class MessageParserTester extends TestCase {
 			assertEquals(member1.name, member2.name);
 			assertEquals(member1.sip, member2.sip);
 			assertEquals(member1.pending, member2.pending);
+		}
+	}
+	
+	public void testParseGroupChatData() {
+		
+		GroupChatData exp = new GroupChatData();
+		exp.group_id = "sip@linphone.org:GroupName";
+		exp.group_name = "Group Name";
+		exp.admin = "admin@linphone.org";
+		exp.encryption_type = EncryptionType.None;
+		exp.members.add(new GroupChatMember("John", "john@linphone.org", true));
+		exp.members.add(new GroupChatMember("Bob", "bob@linphone.org", false));
+		exp.members.add(new GroupChatMember("Jess", "Jess@linphone.org", false));
+		
+		GroupChatData act = MessageParser.parseGroupChatData(MessageParser.stringifyGroupChatData(exp));
+		
+		assertEquals(exp.group_id, act.group_id);
+		assertEquals(exp.group_name, act.group_name);
+		assertEquals(exp.encryption_type, act.encryption_type);
+		
+		assertEquals(exp.members.size(), act.members.size());
+		Iterator<GroupChatMember> ite = exp.members.iterator();
+		Iterator<GroupChatMember> ita = act.members.iterator();
+		while (ite.hasNext() && ita.hasNext()){
+			GroupChatMember me = (GroupChatMember) ite.next();
+			GroupChatMember ma = (GroupChatMember) ita.next();
+			assertEquals(me.name, ma.name);
+			assertEquals(me.sip, ma.sip);
+			assertEquals(me.pending, ma.pending);
 		}
 	}
 

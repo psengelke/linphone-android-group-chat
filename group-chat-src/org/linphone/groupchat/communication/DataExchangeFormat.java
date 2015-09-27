@@ -3,9 +3,7 @@ package org.linphone.groupchat.communication;
 import java.util.Date;
 import java.util.LinkedList;
 
-import org.linphone.groupchat.encryption.EncryptionHandler;
 import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
-import org.linphone.groupchat.storage.GroupChatStorage;
 import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
 import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 
@@ -34,20 +32,6 @@ public interface DataExchangeFormat {
 			admin = "";
 			members = new LinkedList<>();
 			encryption_type = EncryptionType.None;
-		}
-	}
-	
-	/**
-	 * Stores simple data about a group for use by the front-end.
-	 */
-	public class GroupChatInfo {
-
-		public String id;
-		public String name;
-		
-		public GroupChatInfo(String id, String name){
-			this.id = id;
-			this.name = name;
 		}
 	}
 	
