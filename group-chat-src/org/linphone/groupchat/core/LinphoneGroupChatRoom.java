@@ -51,6 +51,8 @@ public class LinphoneGroupChatRoom {
 	// this variable is set to true once the client has received the group information after logging in to Linphone.
 	private boolean updated = false;
 	
+	private GroupChatRoomListener listener;
+	
 	private LinkedList<GroupChatMember> members;
 	private String admin;
 	private String group_id;
@@ -270,7 +272,8 @@ public class LinphoneGroupChatRoom {
 	/* Message Handlers */
 	
 	/**
-	 * Handles the storage of a plain text message.
+	 * Handles the storage of a plain text message and pushes the message to the current 
+	 * {@link GroupChatRoomListener} if present.
 	 * @param message The message to be parsed and stored.
 	 */
 	private void handlePlainTextMessage(LinphoneChatMessage message){
@@ -278,6 +281,8 @@ public class LinphoneGroupChatRoom {
 		GroupChatMessage m = encryption_strategy.handlePlainTextMessage(message);
 		
 		storage.saveTextMessage(group_id, m);
+		
+		if (listener != null) listener.onMessageReceived(m);
 	}
 	
 	/**
@@ -497,6 +502,16 @@ public class LinphoneGroupChatRoom {
 		}
 		
 		return members;
+	}
+	
+	public void setGroupChatRoomListener(GroupChatRoomListener listner){
+		
+		this.listener = listner;
+	}
+	
+	public void unsetGroupChatListner(){
+		
+		listener = null;
 	}
 	
 	/**
