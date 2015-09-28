@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.CheckBoxPreference;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +51,10 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private LayoutInflater mInflater;
 	private List<String> members = new LinkedList<String>();
 	private boolean isEditMode = false;
+	private String encryptionChoice = "";
+	private String groupNameString = "";
+	private final String ENC_NONE = "None";
+	private final String ENC_AES = "AES";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
@@ -67,7 +74,9 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		next.setEnabled(false);
 		
 		encryptionNone = (RadioButton) view.findViewById(R.id.radio_none);
+		encryptionNone.setOnClickListener(this);
 		encryptionAES = (RadioButton) view.findViewById(R.id.radio_EncAES);
+		encryptionAES.setOnClickListener(this);
 		
 		groupName = (EditText) view.findViewById(R.id.newGroupChatName);
 		
@@ -93,6 +102,17 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 		groupParticipants.setVisibility(View.INVISIBLE);
 		
+		groupName.addTextChangedListener(new TextWatcher() {
+			   public void afterTextChanged(Editable s) {
+			   }
+			   public void beforeTextChanged(CharSequence s, int start, 
+			     int count, int after) {
+			   }
+			   public void onTextChanged(CharSequence s, int start, 
+			     int before, int count) {
+				   testDone();
+			   }
+			  });
 		
 		return view;
 	}
@@ -154,15 +174,50 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 				groupParticipants.setAdapter(new MembersAdapter());
 				groupParticipants.setVisibility(View.VISIBLE);
 				noMembers.setVisibility(View.INVISIBLE);
+				
+				testDone();
 			}
 		}
 		else if (id == R.id.clearGroupNameField)
+		{
 			groupName.setText("");
+			testDone();
+		}
 		else if (id == R.id.clearMemberField)
 			newParticipant.setText("");
+		else if (id == R.id.radio_none)
+		{
+			encryptionChoice = ENC_NONE;
+			testDone();
+		}
+		else if (id == R.id.radio_EncAES)
+		{
+			encryptionChoice = ENC_AES;
+			testDone();
+		}
+		else if (id == R.id.next)
+		{
+			//TODO Check group parameters here!!!
+			//TODO Interface with core and create group
+			
+			GroupChatActivity activity =  (GroupChatActivity) getActivity();
+			Bundle extras = new Bundle();
+			extras.putString("groupName", groupNameString);
+			activity.changeFragment("gcMessagingFragment", extras);
+		}
 		
 	}
 	
+
+	private void testDone() 
+	{
+		groupNameString = groupName.getText().toString();
+		if (!members.isEmpty() && !groupNameString.isEmpty() && !encryptionChoice.isEmpty())
+			next.setEnabled(true);
+		else
+			next.setEnabled(false);
+		
+	}
 
 	/**
 	 * Usage: closeKeyboard(getActivity(), yourEditText.getWindowToken());
@@ -198,6 +253,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			noMembers.setVisibility(View.GONE);
 			groupParticipants.setAdapter(new MembersAdapter());
 		}
+		testDone();
 		
 	}
 

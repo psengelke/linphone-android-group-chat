@@ -1,11 +1,9 @@
 package com.example.groupchatui;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
@@ -13,7 +11,6 @@ public class GroupChatActivity extends FragmentActivity
 {
 	private static GroupChatActivity instance;
 	private static final String GROUP_CHAT_CREATION_FRAGMENT = "gcCreationFragment";
-	private static final String GROUP_CHAT_INFO_FRAGMENT = "gcInfoFragment";
 	private static final String GROUP_CHAT_MSG_FRAGMENT = "gcMessagingFragment";
 	private static final String GROUP_CHAT_SETTINGS_FRAGMENT = "gcSettingsFragment";
 	private GroupChatMessagingFragment gcMessagingFragment;
@@ -92,12 +89,10 @@ public class GroupChatActivity extends FragmentActivity
 		    // retained across a configuration change.
 			if (gcMessagingFragment == null) {
 				gcMessagingFragment = new GroupChatMessagingFragment();
+				gcMessagingFragment.setArguments(extras);
 				fm.beginTransaction().replace(R.id.gcactivity, gcMessagingFragment, GROUP_CHAT_MSG_FRAGMENT).commit();
 		    }
 		}
-		
-		
-		
 	}
 	
 	public void onRadioButtonClicked(View view)
