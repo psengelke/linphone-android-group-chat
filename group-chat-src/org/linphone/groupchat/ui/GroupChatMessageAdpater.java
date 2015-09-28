@@ -1,4 +1,3 @@
-package com.example.groupchatui;
 /*
 package org.linphone.groupchat.ui;
 

@@ -1,76 +1,50 @@
-package com.example.groupchatui;
+package org.linphone.groupchat.ui;
+
+import org.linphone.ChatFragment;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.ui.BubbleChat;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
+public class GroupChatMessagingFragment extends ChatFragment
 {
-	private static GroupChatMessagingFragment instance;		
+	private static GroupChatMessagingFragment instance;		// Not in documentation
 	
-	private TextView groupNameView;
+	private TextView groupName;
 	private ImageView groupPicture;
 	private TextView remoteMemberComposing;
-	private TextView back, info;
-	private EditText message;
-	private ListView msgList;
-	private String groupName;
 	
-//	private LinphoneGroupChatRoom chatroom;
-//	private GroupChatMessageAdapter groupChatMessageAdapter;
+	private LinphoneGroupChatRoom chatroom;
+	private GroupChatMessageAdapter groupChatMessageAdapter;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		instance = this;
-		
-		View view = inflater.inflate(R.layout.groupchat, container, false);
-		setRetainInstance(true);
-		
-		groupName = getArguments().getString("groupName");
-		
-		groupNameView = (TextView) view.findViewById(R.id.groupName);
-		groupNameView.setText(groupName);
-		
-		back = (TextView) view.findViewById(R.id.back);
-		back.setOnClickListener(this);
-		
-		info = (TextView) view.findViewById(R.id.group_info);
-		info.setOnClickListener(this);
-		
-		message = (EditText) view.findViewById(R.id.message);
-		
-		msgList = (ListView) view.findViewById(R.id.group_message_list);
-		//TODO set msgList adapter
-		
-		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
-		//TODO Get handle to appropriate GroupChatStorage interface to retrieve parameters and messages
-		
-		return view;
+		return null;
 		
 	}
 	
 	public void onPause()
 	{
-		super.onPause();
+		
 		
 	}
 	
 	public void onResume()
 	{
-		super.onResume();
+		
 		
 	}
 	
@@ -98,45 +72,15 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		int id = v.getId();
-		
-		if (id == R.id.back)
-		{
-			//getFragmentManager().popBackStackImmediate();
-			getActivity().finish();
-		}
-		else if (id == R.id.group_info)
-		{
-			GroupChatActivity activity =  (GroupChatActivity) getActivity();
-			Bundle extras = new Bundle();
-			extras.putString("groupName", groupName);
-			activity.changeFragment("gcSettingsFragment", extras);
-		}
-		else if (id == R.id.sendMessage)
-		{
-			if (!message.getText().toString().isEmpty())
-			{
-				// TODO send message here
-			}
-		}
-		else if (id == R.id.sendPicture)
-		{
-			
-		}
-	}
 	
 	public class GroupChatMessageAdapter extends BaseAdapter
 	{
-//		LinphoneChatMessage[] history;
+		LinphoneChatMessage[] history;
 		Context context;
 		
-		public GroupChatMessageAdapter(Context context/*,LinphoneChatMessage[] history*/) 
+		public GroupChatMessageAdapter(Context context, LinphoneChatMessage[] history) 
 		{
-//			this.history = history;
+			this.history = history;
 			this.context = context;
 		}
 		
@@ -145,34 +89,39 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 			
 		}
 		
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-//			LinphoneChatMessage message = history[position];
-//			
-//			BubbleChat bubble = new BubbleChat(context, message, GroupChatMessagingFragment.this);
-//			View v = bubble.getView();
-//			
-//			//registerForContextMenu(v);
-//			RelativeLayout rlayout = new RelativeLayout(context);
-//			rlayout.addView(v);
-//			
-//			return rlayout;
-			return null;
+			LinphoneChatMessage message = history[position];
+			
+			BubbleChat bubble = new BubbleChat(context, message, GroupChatMessagingFragment.this);
+			View v = bubble.getView();
+			
+			//registerForContextMenu(v);
+			RelativeLayout rlayout = new RelativeLayout(context);
+			rlayout.addView(v);
+			
+			return rlayout;
 		}
 
+		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
+		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
 			return 0;
 		}
+
+		
 	}
 }
