@@ -88,6 +88,15 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        
+		<activity
+            android:name="GroupChatActivity"
+            android:theme="@style/NoTitle"
+            android:label="@string/title_activity_groupchat">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <activity android:name="org.linphone.IncomingCallActivity"
 		    android:theme="@style/NoTitle"
