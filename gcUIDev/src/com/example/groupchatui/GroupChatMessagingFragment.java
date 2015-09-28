@@ -1,8 +1,5 @@
 package com.example.groupchatui;
 
-
-
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +22,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	private ImageView groupPicture;
 	private TextView remoteMemberComposing;
 	private TextView back, info;
+	private EditText message;
 	private ListView msgList;
 	private String groupName;
 	
@@ -50,7 +49,10 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		info = (TextView) view.findViewById(R.id.group_info);
 		info.setOnClickListener(this);
 		
+		message = (EditText) view.findViewById(R.id.message);
+		
 		msgList = (ListView) view.findViewById(R.id.group_message_list);
+		//TODO set msgList adapter
 		
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
@@ -113,6 +115,17 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 			Bundle extras = new Bundle();
 			extras.putString("groupName", groupName);
 			activity.changeFragment("gcSettingsFragment", extras);
+		}
+		else if (id == R.id.sendMessage)
+		{
+			if (!message.getText().toString().isEmpty())
+			{
+				// TODO send message here
+			}
+		}
+		else if (id == R.id.sendPicture)
+		{
+			
 		}
 	}
 	
