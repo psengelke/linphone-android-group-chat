@@ -23,21 +23,6 @@
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
-
-        <TextView
-            android:contentDescription="@string/content_description_new_group_discussion"
-            android:id="@+id/newGroupDiscussion"
-            android:background="@drawable/create_group"
-            android:text="@string/button_new_group_chat"
-            android:gravity="center"
-            android:paddingTop="25dp"
-            android:textColor="@drawable/text_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"
-            android:scaleType="centerCrop"/>
-
         
         <TextView 
             android:contentDescription="@string/content_description_edit"
@@ -66,61 +51,6 @@
 		    android:adjustViewBounds="true"
 		    android:layout_weight="1"/>
         
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/toolsbar_background">
-
-        <TextView
-            android:visibility="invisible"
-            android:paddingTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:contentDescription="@string/content_description_all_contacts"
-            android:id="@+id/allChats"
-            android:background="@drawable/chats_all"
-            android:text="@string/button_private_chats"
-            android:gravity="center"
-            android:paddingTop="25dp"
-            android:textSize="13sp"
-            android:textColor="@drawable/text_switch_button_color"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:contentDescription="@string/content_description_all_contacts"
-            android:id="@+id/allGroups"
-            android:background="@drawable/groups_all"
-            android:text="@string/button_group_chats"
-            android:gravity="center"
-            android:paddingTop="25dp"
-            android:textSize="13sp"
-            android:textColor="@drawable/text_switch_button_color"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:visibility="invisible"
-            android:paddingTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"/>
-
     </LinearLayout>
     
     <RelativeLayout
