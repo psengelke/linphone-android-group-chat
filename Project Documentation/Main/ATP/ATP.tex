@@ -119,11 +119,16 @@ Several factors describe the test conditions:
 
 \section{Test Procedures \& Verification Results Record}
 \subsection{Test Procedures Summary}
+All tests will involve testing the use case preconditions and postconditions.
 The following is a list of tests are to be performed:
 \begin{enumerate}
 \item Create group chat
-\item 
+\item Send Invite
+\item Delete Group Chat
 \end{enumerate}
+
+
+
 \subsection{Test 1: Create group chat}
 \subsubsection{Description}
 A user shall be able to create a new group.\\
@@ -140,11 +145,117 @@ The group will not be created if one of the following preconditions is not met:
 \item The group is created with the respective profiles and members.
 \item An error is displayed if the user attempts to create a group with less than two members in it.
 \end{itemize}
+
+\subsubsection{Expected Result to Pass Test}
+In order for the application to pass this test a new group chat should be created without any unexpected problems. The appropriate preconditions and postconditions should be followed.
 \subsubsection{Result}
+
+
+\subsection{Test 2: Send Invite}
+An invite shall be sent to each user added to the group upon creation or when a new member is added to the group. Thus this test is divided into two sub-tests.
+
+\subsubsection{Test 2.1: Invite sent on group chat creation}
+\paragraph{Description}
+ A new group chat will be created and checked whether the initially added participants receive the invite to join the group chat.\\
+ \textbf{Preconditions:} For each of the pre-conditions below an exception is raised where that precondition is not met, to indicate service refusal.
+ The invite will not be sent if one of the following scenarios occurs:
+ \begin{itemize}
+ \item The receiver of the invite is a contact added by the administrator of the group.
+ \end{itemize}
+ \textbf{Postconditions:} The post-conditions specify the conditions which must hold true when the service has been provided.
+ \begin{itemize}
+ \item The invite must be sent to the correct user.
+ \end{itemize}
+\paragraph{Expected Result to Pass Test}
+In order for the application to pass this test the members added to the new group chat created must receive an invite to participate.
+\paragraph{Result}
+
+\subsubsection{Test 2.2: Invite sent on group chat addition of member}
+\paragraph{Description}
+ An existing group chat will be edited by adding a new member to participate in the group chat. It will be checked whether the newly added member receives an invite for the group chat. \\
+  \textbf{Preconditions:} For each of the pre-conditions below an exception is raised where that precondition is not met, to indicate service refusal.
+  The invite will not be sent if one of the following scenarios occurs:
+  \begin{itemize}
+  \item The receiver of the invite is a contact added by the administrator of the group.
+  \end{itemize}
+  \textbf{Postconditions:} The post-conditions specify the conditions which must hold true when the service has been provided.
+  \begin{itemize}
+  \item The invite must be sent to the correct user.
+  \end{itemize}
+\paragraph{Expected Result to Pass Test}
+In order for the application to pass this test the member added after the group chat was created must receive an invite to participate.
+\paragraph{Result}
+
+\subsection{Test 3: Delete Group Chat}
+\subsubsection{Description}
+A user shall be able to leave a group chat. When all the users leave a group chat, it will be deleted. If only one person remains in a group chat, that person will be unable to send messages to the chat until at least one other person is added to the chat. If the group owner leaves the group, a new owner is automatically assigned.\\
+\textbf{Preconditions:} 
+\begin{itemize}
+\item The user must be part of a group.
+\end{itemize}
+\textbf{Postconditions:}
+\begin{itemize}
+\item The chat is locally deleted from the user's phone.
+\item The user is removed/unlinked from the group chat.
+\item If the user leaving is the administrator: The administrative privileges are assigned to another group member.
+\item If the user is the last user in the group, their ability to send messages  to the group is locked.
+\end{itemize}
+\subsubsection{Expected Result to Pass Test}
+In order for the application to pass this test the group chat in question must be deleted and removed from the members profile. All post-conditions must take place.
+\subsubsection{Result}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Test 2}
 \subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
+\subsubsection{Result}
+
+\subsection{Test 2}
+\subsubsection{Description}
+\subsubsection{Expected Result to Pass Test}
 \subsubsection{Result}
 
 \section{Summary Test Report}
