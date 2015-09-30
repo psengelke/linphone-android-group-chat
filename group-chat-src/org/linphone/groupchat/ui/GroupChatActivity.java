@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 public class GroupChatActivity extends FragmentActivity
 {
-	private static final String GROUP_CHAT_FRAGMENT;
+	private static final String GROUP_CHAT_FRAGMENT = "";
 	private GroupChatMessagingFragment groupChatFragment;
 	private GroupChatSettingsFragment groupChatSettingsFragment;
 	
@@ -15,7 +15,7 @@ public class GroupChatActivity extends FragmentActivity
 	 * Please modify as needed. Just included code that might be needed here...
 	 */
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		/*super.onCreate(savedInstanceState);
 		setContentView(R.layout.groupchat_activity);
 		
 		Bundle extras = new Bundle();
@@ -35,6 +35,6 @@ public class GroupChatActivity extends FragmentActivity
 			groupChatFragment = new GroupChatMessagingFragment();
 			groupChatFragment.setArguments(extras);
 			fm.beginTransaction().add(R.id.fragmentContainer, groupChatFragment, GROUP_CHAT_FRAGMENT).commit();
-	    }
+	    }*/
 	}
 }
