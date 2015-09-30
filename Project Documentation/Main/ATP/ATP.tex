@@ -125,6 +125,7 @@ The following is a list of tests are to be performed:
 \item Create group chat
 \item Send Invite
 \item Delete Group Chat
+\item Update Group Chat Profile
 \end{enumerate}
 
 
@@ -204,6 +205,50 @@ A user shall be able to leave a group chat. When all the users leave a group cha
 In order for the application to pass this test the group chat in question must be deleted and removed from the members profile. All post-conditions must take place.
 \subsubsection{Result}
 
+\subsection{Test 4: Update Group Chat Profile}
+The group name, subject, and members may be changed. Thus this use case is divided into three major sub-tasks (Update group chat descriptions - name, subject etc, add member, remove member) with minor subtask within each of the major ones.
+\subsubsection{Test 4.1: Update Group descriptions}
+\paragraph{Description} Here a group description such as a name or subject will be changed and saved. It follows that each member on the corresponding group chat's profile will be updated with the correct information.
+\paragraph{Expected Result to Pass Test}
+Descriptions updated successfully in all relevant places.\\
+\textbf{Preconditions:} 
+\begin{itemize}
+\item A group exists and has members.
+\end{itemize}
+\textbf{Postconditions:}
+\begin{itemize}
+\item The current name or subject has been changed.
+\end{itemize}
+\paragraph{Result}
+
+\subsubsection{Test 4.2: Add Member}
+\paragraph{Description}
+The administrator shall be able to add new users to the group. Once a new member is added it will be tested that the member receives the invite and is linked to the specific group chat.\\
+\textbf{Preconditions:} 
+\begin{itemize}
+\item Group exists with an administrator in it.
+\end{itemize}
+\textbf{Postconditions:}
+\begin{itemize}
+\item The user is added to the list of current users in the group and receives messages, etc.
+\end{itemize}
+\paragraph{Expected Result to Pass Test}
+New member receives and invite to participate in group chat, is linked to the group chat, can send and receive messages on the group.
+\paragraph{Result}
+\subsubsection{Test 4.2: Remove Member}
+\paragraph{Description}
+The administrator shall be able to remove members from the group. That user is removed from the list of users currently in the group.\\
+\textbf{Preconditions:} 
+\begin{itemize}
+\item A group exists with more than one member.
+\end{itemize}
+\textbf{Postconditions:}
+\begin{itemize}
+\item The user is no longer a part of the group which entails the user not receiving messages from the group, etc.
+\end{itemize}
+\paragraph{Expected Result to Pass Test}
+The user no longer has access to the group chat, thus cannot participate. All left over members' member list within the group chat is updated to one less member.
+\paragraph{Result}
 
 
 
@@ -223,10 +268,10 @@ In order for the application to pass this test the group chat in question must b
 
 
 
-\subsection{Test 2}
-\subsubsection{Description}
-\subsubsection{Expected Result to Pass Test}
-\subsubsection{Result}
+
+
+
+
 
 \subsection{Test 2}
 \subsubsection{Description}
