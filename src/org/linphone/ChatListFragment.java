@@ -1,4 +1,5 @@
 package org.linphone;
+
 /*
 ChatListFragment.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
@@ -20,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.linphone.core.LinphoneAddress;
@@ -29,8 +31,13 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
+
+
+
+
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
@@ -60,32 +67,52 @@ import android.widget.TextView;
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
-	private List<String> mConversations, mDrafts;
+	private List<String> mConversations, mDrafts, groups;
 	private ListView chatList;
-	private TextView edit, ok, newDiscussion, noChatHistory;
-	private TextView newGroupChat;
+	private TextView edit, ok, newDiscussion, noChatHistory, groupChat, groupsTab, chatsTab;
 	private ImageView clearFastChat;
 	private EditText fastNewChat;
 	private boolean isEditMode = false;
 	private boolean useLinphoneStorage;
+	private boolean displayGroupChats;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater = inflater;
-
+		displayGroupChats = false;
 		View view = inflater.inflate(R.layout.chatlist, container, false);
 		chatList = (ListView) view.findViewById(R.id.chatList);
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 		
+		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
+		
+		
+		if (!displayGroupChats)
+		{
+			chatList.setVisibility(View.GONE);
+			noChatHistory.setVisibility(View.VISIBLE);
+		}
 		edit = (TextView) view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 		
 		
 		newDiscussion = (TextView) view.findViewById(R.id.newDiscussion);
 		newDiscussion.setOnClickListener(this);
+		
+		groupChat = (TextView) view.findViewById(R.id.newGroupDiscussion);
+		groupChat.setOnClickListener(this);
+		
+		groupsTab = (TextView) view.findViewById(R.id.allGroups);
+		groupsTab.setOnClickListener(this);
+		
+		chatsTab = (TextView) view.findViewById(R.id.allChats);
+		chatsTab.setOnClickListener(this);
+		
+		groupsTab.setEnabled(!displayGroupChats);
+		chatsTab.setEnabled(displayGroupChats);
 		
 		ok = (TextView) view.findViewById(R.id.ok);
 		ok.setOnClickListener(this);
@@ -95,21 +122,47 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		
 		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
 		
+		//TODO Harcoded groups here
+		groups = new LinkedList<String>();
+		groups.add("Free Masons");
+		groups.add("Illuminati");
+		groups.add("Al Queda");
+		
 		return view;
 	}
 	
 	private void hideAndDisplayMessageIfNoChat() {
-		if (mConversations.size() == 0 && mDrafts.size() == 0) {
-			noChatHistory.setVisibility(View.VISIBLE);
-			chatList.setVisibility(View.GONE);
-		} else {
-			noChatHistory.setVisibility(View.GONE);
-			chatList.setVisibility(View.VISIBLE);
-			chatList.setAdapter(new ChatListAdapter(useLinphoneStorage));
+		if (displayGroupChats)
+		{
+			if (groups.isEmpty())
+			{
+				noChatHistory.setVisibility(View.VISIBLE);
+				chatList.setVisibility(View.GONE);
+			}
+			else
+			{
+				noChatHistory.setVisibility(View.GONE);
+				chatList.setVisibility(View.VISIBLE);
+				chatList.setAdapter(new GroupListAdapter());
+			}
+				
 		}
+		else
+		{
+			if (mConversations.size() == 0 && mDrafts.size() == 0) {
+				noChatHistory.setVisibility(View.VISIBLE);
+				chatList.setVisibility(View.GONE);
+			} else {
+				noChatHistory.setVisibility(View.GONE);
+				chatList.setVisibility(View.VISIBLE);
+				chatList.setAdapter(new ChatListAdapter(useLinphoneStorage));
+			}
+		}
+		
 	}
 	
 	public void refresh() {
+		// TODO Reenable this code block!
 		mConversations = LinphoneActivity.instance().getChatList();
 		mDrafts = LinphoneActivity.instance().getDraftChatList();
 		mConversations.removeAll(mDrafts);
@@ -237,25 +290,118 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				LinphoneActivity.instance().displayChat(sipUri);
 			}
 		}
+		else if (id == R.id.newGroupDiscussion)
+		{
+			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
+			Bundle b = new Bundle();
+			b.putString("fragment", "gcCreationFragment");
+			intent.putExtras(b);
+			startActivity(intent);
+		}
+		else if (id == R.id.allGroups)
+		{
+			displayGroupChats = true;
+			changeContactAdapter();
+		}
+		else if (id == R.id.allChats)
+		{
+			displayGroupChats = false;
+			changeContactAdapter();
+		}
+	}
+	
+	/**
+	 * Method to refresh chatlist to display either groupChats or Normal Chats
+	 */
+	private void changeContactAdapter()
+	{
+		toggleContactsTab();
+		
+		if (displayGroupChats)
+		{
+			if (!groups.isEmpty()) {
+				chatList.setVisibility(View.VISIBLE);
+				chatList.setAdapter(new GroupListAdapter());
+			}
+			else
+			{
+				chatList.setVisibility(View.GONE);
+				noChatHistory.setVisibility(View.VISIBLE);
+			}
+			
+		}
+		else
+		{
+			chatList.setVisibility(View.GONE);	// TODO remove this line
+			noChatHistory.setVisibility(View.VISIBLE);
+			// TODO Change back to ChatListAdapter
+		}
+		
+	}
+	
+	private void toggleContactsTab()
+	{
+		if (displayGroupChats)
+		{
+			groupsTab.setEnabled(false);
+			chatsTab.setEnabled(true);
+			fastNewChat.setText("");
+			fastNewChat.setHint(R.string.group_list_name);
+		}
+		else
+		{
+			groupsTab.setEnabled(true);
+			chatsTab.setEnabled(false);
+			fastNewChat.setText("");
+			fastNewChat.setHint(R.string.new_fast_chat);
+		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		String sipUri = (String) view.getTag();
-		
-		if (LinphoneActivity.isInstanciated() && !isEditMode) {
-			LinphoneActivity.instance().displayChat(sipUri);
-		} else if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().removeFromChatList(sipUri);
-			LinphoneActivity.instance().removeFromDrafts(sipUri);
+		if (displayGroupChats)
+		{
+			if (!isEditMode) {
+				//TODO Make Appropriate GroupChatMessagingFragment appear
+				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
+				Bundle b = new Bundle();
+				b.putString("fragment", "gcMessagingFragment");
+				b.putString("groupName", (String) view.getTag());
+				intent.putExtras(b);
+				startActivity(intent);
+				
+			}
+			else
+			{
+				//TODO Remove group from storage via appropriate interface
+				
+				String group = (String) view.getTag();
+				
+				groups.remove(group);	// TODO this is mock
+				
+				hideAndDisplayMessageIfNoChat();
+			}
 			
-			mConversations = LinphoneActivity.instance().getChatList();
-			mDrafts = LinphoneActivity.instance().getDraftChatList();
-			mConversations.removeAll(mDrafts);
-			hideAndDisplayMessageIfNoChat();
-			
-			LinphoneActivity.instance().updateMissedChatCount();
 		}
+		else
+		{
+			String sipUri = (String) view.getTag();
+			
+			if (LinphoneActivity.isInstanciated() && !isEditMode) {
+				LinphoneActivity.instance().displayChat(sipUri);
+			} else if (LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().removeFromChatList(sipUri);
+				LinphoneActivity.instance().removeFromDrafts(sipUri);
+				
+				mConversations = LinphoneActivity.instance().getChatList();
+				mDrafts = LinphoneActivity.instance().getDraftChatList();
+				mConversations.removeAll(mDrafts);
+				hideAndDisplayMessageIfNoChat();
+				
+				LinphoneActivity.instance().updateMissedChatCount();
+			}
+		}
+
 	}
 	
 	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
@@ -424,6 +570,55 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			return view;
 		}
+	}
+	
+	class GroupListAdapter extends BaseAdapter
+	{
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return groups.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			View view = null;
+			
+			if (convertView != null)
+				view = convertView;
+			else
+				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
+			
+			String group = groups.get(position);
+			view.setTag(group);
+			
+			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
+			groupName.setText(group);
+			
+			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+			
+			if (isEditMode)
+				delete.setVisibility(View.VISIBLE);
+			else
+				delete.setVisibility(View.GONE);
+			
+			return view;
+		}
+		
 	}
 }
 
