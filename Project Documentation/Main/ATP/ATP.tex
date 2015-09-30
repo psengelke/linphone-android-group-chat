@@ -87,21 +87,67 @@ The Linphone application is based on a distributed system. It ranges from a wide
 \multicolumn{1}{|L{2cm}|}{SDD} & \multicolumn{1}{L{10cm}|}{Software Design Description} \\ \hline
 \end{tabular}
 
-\subsection{General Test and Data Completion Requirements}
+\subsection{Test Environment}
+Several aspects play a role in the testing environment. These include equipment used to test the product, technologies used, the environmental/surrounding conditions etc...\\
+\textbf{Equipment}\\
+The equipment used to test the extended functionality for the project will be as follows:
+\begin{itemize}
+\item Computer/Laptop with necessary IDE's and testing environment
+\item Provided cellular phones with appropriate operating system and application installation
+\end{itemize}
+\textbf{Technologies}\\
+The technologies used to test the functionality are mainly software oriented and include:
+\begin{itemize}
+\item JUnit for unit testing and integration testing
+\item .............................
+\end{itemize}
 
-\section{Summary Test Report}
-\subsection{Test Completion Record}
-\subsection{Test Equipment \& Software}
+\textbf{Test Conditions}
+Several factors describe the test conditions:
+\begin{itemize}
+\item Testing will take place in an integrated environment
+\item The project is developed in a Linux environment using the Eclipse IDE. Thus testing will take place within the development paradigm using software to assist in unit and integration testing.
+\item Since the project is a development for an android device, the bulk of the testing will occur on an android device. The specific device to be used will be the Zest cell phone.
+\item All necessary actions are performed. In order to see the application in a certain state, we need to actually perform every step to get us there (clicking buttons, filling in text boxes, sending messages etc).
+\item The only thing that is mocked during the testing is data such as message content etc
+\end{itemize}
+
+
+
 \subsection{Equipment Configuration \& Test Case Setup Instructions}
-\subsection{Test Conditions}
+
 
 \section{Test Procedures \& Verification Results Record}
-\subsection{Test 1}
+\subsection{Test Procedures Summary}
+The following is a list of tests are to be performed:
+\begin{enumerate}
+\item Create group chat
+\item 
+\end{enumerate}
+\subsection{Test 1: Create group chat}
 \subsubsection{Description}
+A user shall be able to create a new group.\\
+\textbf{Preconditions:} For each of the pre-conditions below an exception is raised where that precondition is not met, to indicate service refusal.
+The group will not be created if one of the following preconditions is not met:
+\begin{itemize}
+\item User must have access to the Linphone service.
+\item The user may not create the group unless at least one other member is added.
+\end{itemize}
+\textbf{Postconditions:} The post-conditions specify the conditions which must hold true when the service has been provided.
+\begin{itemize}
+\item The creator is automatically assigned administrator rights.
+\item An invite is sent to the other added users to ask them if they want to be part of the group.
+\item The group is created with the respective profiles and members.
+\item An error is displayed if the user attempts to create a group with less than two members in it.
+\end{itemize}
 \subsubsection{Result}
+
+
 \subsection{Test 2}
 \subsubsection{Description}
 \subsubsection{Result}
+
+\section{Summary Test Report}
 
 \section{Traceability Matrix}
 \end{document}
