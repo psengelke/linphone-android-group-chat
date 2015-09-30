@@ -5,16 +5,4 @@
     <style name="NoTitle" parent="android:Theme.Holo.NoActionBar" />
     <style name="FullScreen" parent="android:Theme.Holo.NoActionBar.Fullscreen" />
 
-
-
-    <style name="RadioTheme" parent="android:Theme.Black">
-        <item name="android:color">#FFFF8606</item>
-        <item name="android:colorBackground">#FFFF8606</item>
-        <item name="android:shadowColor">#FFFF8606</item>
-    </style>
-
-    <style name="AppTheme" parent="android:Theme.Holo">
-        <item name="android:radioButtonStyle">@color/missed_calls_background</item>
-    </style>
-
 </resources>

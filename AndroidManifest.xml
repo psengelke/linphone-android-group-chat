@@ -98,14 +98,6 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
          </activity>
-         
-         <activity
-            android:name="GroupChatActivity"
-            android:label="@string/title_activity_groupchat">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
 
         <activity android:name="org.linphone.InCallActivity"
 		   android:theme="@style/FullScreen"
