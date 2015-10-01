@@ -1,5 +1,11 @@
 package org.linphone;
 
+/***
+ * @class GroupChatSettingsFragment
+ * @author Izak Blom
+ * This Fragment handles the user interface for groupchat settings manipulation and viewing
+ * @implements OnClickListener for button click events and OnItemClickListener for ListView item click events
+ */
 
 import java.util.LinkedList;
 import java.util.List;
@@ -163,12 +169,14 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.back)
+		if (id == R.id.back)		// back button clicked. call popBackStack() to make previous fragment (GroupChatMessagingFragme) visible
 		{
 			getActivity().getSupportFragmentManager().popBackStack();
 		}
-		else if (id == R.id.edit)
+		else if (id == R.id.edit)		// edit button clicked
 		{
+			// Change interface to accomodate for edit functionality
+			// Make delete members buttons visible
 			isEditMode = true;
 			edit.setVisibility(View.GONE);
 			next.setVisibility(View.VISIBLE);
@@ -181,8 +189,9 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			encryptionTypeLbl.setVisibility(View.GONE);
 			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		}
-		else if (id == R.id.groupchatinfo_next)
+		else if (id == R.id.groupchatinfo_next)		// next button clicked after edit
 		{
+			// Reset interface after edit complete
 			isEditMode = false;
 			edit.setVisibility(View.VISIBLE);
 			next.setVisibility(View.GONE);
@@ -200,30 +209,32 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			}
 			closeKeyboard(getActivity(), groupNameEdit.getWindowToken());
 		}
-		else if (id == R.id.addMember)
+		else if (id == R.id.addMember)	// add a member button clicked
 		{
 			String newSip = newMember.getText().toString();
-			newMember.setText("");
+			newMember.setText("");		// clear newMember EditText
 			newMember.clearFocus();
+			// Hide keyboard after member added
 			closeKeyboard(getActivity(), newMember.getWindowToken());
 			
 			if (!newSip.isEmpty())
 			{
 				//TODO test valid sip address or contact
 				members.add(newSip);
+				// Update groupParticipants ListView
 				groupParticipants.setAdapter(new MembersAdapter());
 			}
 		}
-		else if (id == R.id.clearMemberField)
+		else if (id == R.id.clearMemberField)	// Clear newMember EditText button clicked
 		{
 			newMember.setText("");
 		}
 	}
-
+	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		if (isEditMode)
+		if (isEditMode)	// Action only needed when editMode (after edit button clicked)
 		{
 			members.remove(view.getTag());
 			groupParticipants.setAdapter(new MembersAdapter());
@@ -276,6 +287,11 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 //		
 //	}
 	
+	/**
+	 * Adapter to update members ListView
+	 * @author Izak Blom
+	 *
+	 */
 	class MembersAdapter extends BaseAdapter
 	{
 

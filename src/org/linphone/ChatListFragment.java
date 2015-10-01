@@ -162,7 +162,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 	
 	public void refresh() {
-		// TODO Reenable this code block!
 		mConversations = LinphoneActivity.instance().getChatList();
 		mDrafts = LinphoneActivity.instance().getDraftChatList();
 		mConversations.removeAll(mDrafts);
@@ -258,22 +257,22 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.clearFastChatField) {
+		if (id == R.id.clearFastChatField) {		// Clear textbox button
 			fastNewChat.setText("");
 		}
-		else if (id == R.id.ok) {
+		else if (id == R.id.ok) {				// OK button click after edit
 			edit.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
 			isEditMode = false;
-			hideAndDisplayMessageIfNoChat();
+			hideAndDisplayMessageIfNoChat();	// refresh contactsList
 		}
-		else if (id == R.id.edit) {
+		else if (id == R.id.edit) {				// Enable edit functionality
 			edit.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
 			isEditMode = true;
-			hideAndDisplayMessageIfNoChat();
+			hideAndDisplayMessageIfNoChat();	// refresh contacts list
 		}
-		else if (id == R.id.newDiscussion) {
+		else if (id == R.id.newDiscussion) {	// New Chat button clicked
 			String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);
@@ -290,20 +289,22 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				LinphoneActivity.instance().displayChat(sipUri);
 			}
 		}
-		else if (id == R.id.newGroupDiscussion)
+		else if (id == R.id.newGroupDiscussion)		// New GroupChatButton clicked
 		{
+			// Start GroupChatActivity with Intent gcCreationFragment to start 
+			// GroupChatCreation Fragm
 			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 			Bundle b = new Bundle();
 			b.putString("fragment", "gcCreationFragment");
 			intent.putExtras(b);
 			startActivity(intent);
 		}
-		else if (id == R.id.allGroups)
+		else if (id == R.id.allGroups)		// All Groups tab clicked
 		{
 			displayGroupChats = true;
 			changeContactAdapter();
 		}
-		else if (id == R.id.allChats)
+		else if (id == R.id.allChats)		// All Chats tab clicked
 		{
 			displayGroupChats = false;
 			changeContactAdapter();
@@ -334,11 +335,15 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		{
 			chatList.setVisibility(View.GONE);	// TODO remove this line
 			noChatHistory.setVisibility(View.VISIBLE);
-			// TODO Change back to ChatListAdapter
+			refresh();
 		}
 		
 	}
 	
+	/**
+	 * Enable and disable groupchat and chats tab as needed
+	 * Also changes other parameters
+	 */
 	private void toggleContactsTab()
 	{
 		if (displayGroupChats)
@@ -371,7 +376,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				startActivity(intent);
 				
 			}
-			else
+			else	// To remove item from list, since editMode
 			{
 				//TODO Remove group from storage via appropriate interface
 				
@@ -572,6 +577,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 	}
 	
+	/**
+	 * Adapter for list of groups
+	 * @author Izak Blom
+	 *
+	 */
 	class GroupListAdapter extends BaseAdapter
 	{
 

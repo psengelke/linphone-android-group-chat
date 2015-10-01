@@ -1,5 +1,11 @@
 package org.linphone;
 
+/**
+ * @class GroupChatActivity
+ * @author Izak Blom
+ * The GroupChatActivity instantiates and swaps respective User Interface Fragments.
+ * It also serves as a communication channel between Fragments
+ */
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -21,13 +27,12 @@ public class GroupChatActivity extends FragmentActivity
 		return instance != null;
 	}
 	
+	
 	@Override
-	/*
-	 * Please modify as needed. Just included code that might be needed here...
-	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.groupchat_activity);
+		// frag passed in intent indicates which fragment to instantiate upon Activity creation
 		String frag = getIntent().getExtras().getString("fragment");
 		
 		
@@ -35,6 +40,7 @@ public class GroupChatActivity extends FragmentActivity
 		Bundle extras = new Bundle();
 		// extras.putString("SipUri", getIntent().getExtras().getString("SipUri"));
 		
+		// When create group button clicked from ChatListFragment
 		if (frag.equals(GROUP_CHAT_CREATION_FRAGMENT))
 		{
 			FragmentManager fm = getSupportFragmentManager();
@@ -48,6 +54,7 @@ public class GroupChatActivity extends FragmentActivity
 				fm.beginTransaction().add(R.id.gcactivity, gcCreationFragment, GROUP_CHAT_CREATION_FRAGMENT).commit();
 		    }
 		}
+		// When a groupchat is selected from ChatListFragment
 		else if (frag.equals(GROUP_CHAT_MSG_FRAGMENT))
 		{
 			FragmentManager fm = getSupportFragmentManager();
@@ -65,6 +72,11 @@ public class GroupChatActivity extends FragmentActivity
 		
 	}
 	
+	/**
+	 * Method to change currently visible Fragment. Called from Fragment as getActivity().changeFragment(..)
+	 * @param fragment Indicates which fragment to change to. Should match one of the static variables above
+	 * @param extras Parameters to be passed to the fragment upon creation
+	 */
 	public void changeFragment(String fragment, Bundle extras)
 	{
 		if (fragment.equals(GROUP_CHAT_SETTINGS_FRAGMENT))
@@ -77,6 +89,7 @@ public class GroupChatActivity extends FragmentActivity
 			if (gcSettingsFragment == null) {
 				gcSettingsFragment = new GroupChatSettingsFragment();
 				gcSettingsFragment.setArguments(extras);
+				// .addToBackStack to ensure previously shown fragment is made visible when back pressed from GroupChatSettingsFragment
 				fm.beginTransaction().replace(R.id.gcactivity, gcSettingsFragment, GROUP_CHAT_SETTINGS_FRAGMENT).addToBackStack(null).commit();
 		    }
 		}
@@ -90,20 +103,28 @@ public class GroupChatActivity extends FragmentActivity
 			if (gcMessagingFragment == null) {
 				gcMessagingFragment = new GroupChatMessagingFragment();
 				gcMessagingFragment.setArguments(extras);
+				// No addToBackStack. Change to GroupChatMessagingFragment occurs only when next clicked on GroupChatCreationFragment.
+				// Back navigation should not return to creation screen. 
 				fm.beginTransaction().replace(R.id.gcactivity, gcMessagingFragment, GROUP_CHAT_MSG_FRAGMENT).commit();
 		    }
 		}
 	}
 	
+	/**
+	 * Empty method needed when radio buttons used even if event not handled here
+	 * @param view
+	 */
 	public void onRadioButtonClicked(View view)
 	{
 		
 	}
 	
+	/**
+	 * Back navigation from activity
+	 */
 	public void onBackPressed()
 	{
 		super.onBackPressed();
-		
 	}
 
 	

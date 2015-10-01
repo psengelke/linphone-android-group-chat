@@ -1,5 +1,11 @@
 package org.linphone;
 
+/**
+ * @class GroupChatCreationFragment
+ * @author Izak Blom
+ * This Fragment handles the User Interface for GroupChatCreation
+ * @implements OnclickListener for button clicks and OnItemClickListener for click events on ListView elements
+ */
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,11 +14,9 @@ import android.widget.TextView;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.CheckBoxPreference;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -102,6 +106,8 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 		groupParticipants.setVisibility(View.INVISIBLE);
 		
+		// TextChangedListener for when groupName field is changed. Possibly next button should be enabled
+		// or disabled. Checked with testDone() method
 		groupName.addTextChangedListener(new TextWatcher() {
 			   public void afterTextChanged(Editable s) {
 			   }
@@ -124,7 +130,6 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	
 	public void onPause()
 	{
-		
 		super.onPause();
 	}
 	
@@ -143,10 +148,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 	}
 	
-	/**
-	 * This function removes a member only from the user interface, since the group has yet to be created
-	 * @param participant The TextView to be removed from the fragment.
-	 */
+	
 	public void removeMember(TextView participant)
 	{
 		
@@ -156,46 +158,53 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	public void onClick(View v) {
 		int id = v.getId();
 		
-		if (id == R.id.back)
+		if (id == R.id.back)	// back button clicked
 		{
-			//getFragmentManager().popBackStackImmediate();
 			getActivity().finish();
 		}
-		else if (id == R.id.addMember)
+		else if (id == R.id.addMember)	// add member button clicked
 		{
 			// TODO Test for valid sip address before adding
 			String newContact = newParticipant.getText().toString();
+			
+			// Clear EditText content
 			newParticipant.setText("");
+			// Hide keyboard
 			closeKeyboard(getActivity(), newParticipant.getWindowToken());
 			
-			if (!newContact.isEmpty())
+			if (!newContact.equals(""))
 			{
 				members.add(newContact);
+				// Refresh list of contacts:
 				groupParticipants.setAdapter(new MembersAdapter());
 				groupParticipants.setVisibility(View.VISIBLE);
 				noMembers.setVisibility(View.INVISIBLE);
-				
+				// Test if next button should be activated
 				testDone();
 			}
 		}
-		else if (id == R.id.clearGroupNameField)
+		else if (id == R.id.clearGroupNameField)	// clear GroupName Edit Button clicked
 		{
 			groupName.setText("");
+			// disable next button
 			testDone();
 		}
-		else if (id == R.id.clearMemberField)
+		else if (id == R.id.clearMemberField)		// clear New Member EditText
 			newParticipant.setText("");
-		else if (id == R.id.radio_none)
+		else if (id == R.id.radio_none)				// Radio button no encryption selected
 		{
 			encryptionChoice = ENC_NONE;
+			// Enable next button?
 			testDone();
 		}
-		else if (id == R.id.radio_EncAES)
+		else if (id == R.id.radio_EncAES)			// Radio button AES encryption selected
 		{
 			encryptionChoice = ENC_AES;
+			// Enable next button?
 			testDone();
 		}
-		else if (id == R.id.next)
+		// Next button clicked. Should proceed to GroupChatMessaginFragment
+		else if (id == R.id.next)					
 		{
 			//TODO Check group parameters here!!!
 			//TODO Interface with core and create group
@@ -203,12 +212,16 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			GroupChatActivity activity =  (GroupChatActivity) getActivity();
 			Bundle extras = new Bundle();
 			extras.putString("groupName", groupNameString);
+			// Replace this fragment with GroupChatMessagingFragment for the newly created group
 			activity.changeFragment("gcMessagingFragment", extras);
 		}
 		
 	}
 	
-
+	/**
+	 * Method to test conditions for enabling next button
+	 * Conditions: GroupName not empty && EncryptionType Selected && At least one member
+	 */
 	private void testDone() 
 	{
 		groupNameString = groupName.getText().toString();
@@ -228,18 +241,22 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	    InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
 	    mgr.hideSoftInputFromWindow(windowToken, 0);
 	}
-
+	
+	/**
+	 * Event handler for click events on ListView items
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 	{
 		String member = (String) view.getTag();
-		
 		members.remove(member);
-		
 		refreshParticipantsList();
 		
 	}
 	
+	/**
+	 * Method to update groupParticipants ListView
+	 */
 	private void refreshParticipantsList() 
 	{
 		if (members.isEmpty())
@@ -257,6 +274,12 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		
 	}
 
+	/**
+	 * Adapter for groupParticipants ListView
+	 * Adds list elements according to List of members
+	 * @author Izak Blom
+	 *
+	 */
 	class MembersAdapter extends BaseAdapter
 	{
 

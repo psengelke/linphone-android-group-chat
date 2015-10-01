@@ -1,7 +1,10 @@
 package org.linphone;
 
-
-
+/**
+ * @class GroupChatMessagingFragment
+ * This Fragment handles the interface for GroupChat Messaging
+ * @implements OnClickListener to handle button click events
+ */
 
 import android.content.Context;
 import android.os.Bundle;
@@ -38,7 +41,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
-		
+		// Determine which groupChat to create interface for
 		groupName = getArguments().getString("groupName");
 		
 		groupNameView = (TextView) view.findViewById(R.id.groupName);
@@ -99,23 +102,26 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		
-		if (id == R.id.back)
+		if (id == R.id.back)	// back button clicked
 		{
-			//getFragmentManager().popBackStackImmediate();
 			getActivity().finish();
 		}
-		else if (id == R.id.group_info)
+		else if (id == R.id.group_info)		// info button clicked
 		{
 			GroupChatActivity activity =  (GroupChatActivity) getActivity();
 			Bundle extras = new Bundle();
 			extras.putString("groupName", groupName);
+			// replace fragment with GroupChatSettingsFragment
 			activity.changeFragment("gcSettingsFragment", extras);
 		}
 	}
 	
+	/**
+	 * Adapter for GroupChatMessages
+	 * @author Izak Blom
+	 */
 	public class GroupChatMessageAdapter extends BaseAdapter
 	{
 //		LinphoneChatMessage[] history;
