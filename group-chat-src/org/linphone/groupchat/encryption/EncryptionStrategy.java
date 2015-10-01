@@ -63,7 +63,7 @@ public interface EncryptionStrategy {
 	 * @param message The message to be parsed and analysed.
 	 * @param lc The {@link LinphoneCore} for sending replies.
 	 */
-	public void handleInitialContactMessage(String message, LinphoneCore lc);
+	public void handleInitialContactMessage(LinphoneChatMessage message, LinphoneCore lc);
 	
     /**
      * Handler for Stage 3 initial contact messages. (When the secret key has been received)
@@ -73,7 +73,7 @@ public interface EncryptionStrategy {
      * @param lc The {@link LinphoneCore} to be used for sending a reply.
      * @param encrypted Whether or not the message is encrypted.
      */
-    public void handleInitialContactMessage(String message, String id, GroupChatStorage storage, LinphoneCore lc);
+    public void handleInitialContactMessage(LinphoneChatMessage message, String id, GroupChatStorage storage, LinphoneCore lc);
     
     /**
      * Handler for member updates (additions and removals).

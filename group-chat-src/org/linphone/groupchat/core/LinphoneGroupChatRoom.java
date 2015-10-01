@@ -240,10 +240,10 @@ public class LinphoneGroupChatRoom {
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			encryption_strategy.handleInitialContactMessage(message.getText(), lc);
+			encryption_strategy.handleInitialContactMessage(message, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
-			encryption_strategy.handleInitialContactMessage(message.getText(), group_id, storage, lc);
+			encryption_strategy.handleInitialContactMessage(message, group_id, storage, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_ACCEPT:
 			updateMember(message.getText());

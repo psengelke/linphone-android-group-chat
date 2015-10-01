@@ -70,7 +70,7 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
-		
+
 	}
 
 	@Override

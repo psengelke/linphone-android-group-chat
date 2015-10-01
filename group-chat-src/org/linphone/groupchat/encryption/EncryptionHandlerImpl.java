@@ -4,15 +4,17 @@ import javax.crypto.spec.SecretKeySpec;
 
 class EncryptionHandlerImpl implements EncryptionHandler {
 	
+	// asymmetric
 	protected long key_private;
 	protected long key_public;
+	
+	// symmetric
 	protected SecretKeySpec sks;
+	
 	protected EncryptionType encryption_type;
 
 	
-	public EncryptionHandlerImpl(){
-		
-	}
+	public EncryptionHandlerImpl(){}
 
 	@Override
 	public String encrypt(String message, long key) {

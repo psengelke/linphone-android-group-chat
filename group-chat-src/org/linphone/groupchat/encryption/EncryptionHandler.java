@@ -16,9 +16,15 @@ public interface EncryptionHandler {
         None, AES256
     }
     
-    public String encrypt(String message, long key);
+    public void generateAsymmetricKeys();
+    public String getPublicKey();
+    
+    public String encrypt(String message);
     public String decrypt(String message);
-    public long getPublicKey();
-    public long getSecretKey();
+    public void setSecretKey(String seed);
+    public String getKeySeed();
+    
     public EncryptionHandler.EncryptionType getEncryptionType();
+    
+    public char[] generateSeed();
 }
