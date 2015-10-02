@@ -17,7 +17,7 @@ public interface EncryptionHandler {
     }
     
     public void generateAsymmetricKeys();
-    public String getPublicKey();
+    public long getPublicKey();
     
     public String encrypt(String message);
     public String decrypt(String message);
@@ -27,4 +27,6 @@ public interface EncryptionHandler {
     public EncryptionHandler.EncryptionType getEncryptionType();
     
     public char[] generateSeed();
+	public Object getSecretKey();
+	public String encrypt(String message, Object secretKey);
 }

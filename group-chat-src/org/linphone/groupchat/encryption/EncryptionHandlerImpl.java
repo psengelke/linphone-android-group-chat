@@ -16,7 +16,6 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	public EncryptionHandlerImpl(){}
 
-	@Override
 	public String encrypt(String message, long key) {
 		return null;
 	}
@@ -36,8 +35,43 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 		return encryption_type;
 	}
 
-	@Override
-	public long getSecretKey() {
+	public Object getSecretKey() {
 		return key_private;
+	}
+
+	@Override
+	public void generateAsymmetricKeys() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String encrypt(String message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSecretKey(String seed) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getKeySeed() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public char[] generateSeed() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String encrypt(String message, Object secretKey) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -14,7 +14,7 @@ public class EncryptionFactory {
 		case AES256:
 			return new SomeEncryptionStrategy(new AES256EncryptionHandler());
 		default:
-			return new NoEncryptionStrategy();
+			return new NoEncryptionStrategy(null);
 		}
 	}
 }

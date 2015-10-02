@@ -2,9 +2,11 @@ package org.linphone.groupchat.encryption;
 
 import java.util.LinkedList;
 
+import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
@@ -33,7 +35,6 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		}
 	}
 	
-	@Override
 	public String receiveMessage(String message){
 		return handler.decrypt(message);
 	}
@@ -64,32 +65,28 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		sendMessage(message, members, lc);
 	}
 
-	@Override
 	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
 		return MessageParser.parseMemberUpdateInfo(handler.decrypt(message));
 	}
 
-	@Override
 	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
 		return handler.decrypt(message);
 	}
 
-	@Override
 	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
 		
 	}
 
-	@Override
 	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
 		return MessageParser.parseGroupChatMember(handler.decrypt(message));
 	}
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+		return null;
 		
 	}
 
-	@Override
 	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
 			boolean encrypted) {
 		String decryptedMessage=handler.decrypt(message);
@@ -98,7 +95,7 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		{
 			ic.public_key=handler.getPublicKey();
 			String newMessage=MessageParser.stringifyInitialContactInfo(ic);
-			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(ic.group.admin);
+			LinphoneChatRoom chatRoom=LinphoneManager.getLc().getOrCreateChatRoom(ic.group.admin);
 			LinphoneChatMessage lcMessage=chatRoom.createLinphoneChatMessage(newMessage);
 			chatRoom.sendChatMessage(lcMessage);
 			chatRoom.deleteMessage(lcMessage);
@@ -107,9 +104,48 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		{
 			if (ic.public_key!=0 && ic.secret_key==0)
 			{
-				ic.secret_key=handler.getSecretKey();
+				ic.secret_key=(long) handler.getSecretKey();
 				storage.updateSecretKey(id, ic.secret_key);
 			}
 		}
+		return null;
+	}
+
+	@Override
+	public void handleInitialContactMessage(LinphoneChatMessage message,
+			LinphoneCore lc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleInitialContactMessage(LinphoneChatMessage message,
+			String id, GroupChatStorage storage, LinphoneCore lc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public MemberUpdateInfo handleMemberUpdate(String message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMessage handleMediaMessage(LinphoneChatMessage message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMember handleAdminChange(String message) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
