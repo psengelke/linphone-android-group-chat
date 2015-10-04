@@ -6,10 +6,11 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	
 	// asymmetric
 	protected long key_private;
-	protected long key_public;
+	protected String key_public;
 	
 	// symmetric
 	protected SecretKeySpec sks;
+	protected String keySeed;
 	
 	protected EncryptionType encryption_type;
 
@@ -17,7 +18,7 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	public EncryptionHandlerImpl(){}
 
 	@Override
-	public String encrypt(String message, long key) {
+	public String encrypt(String message, String keySeed) {
 		return null;
 	}
 
@@ -27,7 +28,7 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	}
 
 	@Override
-	public long getPublicKey() {
+	public String getPublicKey() {
 		return key_public;
 	}
 
@@ -37,7 +38,25 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	}
 
 	@Override
+	public void generateAsymmetricKeys() {}
+
+	@Override
+	public void setSecretKey(String seed) {
+		keySeed=seed;
+	}
+
+	@Override
+	public String getKeySeed() {
+		return keySeed;
+	}
+
+	@Override
+	public char[] generateSeed() {
+		return null;
+	}
+
+	/*@Override
 	public long getSecretKey() {
 		return key_private;
-	}
+	}*/
 }

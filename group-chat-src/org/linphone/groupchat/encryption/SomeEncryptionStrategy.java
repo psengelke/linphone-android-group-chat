@@ -7,6 +7,7 @@ import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
@@ -24,7 +25,7 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 	@Override
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		for (GroupChatMember member : members) {
-			String encryptedMessage=handler.encrypt(message, handler.getSecretKey());
+			String encryptedMessage=handler.encrypt(message, handler.getKeySeed());
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 //			chatRoom.compose();
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(encryptedMessage);
@@ -33,10 +34,10 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public String receiveMessage(String message){
 		return handler.decrypt(message);
-	}
+	}*/
 
 	@Override
 	public EncryptionType getEncryptionType() {
@@ -65,28 +66,30 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 	}
 
 	@Override
-	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
+	public MemberUpdateInfo handleMemberUpdate(String message) {
 		return MessageParser.parseMemberUpdateInfo(handler.decrypt(message));
 	}
 
 	@Override
-	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
-		return handler.decrypt(message);
+	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
+		GroupChatMessage gcm=new GroupChatMessage();
+		gcm.message=handler.decrypt(message.getText());
+		return gcm;
 	}
 
 	@Override
-	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
-		
+	public GroupChatMessage handleMediaMessage(LinphoneChatMessage message) {
+		return null;
 	}
 
 	@Override
-	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
+	public GroupChatMember handleAdminChange(String message) {
 		return MessageParser.parseGroupChatMember(handler.decrypt(message));
 	}
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
-		
+		return new 
 	}
 
 	@Override

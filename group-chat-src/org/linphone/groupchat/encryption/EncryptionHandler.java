@@ -19,7 +19,7 @@ public interface EncryptionHandler {
     public void generateAsymmetricKeys();
     public String getPublicKey();
     
-    public String encrypt(String message);
+    public String encrypt(String message, String keySeed);
     public String decrypt(String message);
     public void setSecretKey(String seed);
     public String getKeySeed();

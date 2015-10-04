@@ -30,9 +30,7 @@ class AES256EncryptionHandler extends EncryptionHandlerImpl implements Encryptio
 	}*/
 	
 	@Override
-	public String encrypt(String message, long key) {
-		
-		// TODO: remove key parameter
+	public String encrypt(String message, String keySeed) {
 		try {
 			/*salt=generateSalt();
 			byte[] saltBytes=salt.getBytes("UTF-8");
@@ -53,7 +51,9 @@ class AES256EncryptionHandler extends EncryptionHandlerImpl implements Encryptio
 //			Mac sha256 = Mac.getInstance("HmacSHA256");
 //			SecretKeySpec sk=new SecretKeySpec(String.valueOf(key).getBytes(), "HmacSHA256");
 //			sha256.init(sk);
-			SecretKeySpec sk=new SecretKeySpec(Arrays.copyOf(String.valueOf(key).getBytes("UTF-8"), 16), "AES");
+			
+//			SecretKeySpec sk=new SecretKeySpec(Arrays.copyOf(String.valueOf(key).getBytes("UTF-8"), 16), "AES");
+			SecretKeySpec sk=new SecretKeySpec(keySeed.getBytes("UTF-8"), "AES");
 			sks=sk;
 			Cipher cipher=Cipher.getInstance("AES/ECB/PKCS5Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, sk);
@@ -95,7 +95,7 @@ class AES256EncryptionHandler extends EncryptionHandlerImpl implements Encryptio
 	}
 
 	@Override
-	public long getPublicKey() {
+	public String getPublicKey() {
 		return super.getPublicKey();
 	}
 	
