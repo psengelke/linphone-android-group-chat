@@ -6,19 +6,20 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
+import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 class SomeEncryptionStrategy implements EncryptionStrategy {
-	
+
 	private final EncryptionHandler handler;
 
 	public SomeEncryptionStrategy(EncryptionHandler handler) {
-		
+
 		this.handler = handler;
 	}
 
@@ -27,13 +28,13 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 		for (GroupChatMember member : members) {
 			String encryptedMessage=handler.encrypt(message, handler.getKeySeed());
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
-//			chatRoom.compose();
+			//			chatRoom.compose();
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(encryptedMessage);
 			chatRoom.sendChatMessage(newMessage);
 			chatRoom.deleteMessage(newMessage);
 		}
 	}
-	
+
 	/*@Override
 	public String receiveMessage(String message){
 		return handler.decrypt(message);
@@ -89,51 +90,83 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
-		
+
 		EncryptionType type = null;// MessageParser.parserEncryptionType(message);
-		
-		if (type != EncryptionType.None) return null;
-		
-		return null;
-		
+
+		if (type != EncryptionType.None) 
+			return null;
+
+		new EncryptionFactory();
+		return EncryptionFactory.createEncryptionStrategy(type);
+
 	}
 
-//	@Override
+	/*	@Override
 	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
 			boolean encrypted) {
 		String decryptedMessage=handler.decrypt(message);
 		InitialContactInfo ic=MessageParser.parseInitialContactInfo(decryptedMessage);
 		if (ic.public_key==0 && ic.secret_key==0)
 		{
-//			ic.public_key=handler.getPublicKey();
-//			String newMessage=MessageParser.stringifyInitialContactInfo(ic);
-//			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(ic.group.admin);
-//			LinphoneChatMessage lcMessage=chatRoom.createLinphoneChatMessage(newMessage);
-//			chatRoom.sendChatMessage(lcMessage);
-//			chatRoom.deleteMessage(lcMessage);
+			ic.public_key=handler.getPublicKey();
+			String newMessage=MessageParser.stringifyInitialContactInfo(ic);
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(ic.group.admin);
+			LinphoneChatMessage lcMessage=chatRoom.createLinphoneChatMessage(newMessage);
+			chatRoom.sendChatMessage(lcMessage);
+			chatRoom.deleteMessage(lcMessage);
 		}
 		else
 		{
 			if (ic.public_key!=0 && ic.secret_key==0)
 			{
-//				ic.secret_key=handler.getSecretKey();
-//				storage.updateSecretKey(id, ic.secret_key);
+				ic.secret_key=handler.getSecretKey();
+				storage.updateSecretKey(id, ic.secret_key);
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void handleInitialContactMessage(LinphoneChatMessage message,
-			LinphoneCore lc) {
-		// TODO Auto-generated method stub
-		
-	}
+	}*/
 
 	@Override
 	public void handleInitialContactMessage(LinphoneChatMessage message,
 			String id, GroupChatStorage storage, LinphoneCore lc) {
-		// TODO Auto-generated method stub
 		
+		String header=message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
+		if (header!=null)
+		{
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
+			LinphoneChatMessage newMessage;
+			
+			switch (header) {
+			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1: 
+				handler.generateAsymmetricKeys();
+				newMessage=chatRoom.createLinphoneChatMessage(handler.getPublicKey());
+				chatRoom.sendChatMessage(newMessage);
+				chatRoom.deleteMessage(newMessage);
+				break;
+			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2:
+				String encryptedKey=handler.encrypt(message.getText(), handler.getKeySeed());
+				newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
+				chatRoom.sendChatMessage(newMessage);
+				chatRoom.deleteMessage(newMessage);
+				break;
+			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3:
+				String key=handler.decrypt(message.getText());
+				try {
+					handler.setSecretKey(key);
+				} catch (InvalidKeySeedException e) {
+					e.printStackTrace();
+					break;
+				}
+				storage.setSecretKey(id, key);
+				GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
+				newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
+				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);
+				chatRoom.sendChatMessage(newMessage);
+				chatRoom.deleteMessage(newMessage);
+				break;
+			default: 
+				break;
+			}
+		}
 	}
 }
