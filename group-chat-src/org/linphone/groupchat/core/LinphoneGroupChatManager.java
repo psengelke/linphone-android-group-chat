@@ -108,23 +108,25 @@ public class LinphoneGroupChatManager {
 	private void generateGroupChats(){
 		
 		LinkedList<GroupChatData> groups = storage.getChatList();
-		Iterator<GroupChatData> it = groups.iterator();
-		while (it.hasNext()) {
-			GroupChatData group = it.next();
-			try {
-				chats.add(new LinphoneGroupChatRoom(
-						group, 
-						EncryptionFactory.createEncryptionStrategy(
-								group.encryption_type, storage.getSecretKey(group.group_id)
-						), 
-						storage, 
-						LinphoneGroupChatListener.getLinphoneCore()
-				));
-			} catch (InvalidKeySeedException e) {
-				// TODO handle error appropriately...
+		if (groups != null)
+		{
+			Iterator<GroupChatData> it = groups.iterator();
+			while (it.hasNext()) {
+				GroupChatData group = it.next();
+				try {
+					chats.add(new LinphoneGroupChatRoom(
+							group, 
+							EncryptionFactory.createEncryptionStrategy(
+									group.encryption_type, storage.getSecretKey(group.group_id)
+							), 
+							storage, 
+							LinphoneGroupChatListener.getLinphoneCore()
+					));
+				} catch (InvalidKeySeedException e) {
+					// TODO handle error appropriately...
+				}
 			}
 		}
-		
 		
 	}
 	
