@@ -10,13 +10,25 @@ package org.linphone;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.communication.DataExchangeFormat;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.core.LinphoneGroupChatManager;
+import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.exception.GroupChatExistsException;
+import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.exception.InvalidGroupNameException;
+
 import android.widget.TextView;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +65,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private RadioButton encryptionNone, encryptionAES;
 	private static GroupChatCreationFragment instance;
 	private LayoutInflater mInflater;
-	private List<String> members = new LinkedList<String>();
+	private LinkedList<GroupChatMember> members = new LinkedList<GroupChatMember>();
 	private boolean isEditMode = false;
 	private String encryptionChoice = "";
 	private String groupNameString = "";
@@ -171,10 +183,20 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			newParticipant.setText("");
 			// Hide keyboard
 			closeKeyboard(getActivity(), newParticipant.getWindowToken());
-			
-			if (!newContact.equals(""))
+			String sipUri = newContact;
+			if (!sipUri.equals(""))
 			{
-				members.add(newContact);
+				if (!LinphoneUtils.isSipAddress(sipUri)) {
+					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+						return;
+					}
+					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+				}
+				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
+					sipUri = "sip:" + sipUri;
+				}
+				DataExchangeFormat.GroupChatMember gm = new DataExchangeFormat.GroupChatMember(newContact, sipUri, true); 
+				members.add(gm);
 				// Refresh list of contacts:
 				groupParticipants.setAdapter(new MembersAdapter());
 				groupParticipants.setVisibility(View.VISIBLE);
@@ -209,11 +231,60 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			//TODO Check group parameters here!!!
 			//TODO Interface with core and create group
 			
-			GroupChatActivity activity =  (GroupChatActivity) getActivity();
-			Bundle extras = new Bundle();
-			extras.putString("groupName", groupNameString);
-			// Replace this fragment with GroupChatMessagingFragment for the newly created group
-			activity.changeFragment("gcMessagingFragment", extras);
+			LinphoneManager lm = LinphoneManager.getInstance();
+			LinphoneCore lc = lm.getLc();
+			// get user sip:
+			String usersip = lc.getDefaultProxyConfig().getIdentity();
+			// get user name
+			String username = usersip.substring(0, usersip.indexOf('@'));
+			members.add(new DataExchangeFormat.GroupChatMember(username, usersip, true));
+			
+			// Determine Encryption type:
+			EncryptionType et;
+			if (encryptionChoice.equals(ENC_AES))
+				et = EncryptionType.AES256;
+			else
+				et = EncryptionType.None;
+			
+			// Create group
+			LinphoneGroupChatManager lGm = LinphoneGroupChatManager.getInstance();
+			try 
+			{
+				lGm.createGroupChat(groupNameString, usersip, members, et);
+				
+				GroupChatActivity activity =  (GroupChatActivity) getActivity();
+				Bundle extras = new Bundle();
+				extras.putString("groupName", groupNameString);
+				// Replace this fragment with GroupChatMessagingFragment for the newly created group
+				activity.changeFragment("gcMessagingFragment", extras);
+				
+			} catch (GroupChatSizeException | InvalidGroupNameException
+					| GroupChatExistsException e) 
+			{
+				Log.e("here", "---- exc ----");
+				String errorMsg = "";
+				if (e.getClass().equals(GroupChatExistsException.class))
+					errorMsg = "This group already exists";
+				else if (e.getClass().equals(GroupChatSizeException.class))
+					errorMsg = "You need at least two members";
+				else
+					errorMsg = "Invalid Group Name";
+				
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+	            builder1.setMessage(errorMsg);
+	            builder1.setCancelable(true);
+	            builder1.setPositiveButton("OK",
+	                    new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    dialog.cancel();
+	                }
+	            });
+	            AlertDialog alert11 = builder1.create();
+	            alert11.show();
+				
+				e.printStackTrace();
+			}
+			
 		}
 		
 	}
@@ -249,7 +320,10 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 	{
 		String member = (String) view.getTag();
-		members.remove(member);
+		for (int k = 0; k < members.size(); ++k)
+			if (members.get(k).name.equals(member))
+				members.remove(k);
+		
 		refreshParticipantsList();
 		
 	}
@@ -307,7 +381,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			else
 				view = mInflater.inflate(R.layout.memberlist_cell, parent, false);
 			
-			String contact = members.get(position);
+			String contact = members.get(position).name;
 			view.setTag(contact);
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
