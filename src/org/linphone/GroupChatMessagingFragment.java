@@ -12,6 +12,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.ui.GroupBubbleChat;
 import org.linphone.ui.BubbleChat;
 
 import android.app.AlertDialog;
@@ -27,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
@@ -37,6 +39,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	private ImageView groupPicture;
 	private TextView remoteMemberComposing;
 	private TextView back, info;
+	private TextView sendMsgBtn;
 	private ListView msgList;
 	private String groupName, groupID;
 	private LinkedList<GroupChatMessage> history;
@@ -86,6 +89,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		info = (TextView) view.findViewById(R.id.group_info);
 		info.setOnClickListener(this);
+		
+		sendMsgBtn = (TextView) view.findViewById(R.id.sendMessage);
 		
 		msgList = (ListView) view.findViewById(R.id.group_message_list);
 		
@@ -150,6 +155,10 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 			// replace fragment with GroupChatSettingsFragment
 			activity.changeFragment("gcSettingsFragment", extras);
 		}
+		else if (id == R.id.sendMessage)
+		{
+			
+		}
 	}
 	
 	/**
@@ -167,17 +176,16 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-////			GroupChatMessage message = history.get(position);
-////			
-////			BubbleChat bubble = new BubbleChat(getActivity(), message, GroupChatMessagingFragment.this);
-////			View v = bubble.getView();
-////			
-////			//registerForContextMenu(v);
-////			RelativeLayout rlayout = new RelativeLayout(context);
-////			rlayout.addView(v);
-////			
-//			return rlayout;
-			return null;
+			GroupChatMessage message = history.get(position);
+			Context context = getActivity();
+			GroupBubbleChat bubble = new GroupBubbleChat(context, message);//, GroupChatMessagingFragment.this);
+			View v = bubble.getView();
+			
+			//registerForContextMenu(v);
+			RelativeLayout rlayout = new RelativeLayout(context);
+			rlayout.addView(v);
+			
+			return rlayout;
 		}
 
 		public int getCount() {
