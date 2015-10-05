@@ -6,7 +6,17 @@ package org.linphone;
  * @implements OnClickListener to handle button click events
  */
 
+import java.util.LinkedList;
+
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.core.LinphoneGroupChatManager;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.ui.BubbleChat;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,7 +38,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	private TextView remoteMemberComposing;
 	private TextView back, info;
 	private ListView msgList;
-	private String groupName;
+	private String groupName, groupID;
+	private LinkedList<GroupChatMessage> history;
 	
 //	private LinphoneGroupChatRoom chatroom;
 //	private GroupChatMessageAdapter groupChatMessageAdapter;
@@ -43,6 +54,29 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		setRetainInstance(true);
 		// Determine which groupChat to create interface for
 		groupName = getArguments().getString("groupName");
+		groupID = getArguments().getString("groupID");
+		
+		// Use groupID to retrieve messages
+		LinphoneGroupChatManager lGM = LinphoneGroupChatManager.getInstance();
+		try {
+			LinphoneGroupChatRoom groupChat = lGM.getGroupChat(groupID);
+			history = groupChat.getHistory();
+			if (history != null)
+				msgList.setAdapter(new GroupChatMessageAdapter());
+		} catch (GroupDoesNotExistException e) {
+			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+            builder1.setMessage(e.getMessage());
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+		}
+		
 		
 		groupNameView = (TextView) view.findViewById(R.id.groupName);
 		groupNameView.setText(groupName);
@@ -125,13 +159,6 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	public class GroupChatMessageAdapter extends BaseAdapter
 	{
 //		LinphoneChatMessage[] history;
-		Context context;
-		
-		public GroupChatMessageAdapter(Context context/*,LinphoneChatMessage[] history*/) 
-		{
-//			this.history = history;
-			this.context = context;
-		}
 		
 		public void refreshHistory()
 		{
@@ -140,15 +167,15 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-//			LinphoneChatMessage message = history[position];
-//			
-//			BubbleChat bubble = new BubbleChat(context, message, GroupChatMessagingFragment.this);
-//			View v = bubble.getView();
-//			
-//			//registerForContextMenu(v);
-//			RelativeLayout rlayout = new RelativeLayout(context);
-//			rlayout.addView(v);
-//			
+////			GroupChatMessage message = history.get(position);
+////			
+////			BubbleChat bubble = new BubbleChat(getActivity(), message, GroupChatMessagingFragment.this);
+////			View v = bubble.getView();
+////			
+////			//registerForContextMenu(v);
+////			RelativeLayout rlayout = new RelativeLayout(context);
+////			rlayout.addView(v);
+////			
 //			return rlayout;
 			return null;
 		}

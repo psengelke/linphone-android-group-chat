@@ -94,5 +94,36 @@ public interface DataExchangeFormat {
 		public Date time;
 		public MessageState state;
 		public MessageDirection direction;
+		
+		public boolean isOutgoing()
+		{
+			return (direction == MessageDirection.Outgoing);
+		}
+		
+		public boolean isIncoming()
+		{
+			return (direction == MessageDirection.Incoming);
+		}
+		
+		public boolean isRead()
+		{
+			return (state == MessageState.Read);
+		}
+		
+		public boolean isUnread()
+		{
+			return (state == MessageState.Unread);
+		}
+		
+		public int getStorageId()
+		{
+			return id;
+		}
+		
+		public Date getTime()
+		{
+			return time;
+		}
+		
 	}
 }

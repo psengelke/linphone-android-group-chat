@@ -252,9 +252,13 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			{
 				lGm.createGroupChat(groupNameString, usersip, members, et);
 				
+				// Get new GroupChat id
+				String groupId = "";
+				
 				GroupChatActivity activity =  (GroupChatActivity) getActivity();
 				Bundle extras = new Bundle();
 				extras.putString("groupName", groupNameString);
+				extras.putString("groupID", groupId);
 				// Replace this fragment with GroupChatMessagingFragment for the newly created group
 				activity.changeFragment("gcMessagingFragment", extras);
 				
@@ -262,16 +266,9 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 					| GroupChatExistsException e) 
 			{
 				Log.e("here", "---- exc ----");
-				String errorMsg = "";
-				if (e.getClass().equals(GroupChatExistsException.class))
-					errorMsg = "This group already exists";
-				else if (e.getClass().equals(GroupChatSizeException.class))
-					errorMsg = "You need at least two members";
-				else
-					errorMsg = "Invalid Group Name";
 				
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-	            builder1.setMessage(errorMsg);
+	            builder1.setMessage(e.getMessage());
 	            builder1.setCancelable(true);
 	            builder1.setPositiveButton("OK",
 	                    new DialogInterface.OnClickListener() {

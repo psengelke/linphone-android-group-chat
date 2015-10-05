@@ -85,11 +85,15 @@ public class LinphoneGroupChatManager {
 		String id =  + ':' + group_name.replaceAll(" ", "");
 		
 		LinkedList<String> list = storage.getChatIdList();
-		Iterator<String> it = list.iterator();
-		while (it.hasNext()) {
-			String gid = (String) it.next();
-			if (gid.equals(id)) throw new InvalidGroupNameException("You already have a group with that name.");
+		if (list != null)
+		{
+			Iterator<String> it = list.iterator();
+			while (it.hasNext()) {
+				String gid = (String) it.next();
+				if (gid.equals(id)) throw new InvalidGroupNameException("You already have a group with that name.");
+			}
 		}
+		
 		
 		return id;
 	}
@@ -100,16 +104,20 @@ public class LinphoneGroupChatManager {
 	private void generateGroupChats(){
 		
 		LinkedList<GroupChatData> groups = storage.getChatList();
-		Iterator<GroupChatData> it = groups.iterator();
-		while (it.hasNext()) {
-			GroupChatData group = it.next();
-			chats.add(new LinphoneGroupChatRoom(
-					group, 
-					EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
-					storage, 
-					LinphoneGroupChatListener.getLinphoneCore()
-			));
+		if (groups != null)
+		{
+			Iterator<GroupChatData> it = groups.iterator();
+			while (it.hasNext()) {
+				GroupChatData group = it.next();
+				chats.add(new LinphoneGroupChatRoom(
+						group, 
+						EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
+						storage, 
+						LinphoneGroupChatListener.getLinphoneCore()
+				));
+			}
 		}
+		
 	}
 	
 	/**
