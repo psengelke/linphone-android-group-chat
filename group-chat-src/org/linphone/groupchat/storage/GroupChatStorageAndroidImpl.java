@@ -86,7 +86,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	
 	public void markChatAsRead(String groupId){
 		
-		String query = "Update Messages SET message_state = 0 WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+groupId + ")" ;
+		String query = "Update Messages SET message_state = 0 WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupId + "')" ;
 		
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL(query);       
@@ -120,7 +120,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		public LinkedList<GroupChatMessage> getMessages(String id) {
 			
 			SQLiteDatabase db = helper.getReadableDatabase();
-			String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ")" ;
+			String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')" ;
 			Cursor c = db.rawQuery(query, null);
 			
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
@@ -222,7 +222,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ")" ;
+		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')" ;
 		Cursor c = db.rawQuery(query, null);
 		
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
@@ -258,7 +258,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public int getUnreadMessageCount(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ") and messages.message_state=0";
+		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "') and messages.message_state=0";
 		Cursor c=db.rawQuery(query, null);
 		int count=0;
 		if (c!=null)
@@ -276,14 +276,14 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setSecretKey(String id, String key) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "Update Groups SET secret_Key="+ key +" Where group_id = "+id;
+		String query = "Update Groups SET secret_Key="+ key +" Where group_id = '"+id+"'";
 		db.execSQL(query);		
 	}
 	
 	@Override
 	public String getSecretKey(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT secret_Key From Groups Where group_id = " + id;
+		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		String secretKey = c.getString(0);
 		return secretKey;
@@ -291,7 +291,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	
 	@Override
 	public void updateEncryptionType(String id, EncryptionType type) {
-		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String query = "Update Groups SET encryption_type="+ type.ordinal() +" Where group_id = '"+id+"'";
+		db.execSQL(query);		
 	}
 	
 	@Override
@@ -302,8 +304,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	@Override
 	public void updateAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException {
-		// TODO Auto-generated method stub
-		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String query = "Update Groups SET admin_id= (Select Members._id From Members Where Members.sip_address = '"+member.sip+"')"+" Where group_id = '"+id+"'";
+		db.execSQL(query);		
 	}
 
 	@Override
