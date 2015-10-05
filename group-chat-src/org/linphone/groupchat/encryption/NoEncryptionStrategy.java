@@ -10,7 +10,7 @@ import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 class NoEncryptionStrategy implements EncryptionStrategy {
@@ -105,7 +105,21 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 	public void handleInitialContactMessage(LinphoneChatMessage message,
 			LinphoneCore lc) {
 		// TODO Auto-generated method stub
+		// check the header
 		
+		//stage 1
+			// generate key-pair
+			// send message public key
+		//stage 2
+			// encrypt secret key
+			// send
+		//stage 3
+			// decrypt key
+			// store key 
+			// set key to handler
+			// send invite confirmation
+				// header: MSG_HEADER_TYPE_INVITE_ACCEPT
+				// message
 	}
 
 	@Override

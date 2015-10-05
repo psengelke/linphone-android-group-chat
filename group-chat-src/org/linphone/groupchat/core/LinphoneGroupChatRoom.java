@@ -14,7 +14,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.encryption.EncryptionStrategy;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
@@ -239,7 +239,7 @@ public class LinphoneGroupChatRoom {
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			encryption_strategy.handleInitialContactMessage(message, lc);
+			encryption_strategy.handleInitialContactMessage(message, group_id, storage, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
 			encryption_strategy.handleInitialContactMessage(message, group_id, storage, lc);

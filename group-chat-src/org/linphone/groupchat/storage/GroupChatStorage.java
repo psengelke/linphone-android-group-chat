@@ -4,7 +4,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
@@ -111,7 +111,13 @@ public interface GroupChatStorage {
 	* @param id The group chat id.
 	* @param key The new secret key.
 	*/
-	public void updateSecretKey(String id, Long key);
+	public void setSecretKey(String id, String key);
+	
+	/**
+	 * Get the secret key seed.
+	 * @param id The group chat id.
+	 */
+	public String getSecretKey(String id);
 	
     /**
      * Changes the encryption type used by the group.

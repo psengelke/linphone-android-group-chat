@@ -6,7 +6,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 
 /**
  * This class provides functionality for parsing string message objects and converting such 
@@ -223,5 +223,10 @@ public class MessageParser {
 		String[] admin = message.split(SEPARATOR);
 		
 		return new GroupChatMember(admin[0], admin[1], Boolean.parseBoolean(admin[2]));
+	}
+	
+	public static EncryptionType parseEncryptionType(String message){
+		
+		return null;
 	}
 }

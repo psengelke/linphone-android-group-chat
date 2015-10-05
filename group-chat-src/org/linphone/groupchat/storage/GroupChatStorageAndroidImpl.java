@@ -11,19 +11,21 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 
 import java.lang.Override;
 import java.lang.String;
 import java.security.PrivateKey;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
  * This class uses {@link org.linphone.groupchat.storage.interfaces.GroupChatStorage} instance.
  *
  * @author David Breetzke
+ * @author Jessica Lessev
  */
 
 class GroupChatStorageAndroidImpl implements GroupChatStorage {
@@ -35,6 +37,62 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     }
 
     public void close(){}
+    
+    /***********************************************************************************************************************/    
+    @Override
+	public void createGroupChat(GroupChatData data) {
+		
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(GroupChatHelper.Groups.groupId, data.group_id);
+        values.put(GroupChatHelper.Groups.groupName, data.group_name);
+        values.put(GroupChatHelper.Groups.adminId, data.admin);
+        values.put(GroupChatHelper.Groups.encryptionType, data.encryption_type.ordinal());
+        values.put(GroupChatHelper.Groups.secretKey,"");
+
+        db.insert(GroupChatHelper.Groups.tableName, null, values);
+        db.close();
+        
+        Iterator<GroupChatMember> it = data.members.iterator();
+        while (it.hasNext()){
+        	addMember(data.group_id, it.next());
+        }
+	}
+    /***********************************************************************************************************************/
+    
+    /***********************************************************************************************************************/
+
+   	@Override
+   	public void addMember(String id, GroupChatMember member) {
+
+   		SQLiteDatabase db = helper.getWritableDatabase();
+           ContentValues values = new ContentValues();
+
+           values.put(GroupChatHelper.Members.name, member.name);
+           values.put(GroupChatHelper.Members.sipAddress, member.sip);
+           values.put(GroupChatHelper.Members.groupId, id);
+           
+           db.insert(GroupChatHelper.Groups.tableName, null, values);
+           db.close();
+   		
+   	}
+   	
+   	
+   	/***********************************************************************************************************************/
+   	/***********************************************************************************************************************/
+	
+	public void markChatAsRead(String groupId){
+		
+		String query = "Update Messages SET message_state = 0 WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+groupId + ")" ;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		db.execSQL(query);       
+	}
+	
+
+	/***********************************************************************************************************************/
+
     
     @Override
 	public void saveTextMessage(String id, GroupChatMessage message) {
@@ -50,12 +108,16 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 	}
 
+    /*************************************************************************************************************************/
 	@Override
 	public void saveImageMessage(String id, GroupChatMessage message) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/*************************************************************************************************************************/
+	
+	
+	
 	@Override
 	public void saveVoiceRecording(String id, GroupChatMessage message) {
 		// TODO Auto-generated method stub
@@ -90,33 +152,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     	return null; // TODO 
     }
     
-    @Override
-	public void createGroupChat(GroupChatData data) {
-		
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(GroupChatHelper.Groups.groupId, data.group_id);
-        values.put(GroupChatHelper.Groups.groupName, data.group_name);
-        values.put(GroupChatHelper.Groups.adminId, data.admin);
-        values.put(GroupChatHelper.Groups.encryptionType, data.encryption_type.ordinal());
-
-        db.insert(GroupChatHelper.Groups.tableName, null, values);
-        db.close();
-
-		// TODO loop through data.members and add them to members table
-	}
-
-	@Override
-	public void addMember(String id, GroupChatMember member) {
-		// TODO Auto-generated method stub
-		
-	}
+   
+    
+   
 	
-	public void markChatAsRead(String groupId){}
-
+	
 	@Override
-	public void updateGroupName(String grouId, String name) {
+	public void updateGroupName(String groupId, String name) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -182,65 +224,66 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         private static final String GROUPCHAT_DB_NAME = "GroupChatStorageDatabase";
 
         //Groups Table
-        public class Groups{
+        private class Groups{
             private static final String tableName = "Groups";
             private static final String id = "_id";
-            private static final String idType = " INTEGER(10) PRIMARY KEY AUTOINCREMENT ";
+            private static final String idType = " INTEGER PRIMARY KEY AUTOINCREMENT ";
             private static final String groupId = "group_id";
             private static final String groupIdType = " VARCHAR(255) ";
             private static final String groupName = "group_name";
             private static final String groupNametype = " VARCHAR(50) ";
             private static final String encryptionType = "encryption_type";
-            private static final String encryptionTypeType = " INTEGER(1) "; 
+            private static final String encryptionTypeType = " INTEGER "; 
             private static final String adminId = "admin_id";
-            private static final String adminIdType = " INTEGER(10) "; 
+            private static final String adminIdType = " INTEGER ";
+            private static final String secretKey = " secret_Key ";
+            private static final String secretKeyType = " VARCHAR(50) ";
+            
         }
 
         //Messages Table
-        public class Messages{
+        private class Messages{
             private static final String tableName = "Messages";
             private static final String id = "_id";
-            private static final String idType = " INTEGER(10) PRIMARY KEY AUTOINCREMENT ";
+            private static final String idType = " INTEGER PRIMARY KEY AUTOINCREMENT ";
             private static final String messageText = "message_text";
             private static final String messageTextType = " TEXT ";
             private static final String memberId = "member_id";
-            private static final String memberIdType = " INTEGER(10) "; 
+            private static final String memberIdType = " INTEGER "; 
             private static final String messageState = "message_state";
-            private static final String messageStateType = " INTEGER(1) ";
+            private static final String messageStateType = " INTEGER ";
             private static final String messageDirection = "message_direction";
-            private static final String messageDirectionType = " INTEGER(1) "; 
+            private static final String messageDirectionType = " INTEGER "; 
             private static final String timeSent = "time_sent";
             private static final String timeSentType = "DATETIME"; 
         }
 
         //Members Table
-        public class Members{
+        private class Members{
             private static final String tableName = "Members";
             private static final String id = "_id";
-            private static final String idType = " INTEGER(10) PRIMARY KEY AUTOINCREMENT ";
+            private static final String idType = " INTEGER PRIMARY KEY AUTOINCREMENT ";
             private static final String name = "name";
             private static final String nameType =" VARCHAR(50) ";
             private static final String sipAddress = "sip_address";
             private static final String sipAddressType = " VARCHAR(50) ";
-            private static final String publicKey = "public_key"; // this field will no longer be needed
-            private static final String publicKeyType = " INTEGER(10) ";
             private static final String groupId = "group_id";
-            private static final String groupIdType = " INTEGER(10) ";
+            private static final String groupIdType = " INTEGER ";
         }
 
         //Attachments Table
-        public class Attachments{
+        private class Attachments{
             private static final String tableName = "Attachments";
             private static final String id = "_id";
-            private static final String idType = " INTEGER(10) PRIMARY KEY AUTOINCREMENT ";
+            private static final String idType = " INTEGER PRIMARY KEY AUTOINCREMENT ";
             private static final String file = "file";
             private static final String fileType = " BLOB ";
             private static final String messageId = "message_id";
-            private static final String messageIdType = " INTEGER(10)";
+            private static final String messageIdType = " INTEGER";
         }
 
 
-        public GroupChatHelper(Context context){
+        private GroupChatHelper(Context context){
             super(context, GROUPCHAT_DB_NAME, null, GROUPCHAT_DB_VERSION);
         }
 
@@ -250,7 +293,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
             String createGroupsTable = "CREATE TABLE " + Groups.tableName + "("
                     + Groups.id + " " + Groups.idType + ", " +  Groups.groupId + " " + Groups.groupIdType + ", "
                     + Groups.groupName + " " + Groups.groupNametype + ", " +  Groups.encryptionType 
-                    + " " + Groups.encryptionTypeType + ", " +  Groups.adminId + " " + Groups.adminIdType + " )";
+                    + " " + Groups.encryptionTypeType + ", " +  Groups.adminId + " " + Groups.adminIdType + ", " +  Groups.secretKey + " " + Groups.secretKeyType + " )";
             
             String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
                     + Messages.id + " "+ Messages.idType +", " +  Messages.messageText + " " + Messages.messageTextType 
@@ -260,7 +303,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
             
             String createMembersTable = "CREATE TABLE " + Members.tableName + "(" + Members.id + " " + Members.idType 
             		+ ", " +  Members.name + " " + Members.nameType + ", " + Members.sipAddress + " " + Members.sipAddressType 
-            		+ ", " +  Members.publicKey + " " + Members.publicKeyType + ", " + Members.groupId + " " + Members.groupIdType + " )";
+            		+ ", " + Members.groupId + " " + Members.groupIdType + " )";
             
             String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
                     + Attachments.id + " " + Attachments.idType + ", " +  Attachments.file + " " + Attachments.fileType 
