@@ -2,9 +2,11 @@ package org.linphone.groupchat.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.text.format.DateFormat;
 
 import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneChatMessage;
@@ -14,12 +16,19 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
+import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
+import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 
 import java.lang.Override;
 import java.lang.String;
 import java.security.PrivateKey;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * This class uses {@link org.linphone.groupchat.storage.interfaces.GroupChatStorage} instance.
@@ -93,13 +102,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	/***********************************************************************************************************************/
 	/***********************************************************************************************************************/
-	String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
-            + Messages.id + " "+ Messages.idType +", " +  Messages.messageText + " " + Messages.messageTextType 
-            + "," + Messages.memberId + " " + Messages.memberIdType + "," +  Messages.messageState 
-            + " " + Messages.messageStateType + ", " + Messages.messageDirection + " " 
-            + Messages.messageDirectionType +", " + Messages.timeSent + " " + Messages.timeSentType + " )";
-	
-	
 	 @Override
 		public void saveTextMessage(String id, GroupChatMessage message) {
 	        SQLiteDatabase db = helper.getWritableDatabase();
@@ -116,8 +118,45 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	        db.close(); // Closing database connection
 			
 		}
+	 
 
-	
+		/***********************************************************************************************************************/
+
+		/***********************************************************************************************************************/
+		@Override
+		public LinkedList<GroupChatMessage> getMessages(String id) {
+			
+			SQLiteDatabase db = helper.getReadableDatabase();
+			String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ")" ;
+			Cursor c = db.rawQuery(query, null);
+			
+			LinkedList<GroupChatMessage> el = new LinkedList<>();
+			GroupChatMessage temp = new GroupChatMessage();
+			
+			SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
+			Date d=null;
+			 if(c.moveToFirst()){
+		            do{	          
+		               temp.id = c.getInt(0);
+		               temp.message = c.getString(1);
+		               temp.sender = c.getString(2);
+		               temp.state = MessageState.values()[c.getInt(3)];
+		               temp.direction = MessageDirection.values()[c.getInt(4)];
+		               try {
+						d=format.parse(c.getString(5));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+		               temp.time= d;
+		               el.add(temp);
+		            }while(c.moveToNext());
+		        }
+		        c.close();
+		        db.close();
+			return el;
+		}
+
+		/***********************************************************************************************************************/
    
 	 
 	 
@@ -135,11 +174,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 	
 
-	@Override
-	public LinkedList<GroupChatMessage> getMessages(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	
 	
 	/**
