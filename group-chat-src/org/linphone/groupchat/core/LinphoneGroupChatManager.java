@@ -63,23 +63,17 @@ public class LinphoneGroupChatManager {
 		group.encryption_type = type;
 		
 		LinphoneGroupChatRoom chat;
-		try {
-			chat = new LinphoneGroupChatRoom(
-					group, 
-					EncryptionFactory.createEncryptionStrategy(type),
-					storage, 
-					LinphoneGroupChatListener.getLinphoneCore()
-			);
-			
-			chat.doInitialization();
-			chats.add(chat);
-			
-			return group.group_id;
-		} catch (InvalidKeySeedException e) {
-			//TODO handle this exception
-		}
+		chat = new LinphoneGroupChatRoom(
+				group, 
+				EncryptionFactory.createEncryptionStrategy(type),
+				storage, 
+				LinphoneGroupChatListener.getLinphoneCore()
+		);
 		
-		return null;
+		chat.doInitialization();
+		chats.add(chat);
+		
+		return group.group_id;
 	}
 	
 	/**
@@ -120,7 +114,9 @@ public class LinphoneGroupChatManager {
 			try {
 				chats.add(new LinphoneGroupChatRoom(
 						group, 
-						EncryptionFactory.createEncryptionStrategy(group.encryption_type, storage.getSecretKey(group.group_id)), 
+						EncryptionFactory.createEncryptionStrategy(
+								group.encryption_type, storage.getSecretKey(group.group_id)
+						), 
 						storage, 
 						LinphoneGroupChatListener.getLinphoneCore()
 				));
@@ -197,7 +193,7 @@ public class LinphoneGroupChatManager {
 	 * @param message The message received for a group chat.
 	 * @throws InvalidKeySeedException 
 	 */
-	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) throws InvalidKeySeedException{
+	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		
 		cr.deleteMessage(message);
 		
@@ -212,7 +208,8 @@ public class LinphoneGroupChatManager {
 				return; // something went wrong in the network, ignore message.
 			}
 			
-			LinphoneGroupChatRoom group = new LinphoneGroupChatRoom(
+			LinphoneGroupChatRoom group;
+			group = new LinphoneGroupChatRoom(
 					info.group, 
 					EncryptionFactory.createEncryptionStrategy(info.group.encryption_type), 
 					storage,

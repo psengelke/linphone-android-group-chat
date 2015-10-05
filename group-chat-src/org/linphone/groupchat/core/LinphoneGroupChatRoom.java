@@ -16,6 +16,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.encryption.EncryptionStrategy;
 import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
+import org.linphone.groupchat.exception.GroupChatListenerIsSetException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
@@ -209,13 +210,19 @@ public class LinphoneGroupChatRoom {
 	 * or in the event that the admin wishes to remove a member.
 	 * @param address The member to be removed.
 	 * @throws IsAdminException If the admin tries to remove themselves before assigning a new admin.
+	 * @throws GroupDoesNotExistException If the the group chat does not exist.
 	 */
-	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException {
-
-		//TODO: Need to possibly call remove group function from {@link LinphoneGroupChatManager}.
+	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException, 
+		GroupDoesNotExistException {
 		
-		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
-		if (lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new IsAdminException("You must assign a new admin first.");
+		String me = lc.getDefaultProxyConfig().getIdentity();
+		
+		if (!me.equals(admin)) throw new PermissionRequiredException();
+		if (member.sip.equals(admin)) throw new IsAdminException("You must assign a new admin first.");
+		if (me.equals(member.sip)){
+			LinphoneGroupChatManager.getInstance().deleteGroupChat(group_id);
+			return;
+		}
 		
 		storage.removeMember(group_id, member);
 		
@@ -226,7 +233,7 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
-	 * This method is called when a new message for the group has been received by the Linphone client. 
+	 * This method is called when a new message for the group has been received by the Linphone client.
 	 * The method handles administrative tasks concerning a new message.
 	 * @param message The message object to be handled by the group chat.
 	 */
@@ -503,11 +510,20 @@ public class LinphoneGroupChatRoom {
 		return members;
 	}
 	
-	public void setGroupChatRoomListener(GroupChatRoomListener listner){
+	/**
+	 * Sets a listner for the {@link LinphoneGroupChatRoom}.
+	 * @param listner The listner to receive push messages from the {@link LinphoneGroupChatRoom}.
+	 * @throws GroupChatListenerIsSetException If a listener is currently set.
+	 */
+	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException{
 		
+		if (this.listener != null) throw new GroupChatListenerIsSetException();
 		this.listener = listner;
 	}
 	
+	/**
+	 * Removes the current {@link GroupChatRoomListener}.
+	 */
 	public void unsetGroupChatListner(){
 		
 		listener = null;
@@ -530,16 +546,21 @@ public class LinphoneGroupChatRoom {
 		return admin;
 	}
 	
-	public void setEncryptionStrategy(EncryptionStrategy encryption_strategy) {
+	/**
+	 * Changes the current encryption strategy, only if that new strategy is uses none.
+	 * @param encryption_strategy The new encryption strategy.
+	 * @throws PermissionRequiredException 
+	 */
+	public void setEncryptionStrategy(EncryptionStrategy encryption_strategy) throws PermissionRequiredException {
+		
+		if (!admin.equals(lc.getDefaultProxyConfig().getIdentity())) throw new PermissionRequiredException();
+		if (encryption_strategy.getEncryptionType() != EncryptionType.None) return; // 
+		
 		this.encryption_strategy = encryption_strategy;
 	}
 	
 	public EncryptionType getEncryptionType(){
 		return encryption_strategy.getEncryptionType();
-	}
-	
-	public void destroy() {
-		throw new UnsupportedOperationException();
 	}
 
 	public void sendMessage(String message) {
