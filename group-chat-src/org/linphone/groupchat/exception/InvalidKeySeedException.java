@@ -1,10 +1,8 @@
 package org.linphone.groupchat.exception;
 
-import org.linphone.groupchat.encryption.EncryptionHandler;
-
 /**
  * 
- * An error for invalid key values used by {@link EncryptionHandler}s.
+ * An error for invalid key values used by EncryptionHandlers.
  * 
  * @author Paul Engelke
  *
