@@ -54,7 +54,7 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	}
 
 	@Override
-	public char[] generateSeed() {
+	public String generateSeed() {
 		return null;
 	}
 
