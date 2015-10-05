@@ -6,6 +6,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.encryption.EncryptionStrategy;
 import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 
 /**
@@ -126,6 +127,16 @@ public class MessageParser {
 		return member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 	}
 	
+	/**
+	 * Converts an {@link EncryptionType} to string.
+	 * @param type The {@link EncryptionType} to convert.
+	 * @return A string containing the ordinal value of the {@link EncryptionType}.
+	 */
+	public static String stringifyEncryptionType(EncryptionType type){
+		
+		return ""+type.ordinal();
+	}
+	
 	/* parse functions */
 	
 	/**
@@ -225,8 +236,13 @@ public class MessageParser {
 		return new GroupChatMember(admin[0], admin[1], Boolean.parseBoolean(admin[2]));
 	}
 	
+	/**
+	 * Converts a serialised object to an {@link EncryptionType}.
+	 * @param message The serialised {@link EncryptionType}.
+	 * @return An {@link EncryptionType}.
+	 */
 	public static EncryptionType parseEncryptionType(String message){
 		
-		return null;
+		return EncryptionType.values()[Integer.parseInt(message)];
 	}
 }
