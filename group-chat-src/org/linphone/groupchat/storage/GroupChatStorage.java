@@ -23,7 +23,7 @@ import java.util.LinkedList;
 public interface GroupChatStorage {
 
     public static enum MessageState{
-        Read, Unread
+        Unread, Read
     }
     public static enum MessageDirection{
         Incoming, Outgoing
