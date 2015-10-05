@@ -137,10 +137,10 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		               temp.direction = MessageDirection.values()[c.getInt(4)];
 		               try {
 						d=format.parse(c.getString(5));
+			               temp.time= d;
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
-		               temp.time= d;
 		               el.add(temp);
 		            }while(c.moveToNext());
 		        }
@@ -149,77 +149,148 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			return el;
 		}
 
+		/***********************************************************************************************************************/   	 
+
 		/***********************************************************************************************************************/
-   
-	 
-	 
-	@Override
-	public void saveImageMessage(String id, GroupChatMessage message) {
-		// TODO Auto-generated method stub
+		/**
+		 * @return A list of group information containers.
+		 */
 		
-	}
-	
-	
-	@Override
-	public void saveVoiceRecording(String id, GroupChatMessage message) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-	 * @return A list of group information containers.
-	 */
-    public LinkedList<GroupChatData> getChatList(){
-    	return null;
-    }
-    
+	    public LinkedList<GroupChatData> getChatList(){
+	    	SQLiteDatabase db = helper.getReadableDatabase();
+			String query = "SELECT * FROM Groups" ;
+			Cursor c = db.rawQuery(query, null);
+			
+			LinkedList<GroupChatData> el = new LinkedList<>();
+			GroupChatData temp = new GroupChatData();
+			
+			 if(c.moveToFirst()){
+		            do{	          
+		               temp.group_id = c.getString(1);
+		               temp.group_name = c.getString(2);
+		               temp.encryption_type = EncryptionType.values()[c.getInt(3)];
+		               temp.admin = c.getString(4);		               		               
+		               el.add(temp);
+		            }while(c.moveToNext());
+		        }
+		        c.close();
+		        db.close();
+			return el;
+	    }
+	    
+	    /***********************************************************************************************************************/
     /**
      * @return A list of group IDs for existing group chats.
      */
-	@Override
+/*	@Override
 	public LinkedList<String> getChatIdList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String query = "SELECT * FROM Groups" ;
+		Cursor c = db.rawQuery(query, null);
+		
+		LinkedList<String> el = new LinkedList<>();
+		GroupChatData temp = new GroupChatData();
+		
+		 if(c.moveToFirst()){
+	            do{	          
+	               temp.group_id = c.getString(1);		               		               
+	               el.add(temp);
+	            }while(c.moveToNext());
+	        }
+	        c.close();
+	        db.close();
+		return el;
+	}*/
 	
     public LinkedList<GroupChatMember> getMembers(String groupId){
-    	return null; // TODO 
+    	SQLiteDatabase db = helper.getReadableDatabase();
+    	String query = "select * from members where members.group_id="+groupId + ")";
+    	Cursor c=db.rawQuery(query, null);
+    	
+    	LinkedList<GroupChatMember> el=new LinkedList<>();
+    	if(c.moveToFirst()){
+            do{	          	               		               
+               el.add(new GroupChatMember(c.getString(1), c.getString(2), Boolean.valueOf(c.getString(3))));
+            }while(c.moveToNext());
+        }
+    	c.close();
+    	db.close();
+    	return el;
     }
     
    
 	@Override
 	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ")" ;
+		Cursor c = db.rawQuery(query, null);
+		
+		LinkedList<GroupChatMessage> el = new LinkedList<>();
+		GroupChatMessage temp = new GroupChatMessage();
+		
+		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
+		Date d=null;
+		int i=0;
+		 if(c.moveToFirst()){
+	            do{	          
+	               temp.id = c.getInt(0);
+	               temp.message = c.getString(1);
+	               temp.sender = c.getString(2);
+	               temp.state = MessageState.values()[c.getInt(3)];
+	               temp.direction = MessageDirection.values()[c.getInt(4)];
+	               try {
+					d=format.parse(c.getString(5));
+		               temp.time= d;
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+	               el.add(temp);
+	               i++;
+	               if (i==limit)
+	            	   break;
+	            }while(c.moveToNext());
+	        }
+	        c.close();
+	        db.close();
+		return el;
 	}
 
 	@Override
 	public int getUnreadMessageCount(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = "+id + ") and messages.message_state=0";
+		Cursor c=db.rawQuery(query, null);
+		int count=0;
+		if (c!=null)
+			while (c.moveToNext())
+				count++;
+		return count;
 	}
 	
 	@Override
 	public void updateGroupName(String groupId, String name) {
-		// TODO Auto-generated method stub
-		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String query="update Groups set groupname='"+name+"' where group_Id='"+groupId+"'";
 	}
 	
 	@Override
 	public void setSecretKey(String id, String key) {
-		// TODO Auto-generated method stub
-		
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String query = "Update Groups SET secret_Key="+ key +" Where group_id = "+id;
+		db.execSQL(query);		
 	}
 	
 	@Override
 	public String getSecretKey(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String query = "SELECT secret_Key From Groups Where group_id = " + id;
+		Cursor c=db.rawQuery(query, null);
+		String secretKey = c.getString(0);
+		return secretKey;
 	}
 	
 	@Override
 	public void updateEncryptionType(String id, EncryptionType type) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -243,6 +314,19 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	@Override
 	public void deleteMessages(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void saveImageMessage(String id, GroupChatMessage message) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	@Override
+	public void saveVoiceRecording(String id, GroupChatMessage message) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -316,6 +400,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
             private static final String nameType =" VARCHAR(50) ";
             private static final String sipAddress = "sip_address";
             private static final String sipAddressType = " VARCHAR(50) ";
+            private static final String pending = "pending";
+            private static final String pendingType = " BOOLEAN ";
             private static final String groupId = "group_id";
             private static final String groupIdType = " INTEGER ";
         }
