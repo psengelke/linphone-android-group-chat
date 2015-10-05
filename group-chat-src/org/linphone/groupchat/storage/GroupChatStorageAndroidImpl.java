@@ -5,24 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.text.format.DateFormat;
 
 import org.linphone.LinphoneService;
-import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
-import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
-import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 
 import java.lang.Override;
 import java.lang.String;
-import java.security.PrivateKey;
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -173,10 +166,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 	}
 	
-
-
-	
-	
 	/**
 	 * @return A list of group information containers.
 	 */
@@ -198,9 +187,17 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     }
     
    
-    
-   
-	
+	@Override
+	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getUnreadMessageCount(String id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	@Override
 	public void updateGroupName(String groupId, String name) {
@@ -209,9 +206,15 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 	
 	@Override
-	public void updateSecretKey(String id, Long key) {
+	public void setSecretKey(String id, String key) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getSecretKey(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	@Override
@@ -237,6 +240,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void deleteMessages(String id) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	@Override
     public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException {
@@ -253,14 +262,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         // TODO delete messages from Message Table. ?????? Should message table have groupId key????
     }
 
-
-
 	// TODO
 	public void saveVoiceRecording(String from, /*Bitstream voiceNote,*/ long time){}
 
-
-	
-	
     //http://androidhive.info/2011/11/android-sqlite-database-tutorial is helpful
     // this class extends a class provided by the android sdk, SQLiteOpenHelper
     private class GroupChatHelper extends SQLiteOpenHelper{
