@@ -573,31 +573,52 @@ public class LinphoneGroupChatRoom {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Get all the messages for a group chat.
+	 * @return A list of the messages.
+	 */
 	public LinkedList<GroupChatMessage> getHistory() {
 
-		throw new UnsupportedOperationException();
+		return storage.getMessages(group_id);
 	}
 
+	/**
+	 * Get a limited number of messages for the group chat.
+	 * @param limit The number of messages requested.
+	 * @return A list with a maximum of 'limit' number of messages.
+	 */
 	public LinkedList<GroupChatMessage> getHistory(int limit) {
 
-		throw new UnsupportedOperationException();
+		return storage.getMessages(group_id, limit);
 	}
 
+	/**
+	 * Gets the number of unread messages.
+	 * @return The number of messages as an integer.
+	 */
 	public int getUnreadMessagesCount() {
 
-		throw new UnsupportedOperationException();
+		return storage.getUnreadMessageCount(group_id);
 	}
 
+	/**
+	 * Delete all the group's messages.
+	 */
 	public void deleteHistory() {
-		throw new UnsupportedOperationException();
+
+		storage.deleteMessages(group_id);
 	}
 
 	public void compose() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Marks all the group chat's messages as read.
+	 */
 	public void markAsRead() {
-		throw new UnsupportedOperationException();
+
+		storage.markChatAsRead(group_id);
 	}
 
 	public void deleteMessage(GroupChatMessage message) {

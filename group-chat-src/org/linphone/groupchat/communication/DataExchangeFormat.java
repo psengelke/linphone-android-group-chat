@@ -114,16 +114,5 @@ public interface DataExchangeFormat {
 		{
 			return (state == MessageState.Unread);
 		}
-		
-		public int getStorageId()
-		{
-			return id;
-		}
-		
-		public Date getTime()
-		{
-			return time;
-		}
-		
 	}
 }

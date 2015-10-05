@@ -60,6 +60,13 @@ public interface GroupChatStorage {
      * @return	A list of group chat messages.
      */
     public LinkedList<GroupChatMessage> getMessages(String id);
+    
+    /**
+     * Retrieves the messages for a group chat up to a limit..
+     * @param id The group chat ID.
+     * @return	A list of group chat messages.
+     */
+    public LinkedList<GroupChatMessage> getMessages(String id, int limit);
 
     /**
      * A function that returns a list of all the groups persistent in the database.
@@ -93,6 +100,13 @@ public interface GroupChatStorage {
      */
     public void addMember(String id, GroupChatMember member);
 
+    /**
+     * Acquires the number of unread messages for a group.
+     * @param id The group id.
+     * @return A count of the unread messages.
+     */
+    public int getUnreadMessageCount(String id);
+    
     /**
      * Marks all the new group messages as read.
      * @param groupId
@@ -146,6 +160,12 @@ public interface GroupChatStorage {
      * @param member The member to be removed.
      */
     public void removeMember(String id, GroupChatMember member);
+    
+    /**
+     * Deletes all the messages in a group's history.
+     * @param id The group id.
+     */
+    public void deleteMessages(String id);
     
     /**
      * Deletes the specified group from the database.
