@@ -31,7 +31,6 @@ import android.graphics.Bitmap;
  * 
  * @author Paul Engelke
  */
-@SuppressWarnings("deprecation")
 public class LinphoneGroupChatRoom {
 	
 	public static final String MSG_HEADER_GROUP_ID = "GROUP-CHAT-ID";
@@ -127,7 +126,7 @@ public class LinphoneGroupChatRoom {
 		Iterator<GroupChatMember> it = getOtherMembers().iterator();
 		while (it.hasNext()){
 			GroupChatMember m = it.next();
-			if (!lc.isMyself(m.sip)){
+			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 				LinphoneChatRoom cr = lc.getOrCreateChatRoom(m.sip);
 				LinphoneChatMessage message = cr.createLinphoneChatMessage("");
 				message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_GET_GROUP_INFO);
@@ -143,12 +142,12 @@ public class LinphoneGroupChatRoom {
 	 */
 	public void removeSelf() throws IsAdminException {
 
-		//TODO: Figure out how the bloody hell to get this client's sip address.
+		String me = lc.getDefaultProxyConfig().getIdentity();
 		
-		if (lc.isMyself(admin)) throw new IsAdminException("You must assign a new admin first.");
+		if (me.equals(admin)) throw new IsAdminException("You must assign a new admin first.");
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
-		info.removed.add(new GroupChatMember(null, null, false));
+		info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
 		encryption_strategy.sendMessage(info, getOtherMembers(), lc);
 	}
 	
@@ -161,7 +160,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	public void addMember(GroupChatMember member) throws PermissionRequiredException, GroupChatSizeException {
 		
-		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
 		if (members.size() == MAX_MEMBERS) throw new GroupChatSizeException("Exceeds group chat size.");
 		
@@ -215,8 +214,8 @@ public class LinphoneGroupChatRoom {
 
 		//TODO: Need to possibly call remove group function from {@link LinphoneGroupChatManager}.
 		
-		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
-		if (lc.isMyself(member.sip)) throw new IsAdminException("You must assign a new admin first.");
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
+		if (lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new IsAdminException("You must assign a new admin first.");
 		
 		storage.removeMember(group_id, member);
 		
@@ -305,7 +304,7 @@ public class LinphoneGroupChatRoom {
 			GroupChatMember m = it.next();
 			storage.removeMember(group_id, m);
 			
-			if (lc.isMyself(m.sip)){
+			if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 				
 				members = new LinkedList<>();
 				try {
@@ -414,7 +413,7 @@ public class LinphoneGroupChatRoom {
 			
 			GroupChatMember m = it1.next();
 			
-			if (lc.isMyself(m.sip)){
+			if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 				// TODO: remove this group.
 				return;
 			}
@@ -436,7 +435,7 @@ public class LinphoneGroupChatRoom {
 	
 	public void setGroupImage(Bitmap image) throws PermissionRequiredException{
 		
-		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
 		this.image = image;
 	}
@@ -448,7 +447,7 @@ public class LinphoneGroupChatRoom {
 	
 	public void setName(String name) throws PermissionRequiredException {
 		
-		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
 		this.group_name = name;
 		
@@ -496,7 +495,7 @@ public class LinphoneGroupChatRoom {
 		while (it.hasNext()){
 			
 			GroupChatMember m = it.next();
-			if (!lc.isMyself(m.sip)){
+			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 				members.add(new GroupChatMember(m.name, m.sip, m.pending));
 			}
 		}
@@ -521,7 +520,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	public void setAdmin(GroupChatMember member) throws PermissionRequiredException {
 		
-		if (!lc.isMyself(admin)) throw new PermissionRequiredException();
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
 		encryption_strategy.sendMessage(member, getOtherMembers(), lc);
 	}
