@@ -7,10 +7,10 @@ import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.MessageParser;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 class NoEncryptionStrategy implements EncryptionStrategy {
@@ -28,10 +28,10 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 		}		
 	}
 
-//	@Override
+/*	@Override
 	public String receiveMessage(String message) {
 		return message;
-	}
+	}*/
 
 	@Override
 	public EncryptionType getEncryptionType() {
@@ -59,33 +59,34 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 		sendMessage(message, members, lc);
 	}
 
-//	@Override
-	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
+	@Override
+	public MemberUpdateInfo handleMemberUpdate(String message) {
 		return MessageParser.parseMemberUpdateInfo(message);
 	}
 
-//	@Override
-	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
-		return message;
+	@Override
+	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
+		GroupChatMessage gcm=new GroupChatMessage();
+		gcm.message=message.getText();
+		return gcm;
 	}
 
-//	@Override
-	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
-
+	@Override
+	public GroupChatMessage handleMediaMessage(LinphoneChatMessage message) {
+		return null;
 	}
 
-//	@Override
-	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
-		return MessageParser.parseGroupChatMember("");//handler.decrypt(message));
+	@Override
+	public GroupChatMember handleAdminChange(String message) {
+		return MessageParser.parseGroupChatMember(message);
 	}
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
 		return null;
-		
 	}
 
-//	@Override
+	/*@Override
 	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
 			boolean encrypted) {
 		try{
@@ -99,57 +100,22 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 			return null;
 		}
 		return null;
-	}
-
-	@Override
-	public void handleInitialContactMessage(LinphoneChatMessage message,
-			LinphoneCore lc) {
-		// TODO Auto-generated method stub
-		// check the header
-		
-		//stage 1
-			// generate key-pair
-			// send message public key
-		//stage 2
-			// encrypt secret key
-			// send
-		//stage 3
-			// decrypt key
-			// store key 
-			// set key to handler
-			// send invite confirmation
-				// header: MSG_HEADER_TYPE_INVITE_ACCEPT
-				// message
-	}
+	}*/
 
 	@Override
 	public void handleInitialContactMessage(LinphoneChatMessage message,
 			String id, GroupChatStorage storage, LinphoneCore lc) {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public MemberUpdateInfo handleMemberUpdate(String message) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GroupChatMessage handleMediaMessage(LinphoneChatMessage message) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GroupChatMember handleAdminChange(String message) {
-		// TODO Auto-generated method stub
-		return null;
+		String header=message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
+		if (header!=null && (header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3)))
+		{
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
+			GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
+			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);
+			chatRoom.sendChatMessage(newMessage);
+			chatRoom.deleteMessage(newMessage);
+		}
+	
 	}
 }
