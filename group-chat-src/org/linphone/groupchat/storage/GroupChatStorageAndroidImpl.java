@@ -11,7 +11,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 

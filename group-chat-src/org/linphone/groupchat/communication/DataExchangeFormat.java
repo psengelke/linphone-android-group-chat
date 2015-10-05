@@ -3,7 +3,7 @@ package org.linphone.groupchat.communication;
 import java.util.Date;
 import java.util.LinkedList;
 
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
 import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 

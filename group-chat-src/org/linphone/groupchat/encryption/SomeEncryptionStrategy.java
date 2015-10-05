@@ -10,7 +10,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 class SomeEncryptionStrategy implements EncryptionStrategy {
@@ -89,6 +89,11 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+		
+		EncryptionType type = null;// MessageParser.parserEncryptionType(message);
+		
+		if (type != EncryptionType.None) return null;
+		
 		return null;
 		
 	}

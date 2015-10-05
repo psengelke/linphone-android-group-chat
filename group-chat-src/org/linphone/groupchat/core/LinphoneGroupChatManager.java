@@ -11,11 +11,12 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.encryption.EncryptionFactory;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidGroupNameException;
+import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 import org.linphone.groupchat.storage.GroupChatStorageFactory;
@@ -60,16 +61,21 @@ public class LinphoneGroupChatManager {
 		group.members = members;
 		group.encryption_type = type;
 		
-		LinphoneGroupChatRoom chat = new LinphoneGroupChatRoom(
-				group, 
-				EncryptionFactory.createEncryptionStrategy(type), 
-				storage, 
-				LinphoneGroupChatListener.getLinphoneCore()
-		);
-		
-		chat.doInitialization();
-		
-		chats.add(chat);
+		LinphoneGroupChatRoom chat;
+		try {
+			chat = new LinphoneGroupChatRoom(
+					group, 
+					EncryptionFactory.createEncryptionStrategy(type),
+					storage, 
+					LinphoneGroupChatListener.getLinphoneCore()
+			);
+			
+			chat.doInitialization();
+			
+			chats.add(chat);
+		} catch (InvalidKeySeedException e) {
+			//TODO handle this exception
+		}
 	}
 	
 	/**
@@ -103,12 +109,16 @@ public class LinphoneGroupChatManager {
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
-			chats.add(new LinphoneGroupChatRoom(
-					group, 
-					EncryptionFactory.createEncryptionStrategy(group.encryption_type), 
-					storage, 
-					LinphoneGroupChatListener.getLinphoneCore()
-			));
+			try {
+				chats.add(new LinphoneGroupChatRoom(
+						group, 
+						EncryptionFactory.createEncryptionStrategy(group.encryption_type, storage.getSecretKey(group.group_id)), 
+						storage, 
+						LinphoneGroupChatListener.getLinphoneCore()
+				));
+			} catch (InvalidKeySeedException e) {
+				// TODO handle error appropriately...
+			}
 		}
 	}
 	
@@ -176,12 +186,14 @@ public class LinphoneGroupChatManager {
 	 * @param lc The {@link LinphoneCore} instance.
 	 * @param cr The {@link LinphoneChatRoom} instance.
 	 * @param message The message received for a group chat.
+	 * @throws InvalidKeySeedException 
 	 */
-	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message){
+	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) throws InvalidKeySeedException{
 		
 		cr.deleteMessage(message);
 		
-		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT) != null){ // new group
+		String message_type = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_MESSAGE);
+		if (message_type != null && message_type.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1)){ // new group
 			
 			InitialContactInfo info = MessageParser.parseInitialContactInfo(message.getText());
 			

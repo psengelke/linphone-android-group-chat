@@ -6,12 +6,10 @@ import java.util.LinkedList;
 
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
-import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionHandler.EncryptionType;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 /**
@@ -25,6 +23,10 @@ import org.linphone.groupchat.storage.GroupChatStorage;
 
 public interface EncryptionStrategy {
 
+    public static enum EncryptionType{
+        None, AES256
+    }
+	
 	/**
 	 * Sends a plain text message to the group.
 	 * @param message The message to be sent.
@@ -56,22 +58,13 @@ public interface EncryptionStrategy {
 	 * @param lc The {@link LinphoneCore} instance.
 	 */
 	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc);
-    
-	/**
-	 * Handler for Stage 1 and 2 initial contact messages. 
-	 * (When a user receives an invite and when the admin gets a public encryption key)
-	 * @param message The message to be parsed and analysed.
-	 * @param lc The {@link LinphoneCore} for sending replies.
-	 */
-	public void handleInitialContactMessage(LinphoneChatMessage message, LinphoneCore lc);
 	
     /**
-     * Handler for Stage 3 initial contact messages. (When the secret key has been received)
+     * Handler for the initial contact messages.
      * @param message The message to be parsed and analysed.
      * @param id The group id for persistence purposes.
      * @param storage The storage adapter instance.
      * @param lc The {@link LinphoneCore} to be used for sending a reply.
-     * @param encrypted Whether or not the message is encrypted.
      */
     public void handleInitialContactMessage(LinphoneChatMessage message, String id, GroupChatStorage storage, LinphoneCore lc);
     
