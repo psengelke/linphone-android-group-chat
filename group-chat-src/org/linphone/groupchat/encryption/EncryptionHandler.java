@@ -13,7 +13,7 @@ import org.linphone.groupchat.exception.InvalidKeySeedException;
  * @author Paul Engelke
  */
 
-public interface EncryptionHandler {
+interface EncryptionHandler {
     
     public void generateAsymmetricKeys();
     public String getPublicKey();
