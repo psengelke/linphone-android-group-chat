@@ -47,9 +47,10 @@ public class LinphoneGroupChatManager {
 	 * @throws GroupChatSizeException In the event that the group size is too small.
 	 * @throws InvalidGroupNameException In the event that the creator chose a name that matches an existing group 
 	 * owned by the creator.
+	 * @return The new group's id.
 	 * @throws GroupChatExistsException In the case that the group already exists on initialisation.
 	 */
-	public void createGroupChat(String name, String admin, LinkedList<GroupChatMember> members, EncryptionType type) 
+	public String createGroupChat(String name, String admin, LinkedList<GroupChatMember> members, EncryptionType type) 
 			throws GroupChatSizeException, InvalidGroupNameException, GroupChatExistsException {
 		
 		if (members.size() < 2) throw new GroupChatSizeException("Group size too small.");
@@ -71,11 +72,14 @@ public class LinphoneGroupChatManager {
 			);
 			
 			chat.doInitialization();
-			
 			chats.add(chat);
+			
+			return group.group_id;
 		} catch (InvalidKeySeedException e) {
 			//TODO handle this exception
 		}
+		
+		return null;
 	}
 	
 	/**

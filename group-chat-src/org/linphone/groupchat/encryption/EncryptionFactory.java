@@ -16,7 +16,7 @@ public class EncryptionFactory {
 		case AES256:
 			EncryptionHandler handler = new AES256EncryptionHandler();
 			handler.setSecretKey(handler.generateSeed());
-			SomeEncryptionStrategy strategy = new SomeEncryptionStrategy(handler);
+			EncryptionStrategy strategy = new SomeEncryptionStrategy(handler);
 			return strategy;
 		default:
 			return new NoEncryptionStrategy();
@@ -33,9 +33,9 @@ public class EncryptionFactory {
 	public static EncryptionStrategy createEncryptionStrategy(EncryptionType type, String seed) throws InvalidKeySeedException{
 		switch (type) {
 		case AES256:
-			AES256EncryptionHandler handler = new AES256EncryptionHandler();
+			EncryptionHandler handler = new AES256EncryptionHandler();
 			handler.setSecretKey(seed);
-			SomeEncryptionStrategy strategy = new SomeEncryptionStrategy(handler);
+			EncryptionStrategy strategy = new SomeEncryptionStrategy(handler);
 			return strategy;
 		default:
 			return new NoEncryptionStrategy();
