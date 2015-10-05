@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
@@ -27,7 +28,7 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 		}		
 	}
 
-	@Override
+//	@Override
 	public String receiveMessage(String message) {
 		return message;
 	}
@@ -58,32 +59,33 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 		sendMessage(message, members, lc);
 	}
 
-	@Override
+//	@Override
 	public MemberUpdateInfo handleMemberUpdate(String message, String id, GroupChatStorage storage) {
 		return MessageParser.parseMemberUpdateInfo(message);
 	}
 
-	@Override
+//	@Override
 	public String handlePlainTextMessage(String message, String id, GroupChatStorage storage) {
 		return message;
 	}
 
-	@Override
+//	@Override
 	public void handleMediaMessage(String message, String id, GroupChatStorage storage) {
 
 	}
 
-	@Override
+//	@Override
 	public GroupChatMember handleAdminChange(String message, String id, GroupChatStorage storage) {
-		return MessageParser.parseGroupChatMember(handler.decrypt(message));
+		return MessageParser.parseGroupChatMember("");//handler.decrypt(message));
 	}
 
 	@Override
 	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+		return null;
 		
 	}
 
-	@Override
+//	@Override
 	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
 			boolean encrypted) {
 		try{
@@ -96,5 +98,44 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 			System.err.println("Encrypted message passed to NoEncryptionStrategy");
 			return null;
 		}
+		return null;
+	}
+
+	@Override
+	public void handleInitialContactMessage(LinphoneChatMessage message,
+			LinphoneCore lc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleInitialContactMessage(LinphoneChatMessage message,
+			String id, GroupChatStorage storage, LinphoneCore lc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public MemberUpdateInfo handleMemberUpdate(String message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMessage handleMediaMessage(LinphoneChatMessage message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GroupChatMember handleAdminChange(String message) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
