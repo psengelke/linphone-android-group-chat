@@ -92,30 +92,40 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	
 
 	/***********************************************************************************************************************/
+	/***********************************************************************************************************************/
+	String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
+            + Messages.id + " "+ Messages.idType +", " +  Messages.messageText + " " + Messages.messageTextType 
+            + "," + Messages.memberId + " " + Messages.memberIdType + "," +  Messages.messageState 
+            + " " + Messages.messageStateType + ", " + Messages.messageDirection + " " 
+            + Messages.messageDirectionType +", " + Messages.timeSent + " " + Messages.timeSentType + " )";
+	
+	
+	 @Override
+		public void saveTextMessage(String id, GroupChatMessage message) {
+	        SQLiteDatabase db = helper.getWritableDatabase();
+	        ContentValues values = new ContentValues();
+	        
+	        values.put(GroupChatHelper.Messages.messageText, message.message);
+	        values.put(GroupChatHelper.Messages.memberId, message.sender);
+	        values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
+	        values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
+	        values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
 
-    
-    @Override
-	public void saveTextMessage(String id, GroupChatMessage message) {
-		// TODO Auto-generated method stub
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        //values.put(GroupChatHelper.Messages.memberId, from);
-        values.put(GroupChatHelper.Messages.messageText, message.message); // store message
+	        // Inserting Row
+	        db.insert(GroupChatHelper.Messages.tableName, null, values);
+	        db.close(); // Closing database connection
+			
+		}
 
-        // Inserting Row
-        db.insert(GroupChatHelper.Messages.tableName, null, values);
-        db.close(); // Closing database connection
-		
-	}
-
-    /*************************************************************************************************************************/
+	
+   
+	 
+	 
 	@Override
 	public void saveImageMessage(String id, GroupChatMessage message) {
 		// TODO Auto-generated method stub
 		
 	}
-	/*************************************************************************************************************************/
-	
 	
 	
 	@Override
