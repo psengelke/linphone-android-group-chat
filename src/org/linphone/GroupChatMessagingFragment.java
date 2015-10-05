@@ -9,6 +9,7 @@ package org.linphone;
 import java.util.LinkedList;
 
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.core.GroupChatRoomListener;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
@@ -26,12 +27,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GroupChatMessagingFragment extends Fragment  implements OnClickListener
+public class GroupChatMessagingFragment extends Fragment  implements OnClickListener, GroupChatRoomListener
 {
 	private static GroupChatMessagingFragment instance;		
 	
@@ -41,8 +43,13 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	private TextView back, info;
 	private TextView sendMsgBtn;
 	private ListView msgList;
+	private EditText msgToSend;
 	private String groupName, groupID;
 	private LinkedList<GroupChatMessage> history;
+
+	private LinphoneGroupChatRoom chatroom;
+
+	private GroupChatMessageAdapter adapter;
 	
 //	private LinphoneGroupChatRoom chatroom;
 //	private GroupChatMessageAdapter groupChatMessageAdapter;
@@ -58,14 +65,21 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		// Determine which groupChat to create interface for
 		groupName = getArguments().getString("groupName");
 		groupID = getArguments().getString("groupID");
+		LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
+		try {
+			chatroom = lgm.getGroupChat(groupID);
+		} catch (GroupDoesNotExistException e1) {
+			e1.printStackTrace();
+		}
 		
 		// Use groupID to retrieve messages
 		LinphoneGroupChatManager lGM = LinphoneGroupChatManager.getInstance();
 		try {
 			LinphoneGroupChatRoom groupChat = lGM.getGroupChat(groupID);
 			history = groupChat.getHistory();
+			adapter = new GroupChatMessageAdapter(history);
 			if (history != null)
-				msgList.setAdapter(new GroupChatMessageAdapter());
+				msgList.setAdapter(adapter);
 		} catch (GroupDoesNotExistException e) {
 			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage(e.getMessage());
@@ -91,6 +105,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		info.setOnClickListener(this);
 		
 		sendMsgBtn = (TextView) view.findViewById(R.id.sendMessage);
+		msgToSend = (EditText) view.findViewById(R.id.message);
 		
 		msgList = (ListView) view.findViewById(R.id.group_message_list);
 		
@@ -157,7 +172,11 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		}
 		else if (id == R.id.sendMessage)
 		{
-			
+			String message = msgToSend.getText().toString();
+			if (!message.isEmpty())
+			{
+				chatroom.sendMessage(message);
+			}
 		}
 	}
 	
@@ -167,11 +186,16 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	 */
 	public class GroupChatMessageAdapter extends BaseAdapter
 	{
-//		LinphoneChatMessage[] history;
+		LinkedList<GroupChatMessage> history;
+		
+		public GroupChatMessageAdapter(LinkedList<GroupChatMessage> history)
+		{
+			this.history = history;
+		}
 		
 		public void refreshHistory()
 		{
-			
+			this.history = chatroom.getHistory();
 		}
 		
 		public View getView(int position, View convertView, ViewGroup parent)
@@ -189,18 +213,22 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		}
 
 		public int getCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			return history.size();
 		}
 
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return null;
+			return history.get(position);
 		}
 
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
 			return 0;
 		}
+	}
+
+	@Override
+	public void onMessageReceived(GroupChatMessage message) {
+		adapter.refreshHistory();
+		
 	}
 }
