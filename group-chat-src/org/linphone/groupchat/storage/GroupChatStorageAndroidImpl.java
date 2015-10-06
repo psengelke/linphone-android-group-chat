@@ -182,6 +182,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     /**
      * @return A list of group IDs for existing group chats.
      */
+
+		@Override
+		public LinkedList<String> getChatIdList() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 /*	@Override
 	public LinkedList<String> getChatIdList() {
 		SQLiteDatabase db = helper.getReadableDatabase();
@@ -323,12 +329,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String query="delete FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')";
 		db.execSQL(query);
-	}
-	
-	@Override
-	public LinkedList<String> getChatIdList() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override
