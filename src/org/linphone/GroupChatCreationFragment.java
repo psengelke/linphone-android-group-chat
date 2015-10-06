@@ -176,7 +176,6 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		}
 		else if (id == R.id.addMember)	// add member button clicked
 		{
-			// TODO Test for valid sip address before adding
 			String newContact = newParticipant.getText().toString();
 			
 			// Clear EditText content
@@ -186,6 +185,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			String sipUri = newContact;
 			if (!sipUri.equals(""))
 			{
+				// Test for valid sip address
 				if (!LinphoneUtils.isSipAddress(sipUri)) {
 					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
 						return;
@@ -228,8 +228,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		// Next button clicked. Should proceed to GroupChatMessaginFragment
 		else if (id == R.id.next)					
 		{
-			//TODO Check group parameters here!!!
-			//TODO Interface with core and create group
+			//Check UI data and create group => Make MessagingFragment Visible
 			
 			LinphoneManager lm = LinphoneManager.getInstance();
 			LinphoneCore lc = lm.getLc();
@@ -250,22 +249,19 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			LinphoneGroupChatManager lGm = LinphoneGroupChatManager.getInstance();
 			try 
 			{
-				lGm.createGroupChat(groupNameString, usersip, members, et);
-				
-				// Get new GroupChat id
-				String groupId = "";
+				// Create groupchat and Get new GroupChat id
+				String groupId = lGm.createGroupChat(groupNameString, usersip, members, et);
 				
 				GroupChatActivity activity =  (GroupChatActivity) getActivity();
 				Bundle extras = new Bundle();
-				extras.putString("groupName", groupNameString);
 				extras.putString("groupID", groupId);
+				extras.putString("groupName", groupNameString);
 				// Replace this fragment with GroupChatMessagingFragment for the newly created group
 				activity.changeFragment("gcMessagingFragment", extras);
 				
 			} catch (GroupChatSizeException | InvalidGroupNameException
 					| GroupChatExistsException e) 
 			{
-				Log.e("here", "---- exc ----");
 				
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
 	            builder1.setMessage(e.getMessage());

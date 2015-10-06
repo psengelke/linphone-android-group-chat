@@ -104,7 +104,7 @@ public class LinphoneGroupChatRoom {
 		group.admin = this.admin;
 		group.members = getMembers();
 		group.encryption_type = this.getEncryptionType();
-		
+		// encryption type null here. Fix in AES256EncryptionHandler
 		storage.createGroupChat(group);
 		
 		InitialContactInfo info = new InitialContactInfo();

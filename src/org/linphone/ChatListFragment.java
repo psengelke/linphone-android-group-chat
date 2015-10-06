@@ -292,7 +292,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.newGroupDiscussion)		// New GroupChatButton clicked
 		{
 			// Start GroupChatActivity with Intent gcCreationFragment to start 
-			// GroupChatCreation Fragm
+			// GroupChatCreation Fragment
 			Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 			Bundle b = new Bundle();
 			b.putString("fragment", "gcCreationFragment");
@@ -333,7 +333,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		else
 		{
-			chatList.setVisibility(View.GONE);	// TODO remove this line
 			noChatHistory.setVisibility(View.VISIBLE);
 			refresh();
 		}
@@ -371,6 +370,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 				Bundle b = new Bundle();
 				b.putString("fragment", "gcMessagingFragment");
+				b.putString("groupID", "");
 				b.putString("groupName", (String) view.getTag());
 				intent.putExtras(b);
 				startActivity(intent);

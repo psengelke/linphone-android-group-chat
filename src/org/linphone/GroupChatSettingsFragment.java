@@ -10,8 +10,18 @@ package org.linphone;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.core.LinphoneGroupChatManager;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
+import org.linphone.groupchat.exception.GroupChatSizeException;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.exception.PermissionRequiredException;
+
 import android.widget.TextView;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -33,25 +43,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-//import org.linphone.core.LinphoneBuffer;
-//import org.linphone.core.LinphoneChatMessage;
-//import org.linphone.core.LinphoneChatMessage.State;
-//import org.linphone.core.LinphoneContent;
-//import org.linphone.core.LinphoneCoreListenerBase;
-//import org.linphone.groupchat.core.LinphoneGroupChatRoom;
-//import org.linphone.groupchat.interfaces.GroupChatStorage;
-//import org.linphone.core.LinphoneChatMessage.LinphoneChatMessageListener;
+
 
 public class GroupChatSettingsFragment extends Fragment implements OnClickListener//, LinphoneChatMessageListener
 , OnItemClickListener
 {
-//	private LinphoneGroupChatRoom groupChatRoom;
-//	private LinphoneCoreListenerBase mListener; 	// Really needed?
-//	private GroupChatStorage groupChatStorage;
-	private String sipUri;
-	private String displayName;
-	private String pictureUri;	
-	
 	private LinearLayout topBar;
 	private TextView back, edit, next;
 	private TextView groupNameView, encryptionType;
@@ -59,16 +55,23 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private ImageView clearGroupName, addMember, clearMemberField;
 	private EditText groupNameEdit, newMember;
 	private RadioGroup editEncryptionGroup;
-	private RadioButton encryptionNone, encryptionAES;
+	private RadioButton radioEncNone, radioEncAES;
 	private RelativeLayout addMemberLayout;
 	private TextView removeParticipant;
 	private TextView leaveGroup;
 	private LayoutInflater mInflater;
 	private List<String> members = new LinkedList<String>();
 	private boolean isEditMode;
-	private String groupName;
 	private TextView encryptionTypeLbl;
 	private static GroupChatSettingsFragment instance;
+	
+	private EncryptionType encTypeOnUI;
+	private String groupID, groupName;
+	private LinphoneGroupChatManager manager;
+	private LinphoneGroupChatRoom chatroom;
+	//TODO activate
+	//private LinkedList<GroupChatMember> members = new LinkedList<GroupChatMember>();
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -80,7 +83,19 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		setRetainInstance(true);
 		mInflater = inflater;
 		
+		groupID = args.getString("groupID");
 		groupName = args.getString("groupName");
+		
+		manager = LinphoneGroupChatManager.getInstance();
+		//TODO activate:
+//		try {
+//			chatroom = manager.getGroupChat(groupID);
+//		} catch (GroupDoesNotExistException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		encTypeOnUI = chatroom.getEncryptionType();
+		
 		isEditMode = false;
 		
 		back = (TextView) view.findViewById(R.id.back);
@@ -122,7 +137,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		groupParticipants.setAdapter(new MembersAdapter());
 		
 		//TODO Get handle to appropriate GroupChatStorage interface to retrieve parameters
-		
+		//members = chatroom.getMembers();
 		
 		
 		return view;
@@ -187,6 +202,14 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			addMemberLayout.setVisibility(View.VISIBLE);
 			encryptionType.setVisibility(View.GONE);
 			encryptionTypeLbl.setVisibility(View.GONE);
+			
+			//TODO test this
+			// Select encryption radio button
+			if (encTypeOnUI == EncryptionType.AES256)
+				radioEncAES.setSelected(true);
+			else
+				radioEncNone.setSelected(true);
+			
 			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		}
 		else if (id == R.id.groupchatinfo_next)		// next button clicked after edit
@@ -201,12 +224,22 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			addMemberLayout.setVisibility(View.GONE);
 			encryptionType.setVisibility(View.VISIBLE);
 			encryptionTypeLbl.setVisibility(View.VISIBLE);
+			
+			// Check if groupName Changed
 			if (groupNameEdit.getText().toString().equals(groupName) == false)
 			{
+				//TODO Update group name via appropriate GroupChatStorage interface
 				groupName = groupNameEdit.getText().toString();
 				groupNameView.setText(groupName);
-				//TODO Update group name via appropriate GroupChatStorage interface
 			}
+			// Check if encryptionType changed
+			if (encTypeOnUI != chatroom.getEncryptionType())
+			{
+				//TODO update chatroom.encryptiontType
+			}
+			
+			
+			
 			closeKeyboard(getActivity(), groupNameEdit.getWindowToken());
 		}
 		else if (id == R.id.addMember)	// add a member button clicked
@@ -220,6 +253,26 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			if (!newSip.isEmpty())
 			{
 				//TODO test valid sip address or contact
+				String sipUri = newSip;
+				if (!LinphoneUtils.isSipAddress(sipUri)) {
+					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+						return;
+					}
+					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+				}
+				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
+					sipUri = "sip:" + sipUri;
+				}
+				
+				//TODO add member to chatroom
+//				try {
+//					chatroom.addMember(new GroupChatMember(newSip, sipUri, false));
+//				} catch (PermissionRequiredException | GroupChatSizeException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				
+				//TODO update members list
 				members.add(newSip);
 				// Update groupParticipants ListView
 				groupParticipants.setAdapter(new MembersAdapter());
@@ -229,6 +282,14 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			newMember.setText("");
 		}
+		else if (id == R.id.radio_EncAES)
+		{
+			encTypeOnUI = EncryptionType.AES256;
+		}
+		else if (id == R.id.radio_none)
+		{
+			encTypeOnUI = EncryptionType.None;
+		}
 	}
 	
 	@Override
@@ -236,8 +297,24 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			long id) {
 		if (isEditMode)	// Action only needed when editMode (after edit button clicked)
 		{
+			// TODO remove member from chatroom
 			members.remove(view.getTag());
 			groupParticipants.setAdapter(new MembersAdapter());
+			
+			if (members.size() < 2)	// show alert invalid group size
+			{
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+	            builder1.setMessage("Group must have at least two members. Group will be deleted");
+	            builder1.setCancelable(true);
+	            builder1.setPositiveButton("OK",
+	                    new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    dialog.cancel();
+	                }
+	            });
+	            AlertDialog alert11 = builder1.create();
+	            alert11.show();
+			}
 		}
 	}
 	

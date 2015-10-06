@@ -63,11 +63,12 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
 		// Determine which groupChat to create interface for
-		groupName = getArguments().getString("groupName");
 		groupID = getArguments().getString("groupID");
+		groupName = getArguments().getString("groupName");
 		LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
 		try {
 			chatroom = lgm.getGroupChat(groupID);
+			//groupName = chatroom.getName();
 		} catch (GroupDoesNotExistException e1) {
 			e1.printStackTrace();
 		}
@@ -110,8 +111,6 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		msgList = (ListView) view.findViewById(R.id.group_message_list);
 		
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
-		//TODO Get handle to appropriate GroupChatStorage interface to retrieve parameters and messages
 		
 		return view;
 		
@@ -167,6 +166,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 			GroupChatActivity activity =  (GroupChatActivity) getActivity();
 			Bundle extras = new Bundle();
 			extras.putString("groupName", groupName);
+			extras.putString("groupID", groupID);
 			// replace fragment with GroupChatSettingsFragment
 			activity.changeFragment("gcSettingsFragment", extras);
 		}
@@ -221,8 +221,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		}
 
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
+			return history.get(position).id;
 		}
 	}
 
