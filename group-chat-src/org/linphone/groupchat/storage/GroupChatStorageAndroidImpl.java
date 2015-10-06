@@ -325,6 +325,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 	
 	@Override
+	public LinkedList<String> getChatIdList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public void saveImageMessage(String id, GroupChatMessage message) {
 		// TODO Auto-generated method stub
 		
@@ -487,5 +493,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
         private static final GroupChatStorageAndroidImpl INSTANCE = new GroupChatStorageAndroidImpl();
     }
+
+
+	
 
 }
