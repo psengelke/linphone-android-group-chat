@@ -300,7 +300,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void updateMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="update members set pending='"+member.pending+"' where sip_address='"+member.sip+"' and where group_id='"+id+"'";
+		String query="update Members set pending='"+member.pending+"' where sip_address='"+member.sip+"' and where group_id='"+id+"'";
 		db.execSQL(query);
 	}
 
@@ -314,7 +314,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void removeMember(String id, GroupChatMember member) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="delete from members where sip_address='"+member.sip+"' and where group_id='"+id+"'";
+		String query="delete from Members where sip_address='"+member.sip+"' and where group_id='"+id+"'";
 		db.execSQL(query);
 	}
 
