@@ -270,7 +270,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void updateGroupName(String groupId, String name) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="update Groups set groupname='"+name+"' where group_Id='"+groupId+"'";
+		String query="update Groups set" + GroupChatHelper.Groups.groupName + "='"+name+"' where " + GroupChatHelper.Groups.groupId + "='"+groupId+"'";
+		db.execSQL(query);
 	}
 	
 	@Override
