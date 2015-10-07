@@ -92,6 +92,11 @@ To install the Linphone application simply follow the steps below:
 \caption{Locate repository}
 \label{repoLocate}
 \end{figure}
+\item Here there are two separate ways to go about installing the application. Using an IDE or using a makefile. 
+\end{enumerate}
+
+\textbf{Using Eclipse IDE}
+\begin{enumerate}
 \item Navigate to directory where you wish to clone the repository. 
 \item Clone the repository to your local hard disk by typing the following command in the terminal: "git clone https://github.com/psengelke/linphone-android-group-chat.git" 
 \item Navigate to the cloned repository in your directory. Refer to figure 3
@@ -116,6 +121,38 @@ To install the Linphone application simply follow the steps below:
 \item \textbf{Setup Device: } Set device to Developer Mode through the settings. 
 \subitem Settings -$>$ Developer Options -$>$ On
 \subitem Enable debugging mode in developer options.
+\subitem Plug device into your computer (USB port).
+\subitem Install necessary device drivers if they are not already available on the computer.
+\item Locate the green "Play" button on the top of the Eclipse IDE and select it.
+\begin{figure}[H]
+\includegraphics[width=80px]{./images/eclipsePlay.png}
+\caption{Eclipse IDE Play}
+\label{repoClone}
+\end{figure}
+\item A prompt will appear, with the options to select which device you would like to run the application on. Select the desired device.
+\begin{figure}[H]
+\includegraphics[width=80px]{./images/eclipsePlay.png}
+\caption{Eclipse IDE Play}
+\label{repoClone}
+\end{figure}
+\item The application will be launched on your selected device.
+\end{enumerate}
+
+\textbf{Using a Makefile}
+\begin{enumerate}
+\item Download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
+\item Download the Android ndk (=r10c) from Google and add it to your path.
+\item Install yasm, nasm, curl, ant, rsync and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig.
+\subitem On 64 bits linux systems you'll need the ia32-libs package
+\subitem With the latest Debian (multiarch), you need this:
+\subsubitem dpkg --add-architecture i386
+\subsubitem aptitude update
+\subsubitem aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
+\item run the Makefile script in the top level directory. This will download iLBC source files and convert some assembly files in VP8 project.
+\begin{verbatim}$ make \end{verbatim}
+\item To generate a signed apk to publish on the Google Play, run  \begin{verbatim} $ make release \end{verbatim}
+\item Locate the created APK on the the computer and copy it onto the device. 
+\item Locate device on device - select it and follow the prompts.
 \end{enumerate}
 
 \section{Getting Started}
