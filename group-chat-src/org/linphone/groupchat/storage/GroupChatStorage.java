@@ -134,11 +134,18 @@ public interface GroupChatStorage {
 	public String getSecretKey(String id);
 	
     /**
-     * Changes the encryption type used by the group.
+     * Sets the encryption type used by the group.
      * @param id The group id.
      * @param type The encryption type to be used.
      */
-    public void updateEncryptionType(String id, EncryptionType type);
+    public void setEncryptionType(String id, EncryptionType type);
+    
+    /**
+     * Get the encryption type used by the group.
+     * @param id The group id.
+     * @return The encryption type.
+     */
+    public EncryptionType getEncryptionType(String id);
     
     /**
      * Updates the pending status of a group member.
