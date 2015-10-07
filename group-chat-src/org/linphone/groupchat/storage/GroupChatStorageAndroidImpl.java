@@ -306,8 +306,11 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	
 	@Override
 	public EncryptionType getEncryptionType(String id){
-		
-		return EncryptionType.None;
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String query = "SELECT encryption_type From Groups Where group_id = '" + id+"'";
+		Cursor c=db.rawQuery(query, null);
+		EncryptionType encryption_type = EncryptionType.values()[c.getInt(3)];
+		return encryption_type;
 	}
 	
 	@Override
