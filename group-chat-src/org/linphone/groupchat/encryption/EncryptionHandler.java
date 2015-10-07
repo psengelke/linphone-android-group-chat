@@ -12,6 +12,6 @@ import java.lang.String;
 
 interface EncryptionHandler {
     
-    public String encrypt(String message, String keySeed);
+    public String encrypt(String message);
     public String decrypt(String message);
 }

@@ -30,7 +30,7 @@ class AES256EncryptionHandler extends EncryptionHandlerImpl implements Encryptio
 	}*/
 	
 	@Override
-	public String encrypt(String message, String keySeed) {
+	public String encrypt(String message) {
 		try {
 			/*salt=generateSalt();
 			byte[] saltBytes=salt.getBytes("UTF-8");

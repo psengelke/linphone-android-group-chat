@@ -21,7 +21,7 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	public EncryptionHandlerImpl(){}
 
 	@Override
-	public String encrypt(String message, String keySeed) {
+	public String encrypt(String message) {
 		return null;
 	}
 
@@ -29,37 +29,4 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	public String decrypt(String message) {
 		return null;
 	}
-
-	@Override
-	public String getPublicKey() {
-		return key_public;
-	}
-
-	@Override
-	public EncryptionType getEncryptionType() {
-		return encryption_type;
-	}
-
-	@Override
-	public void generateAsymmetricKeys() {}
-
-	@Override
-	public void setSecretKey(String seed) throws InvalidKeySeedException {
-		keySeed=seed;
-	}
-
-	@Override
-	public String getKeySeed() {
-		return keySeed;
-	}
-
-	@Override
-	public String generateSeed() {
-		return null;
-	}
-
-	/*@Override
-	public long getSecretKey() {
-		return key_private;
-	}*/
 }
