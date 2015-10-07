@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Message;
 
 import org.linphone.LinphoneService;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
@@ -130,13 +131,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			Date d=null;
 			 if(c.moveToFirst()){
 		            do{	          
-		               temp.id = c.getInt(c.getColumnIndex("_id"));
-		               temp.message = c.getString(c.getColumnIndex("message_text"));
-		               temp.sender = c.getString(c.getColumnIndex("member_id"));
-		               temp.state = MessageState.values()[c.getInt(c.getColumnIndex("message_state"))];
-		               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex("message_direction"))];
+		               temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
+		               temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
+		               temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
+		               temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
+		               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
 		               try {
-						d=format.parse(c.getString(c.getColumnIndex("time_sent")));
+						d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
 			               temp.time= d;
 						} catch (ParseException e) {
 							e.printStackTrace();
@@ -166,10 +167,10 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			
 			 if(c.moveToFirst()){
 		            do{	          
-		               temp.group_id = c.getString(c.getColumnIndex("group_id"));
-		               temp.group_name = c.getString(c.getColumnIndex("group_name"));
-		               temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex("encryption_type"))];
-		               temp.admin = c.getString(c.getColumnIndex("admin"));		               		               
+		               temp.group_id = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupId));
+		               temp.group_name = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupName));
+		               temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
+		               temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));		               		               
 		               el.add(temp);
 		            }while(c.moveToNext());
 		        }
@@ -217,7 +218,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     	LinkedList<GroupChatMember> el=new LinkedList<>();
     	if(c.moveToFirst()){
             do{	          	               		               
-               el.add(new GroupChatMember(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("sip_address")), Boolean.valueOf(c.getString(c.getColumnIndex("pending")))));
+               el.add(new GroupChatMember(c.getString(c.getColumnIndex(GroupChatHelper.Members.id)), c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress)), Boolean.valueOf(c.getString(c.getColumnIndex(GroupChatHelper.Members.pending)))));
             }while(c.moveToNext());
         }
     	c.close();
@@ -240,13 +241,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		int i=0;
 		 if(c.moveToFirst()){
 	            do{	          
-	               temp.id = c.getInt(c.getColumnIndex("_id"));
-	               temp.message = c.getString(c.getColumnIndex("message_text"));
-	               temp.sender = c.getString(c.getColumnIndex("member_id"));
-	               temp.state = MessageState.values()[c.getInt(c.getColumnIndex("message_state"))];
-	               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex("message_direction"))];
+	               temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
+	               temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
+	               temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
+	               temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
+	               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
 	               try {
-					d=format.parse(c.getString(c.getColumnIndex("time_sent")));
+					d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
 		               temp.time= d;
 					} catch (ParseException e) {
 						e.printStackTrace();
@@ -294,7 +295,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		// error here:
-		String secretKey = c.getString(c.getColumnIndex("_id"));
+		String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
 		return secretKey;
 	}
 	
@@ -358,10 +359,21 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
     public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException {
         SQLiteDatabase db = helper.getWritableDatabase();
+        String querySelect = "Select * From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+        Cursor c = db.rawQuery(querySelect,null);
+        if(c.moveToFirst()){
+        	String queryDelete = "Delete From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+        	db.execSQL(queryDelete);
+        }
+        else
+        {
+        	throw new GroupDoesNotExistException("Group could not be found in the database!");
+        }
+        
         //delete groupIdToDelete from Groups table
         if( db.delete(GroupChatHelper.Groups.tableName, GroupChatHelper.Groups.groupId + " =?",
         		new String[]{groupIdToDelete}) ==0) {
-            throw new GroupDoesNotExistException("Group could not be found in the database!");
+            
         }
         //remove all members associated with groupIdToDelete from Members table
         db.delete(GroupChatHelper.Members.tableName, GroupChatHelper.Members.groupId + " =?",
