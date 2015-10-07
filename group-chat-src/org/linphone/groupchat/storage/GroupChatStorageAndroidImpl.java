@@ -369,23 +369,21 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         if(c.moveToFirst()){
         	String queryDelete = "Delete From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
         	db.execSQL(queryDelete);
+        	
+            //Delete from Members table
+            String query = "Delete From Members WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
+            db.execSQL(query);
+           
+         //Delete from Groups table
+           String queryDelete = "Delete From Groups WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
+           db.execSQL(queryDelete); 
         }
         else
         {
         	throw new GroupDoesNotExistException("Group could not be found in the database!");
         }
         
-      //Delete from Members table
-        String query = "Delete From Members WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
-        Cursor c = db.rawQuery(querySelect,null);
-        if(c.moveToFirst()){
-        	String queryDelete = "Delete From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
-        	db.execSQL(queryDelete);
-        }
-        else
-        {
-        	throw new GroupDoesNotExistException("Group could not be found in the database!");
-        }
+
         
         
         
@@ -393,8 +391,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         
         
         
-        
-        
+  /*      
         //delete groupIdToDelete from Groups table
         if( db.delete(GroupChatHelper.Groups.tableName, GroupChatHelper.Groups.groupId + " =?",
         		new String[]{groupIdToDelete}) ==0) {
@@ -404,7 +401,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         db.delete(GroupChatHelper.Members.tableName, GroupChatHelper.Members.groupId + " =?",
                 new String[]{groupIdToDelete});
 
-        // TODO delete messages from Message Table. ?????? Should message table have groupId key????
+        // TODO delete messages from Message Table. ?????? Should message table have groupId key????*/
     }
 
 	// TODO
