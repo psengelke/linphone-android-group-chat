@@ -224,7 +224,7 @@ public class LinphoneGroupChatRoom {
 		if (me.equals(member.sip)){
 			LinphoneGroupChatManager.getInstance().deleteGroupChat(group_id);
 			return;
-		}
+		} // TODO might not be necessary.
 		
 		storage.removeMember(group_id, member);
 		
@@ -445,7 +445,7 @@ public class LinphoneGroupChatRoom {
 
 	/* Getters & Setters */
 	
-	public void setGroupImage(Bitmap image) throws PermissionRequiredException{
+	public void setGroupImage(Bitmap image) throws PermissionRequiredException {
 		
 		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
