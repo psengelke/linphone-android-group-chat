@@ -268,6 +268,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "') and messages.message_state=0";
 		Cursor c=db.rawQuery(query, null);
+		c.moveToFirst();
 		int count=0;
 		if (c!=null)
 			while (c.moveToNext())
@@ -295,6 +296,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		// error here:
+		c.moveToFirst();
 		String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
 		return secretKey;
 	}
@@ -311,7 +313,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT encryption_type From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
-		EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex("encryption_type"))];
+		c.moveToFirst();
+		EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
 		return encryption_type;
 	}
 	
@@ -359,6 +362,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
     public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException {
         SQLiteDatabase db = helper.getWritableDatabase();
+        
+        //Delete from messages table
         String querySelect = "Select * From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
         Cursor c = db.rawQuery(querySelect,null);
         if(c.moveToFirst()){
@@ -369,6 +374,26 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
         {
         	throw new GroupDoesNotExistException("Group could not be found in the database!");
         }
+        
+      //Delete from Members table
+        String query = "Delete From Members WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
+        Cursor c = db.rawQuery(querySelect,null);
+        if(c.moveToFirst()){
+        	String queryDelete = "Delete From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+        	db.execSQL(queryDelete);
+        }
+        else
+        {
+        	throw new GroupDoesNotExistException("Group could not be found in the database!");
+        }
+        
+        
+        
+        
+        
+        
+        
+        
         
         //delete groupIdToDelete from Groups table
         if( db.delete(GroupChatHelper.Groups.tableName, GroupChatHelper.Groups.groupId + " =?",
