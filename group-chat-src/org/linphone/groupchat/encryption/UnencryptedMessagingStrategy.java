@@ -13,9 +13,9 @@ import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInf
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
-class NoEncryptionStrategy implements EncryptionStrategy {
+class UnencryptedMessagingStrategy implements MessagingStrategy {
 
-	public NoEncryptionStrategy() {}
+	public UnencryptedMessagingStrategy() {}
 
 	@Override
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
@@ -26,16 +26,6 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 			chatRoom.sendChatMessage(newMessage);
 			chatRoom.deleteMessage(newMessage);
 		}		
-	}
-
-/*	@Override
-	public String receiveMessage(String message) {
-		return message;
-	}*/
-
-	@Override
-	public EncryptionType getEncryptionType() {
-		return EncryptionType.None;
 	}
 
 	@Override
@@ -82,7 +72,7 @@ class NoEncryptionStrategy implements EncryptionStrategy {
 	}
 
 	@Override
-	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+	public MessagingStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
 		return null;
 	}
 

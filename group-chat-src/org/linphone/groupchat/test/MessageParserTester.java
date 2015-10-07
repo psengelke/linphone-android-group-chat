@@ -8,7 +8,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
+import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 
 import junit.framework.TestCase;
 

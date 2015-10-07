@@ -21,7 +21,7 @@ import org.linphone.groupchat.storage.GroupChatStorage;
  * @author Paul Engelke
  */
 
-public interface EncryptionStrategy {
+public interface MessagingStrategy {
 
     public static enum EncryptionType{
         None, AES256
@@ -105,11 +105,5 @@ public interface EncryptionStrategy {
      * @param storage The storage adapter instance.
      * @return A new encryption strategy object.
      */
-    public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage);
-    
-    /**
-     * Getter for the hidden {@link EncryptionHandler}'s {@link EncryptionType}.
-     * @return {@link EncryptionType} of the strategy.
-     */
-    public EncryptionType getEncryptionType();
+    public MessagingStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage);
 }

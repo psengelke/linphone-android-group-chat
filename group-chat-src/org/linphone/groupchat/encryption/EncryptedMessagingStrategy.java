@@ -14,11 +14,11 @@ import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
-class SomeEncryptionStrategy implements EncryptionStrategy {
+class EncryptedMessagingStrategy implements MessagingStrategy {
 
-	private final EncryptionHandler handler;
+	private final SymmetricEncryptionHandler handler;
 
-	public SomeEncryptionStrategy(EncryptionHandler handler) {
+	public EncryptedMessagingStrategy(SymmetricEncryptionHandler handler) {
 
 		this.handler = handler;
 	}
@@ -89,7 +89,7 @@ class SomeEncryptionStrategy implements EncryptionStrategy {
 	}
 
 	@Override
-	public EncryptionStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
+	public MessagingStrategy handleEncryptionStrategyChange(String message, String id, GroupChatStorage storage) {
 
 		EncryptionType type = null;// MessageParser.parserEncryptionType(message);
 

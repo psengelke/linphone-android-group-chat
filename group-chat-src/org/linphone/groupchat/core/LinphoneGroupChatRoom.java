@@ -13,8 +13,8 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.EncryptionStrategy;
-import org.linphone.groupchat.encryption.EncryptionStrategy.EncryptionType;
+import org.linphone.groupchat.encryption.MessagingStrategy;
+import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupChatListenerIsSetException;
 import org.linphone.groupchat.exception.GroupChatSizeException;
@@ -59,7 +59,7 @@ public class LinphoneGroupChatRoom {
 	private String group_name;
 	private Bitmap image;
 	
-	private EncryptionStrategy encryption_strategy;
+	private MessagingStrategy encryption_strategy;
 	
 	private LinphoneCore lc;
 	private GroupChatStorage storage;
@@ -75,7 +75,7 @@ public class LinphoneGroupChatRoom {
 	 * @param lc The {@link LinphoneCore} instance for the client.
 	 */
 	public LinphoneGroupChatRoom(GroupChatData group, 
-			EncryptionStrategy encryption_strategy, 
+			MessagingStrategy encryption_strategy, 
 			GroupChatStorage storage, 
 			LinphoneCore lc){
 		
@@ -174,7 +174,7 @@ public class LinphoneGroupChatRoom {
 		info.group.group_id = group_id;
 		info.group.group_name = group_name;
 		info.group.members = members;
-		info.group.encryption_type = encryption_strategy.getEncryptionType();
+		info.group.encryption_type = null; //TODO get from storage.
 		
 		encryption_strategy.sendMessage(info, member, lc);
 	}
@@ -357,7 +357,7 @@ public class LinphoneGroupChatRoom {
 		group.admin = admin;
 		group.group_id = group_id;
 		group.group_name = group_name;
-		group.encryption_type = encryption_strategy.getEncryptionType();
+		group.encryption_type = null; //TODO get from storage.
 		group.members = members;
 		
 		LinphoneChatRoom cr = lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
@@ -551,16 +551,16 @@ public class LinphoneGroupChatRoom {
 	 * @param encryption_strategy The new encryption strategy.
 	 * @throws PermissionRequiredException 
 	 */
-	public void setEncryptionStrategy(EncryptionStrategy encryption_strategy) throws PermissionRequiredException {
+	public void setEncryptionStrategy(MessagingStrategy encryption_strategy) throws PermissionRequiredException {
 		
 		if (!admin.equals(lc.getDefaultProxyConfig().getIdentity())) throw new PermissionRequiredException();
-		if (encryption_strategy.getEncryptionType() != EncryptionType.None) return; // 
+		//if (encryption_strategy.getEncryptionType() != EncryptionType.None) return; // TODO get from storage
 		
 		this.encryption_strategy = encryption_strategy;
 	}
 	
 	public EncryptionType getEncryptionType(){
-		return encryption_strategy.getEncryptionType();
+		return EncryptionType.None;//encryption_strategy.getEncryptionType(); TODO get from storage.
 	}
 
 	public void sendMessage(String message) {
