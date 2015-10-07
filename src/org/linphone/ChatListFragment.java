@@ -29,14 +29,20 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.groupchat.core.LinphoneGroupChatManager;
+import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
+import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.mediastream.Log;
 
 
 
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -67,7 +73,7 @@ import android.widget.TextView;
  */
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	private LayoutInflater mInflater;
-	private List<String> mConversations, mDrafts, groups;
+	private List<String> mConversations, mDrafts;
 	private ListView chatList;
 	private TextView edit, ok, newDiscussion, noChatHistory, groupChat, groupsTab, chatsTab;
 	private ImageView clearFastChat;
@@ -75,6 +81,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private boolean isEditMode = false;
 	private boolean useLinphoneStorage;
 	private boolean displayGroupChats;
+	
+	private LinphoneGroupChatManager lgm;
+	private LinkedList<LinphoneGroupChatRoom> groups;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +95,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 		
+		lgm = LinphoneGroupChatManager.getInstance();
+		groups = lgm.getGroupChatList();
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 		
@@ -121,12 +132,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		clearFastChat.setOnClickListener(this);
 		
 		fastNewChat = (EditText) view.findViewById(R.id.newFastChat);
-		
-		//TODO Harcoded groups here
-		groups = new LinkedList<String>();
-		groups.add("Free Masons");
-		groups.add("Illuminati");
-		groups.add("Al Queda");
 		
 		return view;
 	}
@@ -302,46 +307,27 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.allGroups)		// All Groups tab clicked
 		{
 			displayGroupChats = true;
-			changeContactAdapter();
+			toggleContactsTab();
+			chatList.setVisibility(View.VISIBLE);
+			refreshGroupList();
 		}
 		else if (id == R.id.allChats)		// All Chats tab clicked
 		{
 			displayGroupChats = false;
-			changeContactAdapter();
-		}
-	}
-	
-	/**
-	 * Method to refresh chatlist to display either groupChats or Normal Chats
-	 */
-	private void changeContactAdapter()
-	{
-		toggleContactsTab();
-		
-		if (displayGroupChats)
-		{
-			if (!groups.isEmpty()) {
-				chatList.setVisibility(View.VISIBLE);
-				chatList.setAdapter(new GroupListAdapter());
-			}
-			else
-			{
-				chatList.setVisibility(View.GONE);
-				noChatHistory.setVisibility(View.VISIBLE);
-			}
-			
-		}
-		else
-		{
 			noChatHistory.setVisibility(View.VISIBLE);
 			refresh();
 		}
-		
+	}
+	
+	public void refreshGroupList()
+	{
+		groups = lgm.getGroupChatList();
+		hideAndDisplayMessageIfNoChat();
 	}
 	
 	/**
 	 * Enable and disable groupchat and chats tab as needed
-	 * Also changes other parameters
+	 * Also change fastNewChat edit text and hint
 	 */
 	private void toggleContactsTab()
 	{
@@ -362,27 +348,42 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> adapter, View view, final int position, long id) {
 		if (displayGroupChats)
 		{
 			if (!isEditMode) {
-				//TODO Make Appropriate GroupChatMessagingFragment appear
+				//Make Appropriate GroupChatMessagingFragment appear
 				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 				Bundle b = new Bundle();
 				b.putString("fragment", "gcMessagingFragment");
-				b.putString("groupID", "");
+				b.putString("groupID", groups.get(position).getGroupId());
 				b.putString("groupName", (String) view.getTag());
 				intent.putExtras(b);
 				startActivity(intent);
 				
 			}
-			else	// To remove item from list, since editMode
+			else	// Leave this group
 			{
-				//TODO Remove group from storage via appropriate interface
-				
 				String group = (String) view.getTag();
-				
-				groups.remove(group);	// TODO this is mock
+				// Alert to confirm leave group
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+	            builder1.setMessage("Are you sure you want to leave group " + group);
+	            builder1.setCancelable(true);
+	            builder1.setPositiveButton("Yes",
+	                    new DialogInterface.OnClickListener() {
+	                
+					public void onClick(DialogInterface dialog, int id) {
+						leaveGroup(position);	// Leave this group
+	                }
+	            });
+	            builder1.setNegativeButton("No", 
+	            		new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+	            AlertDialog alert11 = builder1.create();
+	            alert11.show();
 				
 				hideAndDisplayMessageIfNoChat();
 			}
@@ -409,6 +410,33 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	}
 	
+	/**
+	 * Method to leave a chosen group
+	 * @param position The position in the ListView of Groups indicating group to leave
+	 */
+	protected void leaveGroup(int position) {
+		try {
+			lgm.deleteGroupChat(groups.get(position).getGroupId());
+		} catch (GroupDoesNotExistException e) {
+			e.printStackTrace();
+		} catch (IsAdminException e) {
+			// Display an alert to inform the user to assign a new admin
+			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+            builder1.setMessage("Please assign a new admin before leaving this group");
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("OK", 
+            		new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+			e.printStackTrace();
+		}
+		
+	}
+
 	private boolean importAndroidStoredMessagedIntoLibLinphoneStorage() {
 		Log.w("Importing previous messages into new database...");
 		try {
@@ -585,16 +613,19 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	class GroupListAdapter extends BaseAdapter
 	{
 
+		public GroupListAdapter()
+		{
+			groups = lgm.getGroupChatList();
+		}
+		
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return groups.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return position;
+			return groups.get(position);
 		}
 
 		@Override
@@ -605,7 +636,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			View view = null;
 			
 			if (convertView != null)
@@ -613,11 +643,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			else
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
 			
-			String group = groups.get(position);
-			view.setTag(group);
+			LinphoneGroupChatRoom group = groups.get(position);
+			view.setTag(group.getName());
 			
-			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
-			groupName.setText(group);
+//			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
+//			groupName.setText(group);
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			

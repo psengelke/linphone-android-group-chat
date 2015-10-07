@@ -23,46 +23,23 @@
 \tableofcontents
 
 \newpage
-\section{Systems Overview}
-%Linphone is the leading open source implementation of Voice over IP (VoIP) and Instant messaging functionalities, and is compatible with iOS, Android, Blackberry, Windows Phone, Windows desktop and web browser clients. This user manual will be focused specifically on the Android aspect. 
+\section{Systems Overview} 
 Linphone Android was extended to provide group chat functionality. This gives a user the ability to create, delete, participate in and manage group chats. This enables numerous users to collaborate/communicate simultaneously with each other. Linphone group chat functionality provides the option for secure communication between parties through encryption of messages.
 
 \section{Systems Configuration}
-%Linphone provides a separation between the user interfaces and the core engine, allowing %creation of various kinds of user interfaces for the same core functionality.\\
-
-%\textbf{The user interface frontends:}
-%\begin{itemize}
-%\item Gtk+ interface for windows, mac and linux
-%\item The console interface (linphonec, linphonecsh)
-%\item The iPhone application built in objective C
-%\item The Android application running in java
-%\item The Windows Phone application written in C\#
-%\end{itemize} 
-
-%\textbf{Liblinphone, the core engine} \newline\newline
-%This is the library that implements all the functionalities of Linphone. \\
-%Liblinphone is a powerful SIP VoIP video SDK that anyone can use to add audio or video call %capabilities to an application. It provides a high level API to initiate, receive, terminate %audio and video calls.\\
-%\newline Liblinphone relies on the following software components:
-%\begin{itemize}
-%\item Mediastreamer2, a powerful multimedia SDK to make audio/video streaming and processing.
-%\item oRTP, a simple RTP library.
-%\item belle-sip the SIP library.
-%\end{itemize}
-%Liblinphone and all its dependencies are written in pure C\\
-%\begin{figure}[H]
-%\includegraphics[width=350px]{./images/schema-linphone.png}
-%\caption{Linphone system configuration}
-%\label{Configuration}
-%\end{figure}
 \subsection{Minimum Device Requirements}
-Mobile device which supports Android.\\
-\textbf{For installation:} Require a computer with Linux operating system.
-\subsection{Minimum Software Requirements}
-Android operating system 2.2 and up.\\
-\textbf{For installation:} Require a computer with Linux operating system. 
+A mobile device with an Android operating system, such as
 \begin{itemize}
-\item Make sure that you have Eclipse IDE installed on your Linux environment.
+\item smart phones,
+\item and tablets.
 \end{itemize}
+%\textbf{For compilation:} A computer with a Linux operating system is required.
+\subsection{Minimum Software Requirements}
+An Android operating system of 2.2 or higher.\\
+%\textbf{For installation:} Require a computer with Linux operating system.
+%\begin{itemize}
+%\item Make sure that you have Eclipse IDE installed on your Linux environment.
+%\end{itemize}
 
 \subsection{Communication}
 \begin{figure}[H]
@@ -111,7 +88,7 @@ To install the Linphone application simply follow the steps below:
 \label{repoClone}
 \end{figure}
 \item Open the Eclipse IDE
-\item Click File -$>$ Import -> Git -$>$ Projects From Git -$>$ Next -$>$ Existing local repository -$>$ Locate the newly cloned repository and add it -$>$ Import existing Eclipse projects -$>$ Next -$>$ Check Projects -$>$ Finish
+\item Click File -$>$ Import -$>$ Git -$>$ Projects From Git -$>$ Next -$>$ Existing local repository -$>$ Locate the newly cloned repository and add it -$>$ Import existing Eclipse projects -$>$ Next -$>$ Check Projects -$>$ Finish
 \subitem The project will appear at the bottom left hand corner.
 \begin{figure}[H]
 \includegraphics[width=100px]{./images/git.png}
