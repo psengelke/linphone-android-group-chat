@@ -282,10 +282,6 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	            AlertDialog alert11 = builder1.create();
 	            alert11.show();
 				
-				
-			
-			
-			
 		}
 		
 	}

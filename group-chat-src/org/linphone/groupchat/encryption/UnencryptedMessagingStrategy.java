@@ -109,3 +109,4 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 
 		//	}
 	}
+}
