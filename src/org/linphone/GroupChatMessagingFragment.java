@@ -65,7 +65,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		// Determine which groupChat to create interface for
 		groupID = getArguments().getString("groupID");
 		groupName = getArguments().getString("groupName");
-		LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
+		//LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
 //		try {
 //			chatroom = lgm.getGroupChat(groupID);
 //			//groupName = chatroom.getName();
@@ -74,26 +74,26 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 //		}
 		
 		// Use groupID to retrieve messages
-		LinphoneGroupChatManager lGM = LinphoneGroupChatManager.getInstance();
-		try {
-			LinphoneGroupChatRoom groupChat = lGM.getGroupChat(groupID);
-			history = groupChat.getHistory();
-			adapter = new GroupChatMessageAdapter(history);
-			if (history != null)
-				msgList.setAdapter(adapter);
-		} catch (GroupDoesNotExistException e) {
-			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage(e.getMessage());
-            builder1.setCancelable(true);
-            builder1.setPositiveButton("OK",
-                    new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
-		}
+		//LinphoneGroupChatManager lGM = LinphoneGroupChatManager.getInstance();
+//		try {
+//			LinphoneGroupChatRoom groupChat = lGM.getGroupChat(groupID);
+//			history = groupChat.getHistory();
+//			adapter = new GroupChatMessageAdapter(history);
+//			if (history != null)
+//				msgList.setAdapter(adapter);
+//		} catch (GroupDoesNotExistException e) {
+//			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+//            builder1.setMessage(e.getMessage());
+//            builder1.setCancelable(true);
+//            builder1.setPositiveButton("OK",
+//                    new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    dialog.cancel();
+//                }
+//            });
+//            AlertDialog alert11 = builder1.create();
+//            alert11.show();
+//		}
 		
 		
 		groupNameView = (TextView) view.findViewById(R.id.groupName);
