@@ -4,6 +4,9 @@ import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 
 public class EncryptionFactory {
+	
+	private final static int AES256_SEED_LENGTH = 256;
+	private final static int RSA_SEED_LENGTH = 256;
     
 	/**
 	 * Factory method for creating {@link MessagingStrategy} instances.
@@ -13,13 +16,9 @@ public class EncryptionFactory {
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type) {
 		switch (type) {
 		case AES256:
-			SymmetricEncryptionHandler handler = new AES256EncryptionHandler();
-			try {
-				handler.setSecretKey(handler.generateSeed());
-			} catch (InvalidKeySeedException e) {
-				// this should never be reached as handler.generateSeed() will always return a valid seed.
-			}
-			MessagingStrategy strategy = new EncryptedMessagingStrategy(handler);
+			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(GenerateEncryptionSeeds.generateSeed(AES256_SEED_LENGTH));
+			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(GenerateEncryptionSeeds.generateSeed(RSA_SEED_LENGTH));
+			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
 			return strategy;
 		default:
 			return new UnencryptedMessagingStrategy();
@@ -36,9 +35,9 @@ public class EncryptionFactory {
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type, String seed) throws InvalidKeySeedException{
 		switch (type) {
 		case AES256:
-			SymmetricEncryptionHandler handler = new AES256EncryptionHandler();
-			handler.setSecretKey(seed);
-			MessagingStrategy strategy = new EncryptedMessagingStrategy(handler);
+			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(seed);
+			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(GenerateEncryptionSeeds.generateSeed(RSA_SEED_LENGTH));
+			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
 			return strategy;
 		default:
 			return new UnencryptedMessagingStrategy();
