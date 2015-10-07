@@ -5,8 +5,8 @@ import java.security.SecureRandom;
 
 class GenerateEncryptionSeeds {
 	
-	public static String generateSeed(int bitLength, int rngSeed) {
-		SecureRandom rng=new SecureRandom(String.valueOf(rngSeed).getBytes());
+	public static String generateSeed(int bitLength) {
+		SecureRandom rng=new SecureRandom();
 		String keySeed=null;
 		
 		try {

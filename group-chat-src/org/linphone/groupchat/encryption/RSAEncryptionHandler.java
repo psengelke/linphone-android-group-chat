@@ -1,9 +1,10 @@
 package org.linphone.groupchat.encryption;
 
-public class AsymmetricEncryptionHandlerImpl implements AsymmetricEncryptionHandler {
-	// asymmetric
-	protected String key_private;
-	protected String key_public;
+public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implements AsymmetricEncryptionHandler {
+
+	public RSAEncryptionHandler(String keySeed) {
+		//TODO: generate key pair
+	}
 
 	@Override
 	public String encrypt(String message, String public_key) {
@@ -19,7 +20,7 @@ public class AsymmetricEncryptionHandlerImpl implements AsymmetricEncryptionHand
 
 	@Override
 	public String getPublicKey() {
-		return key_public;
+		return super.getPublicKey();
 	}
 
 }

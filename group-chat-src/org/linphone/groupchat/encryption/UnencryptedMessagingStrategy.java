@@ -21,7 +21,7 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		for (GroupChatMember member : members) {
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
-//			chatRoom.compose();
+			//			chatRoom.compose();
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
 			chatRoom.sendChatMessage(newMessage);
 			chatRoom.deleteMessage(newMessage);
@@ -83,7 +83,7 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 			if (encrypted)
 				throw new Exception();
 			InitialContactInfo ic=MessageParser.parseInitialContactInfo(message);
-			
+
 		}
 		catch(Exception e){
 			System.err.println("Encrypted message passed to NoEncryptionStrategy");
@@ -95,17 +95,17 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 	@Override
 	public void handleInitialContactMessage(LinphoneChatMessage message,
 			String id, GroupChatStorage storage, LinphoneCore lc) {
-		
-		String header=message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
-		if (header!=null && (header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3)))
-		{
-			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
-			GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
-			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
-			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);
-			chatRoom.sendChatMessage(newMessage);
-			chatRoom.deleteMessage(newMessage);
-		}
-	
+
+		//		String header=message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
+		//		if (header!=null && (header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2) || header.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3)))
+		//		{
+		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
+		GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
+		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
+		newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);
+		chatRoom.sendChatMessage(newMessage);
+		chatRoom.deleteMessage(newMessage);
+		//		}
+
+		//	}
 	}
-}
