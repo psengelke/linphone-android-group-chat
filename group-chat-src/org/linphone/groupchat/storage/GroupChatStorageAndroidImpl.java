@@ -130,13 +130,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			Date d=null;
 			 if(c.moveToFirst()){
 		            do{	          
-		               temp.id = c.getInt(0);
-		               temp.message = c.getString(1);
-		               temp.sender = c.getString(2);
-		               temp.state = MessageState.values()[c.getInt(3)];
-		               temp.direction = MessageDirection.values()[c.getInt(4)];
+		               temp.id = c.getInt(c.getColumnIndex("_id"));
+		               temp.message = c.getString(c.getColumnIndex("message_text"));
+		               temp.sender = c.getString(c.getColumnIndex("member_id"));
+		               temp.state = MessageState.values()[c.getInt(c.getColumnIndex("message_state"))];
+		               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex("message_direction"))];
 		               try {
-						d=format.parse(c.getString(5));
+						d=format.parse(c.getString(c.getColumnIndex("time_sent")));
 			               temp.time= d;
 						} catch (ParseException e) {
 							e.printStackTrace();
@@ -166,10 +166,10 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			
 			 if(c.moveToFirst()){
 		            do{	          
-		               temp.group_id = c.getString(1);
-		               temp.group_name = c.getString(2);
-		               temp.encryption_type = EncryptionType.values()[c.getInt(3)];
-		               temp.admin = c.getString(4);		               		               
+		               temp.group_id = c.getString(c.getColumnIndex("group_id"));
+		               temp.group_name = c.getString(c.getColumnIndex("group_name"));
+		               temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex("encryption_type"))];
+		               temp.admin = c.getString(c.getColumnIndex("admin"));		               		               
 		               el.add(temp);
 		            }while(c.moveToNext());
 		        }
@@ -207,6 +207,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	        db.close();
 		return el;
 	}*/
+
 	
     public LinkedList<GroupChatMember> getMembers(String groupId){
     	SQLiteDatabase db = helper.getReadableDatabase();
@@ -216,7 +217,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     	LinkedList<GroupChatMember> el=new LinkedList<>();
     	if(c.moveToFirst()){
             do{	          	               		               
-               el.add(new GroupChatMember(c.getString(1), c.getString(2), Boolean.valueOf(c.getString(3))));
+               el.add(new GroupChatMember(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("sip_address")), Boolean.valueOf(c.getString(c.getColumnIndex("pending")))));
             }while(c.moveToNext());
         }
     	c.close();
@@ -224,7 +225,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
     	return el;
     }
     
-   
+
 	@Override
 	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
 		SQLiteDatabase db = helper.getReadableDatabase();
@@ -239,13 +240,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		int i=0;
 		 if(c.moveToFirst()){
 	            do{	          
-	               temp.id = c.getInt(0);
-	               temp.message = c.getString(1);
-	               temp.sender = c.getString(2);
-	               temp.state = MessageState.values()[c.getInt(3)];
-	               temp.direction = MessageDirection.values()[c.getInt(4)];
+	               temp.id = c.getInt(c.getColumnIndex("_id"));
+	               temp.message = c.getString(c.getColumnIndex("message_text"));
+	               temp.sender = c.getString(c.getColumnIndex("member_id"));
+	               temp.state = MessageState.values()[c.getInt(c.getColumnIndex("message_state"))];
+	               temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex("message_direction"))];
 	               try {
-					d=format.parse(c.getString(5));
+					d=format.parse(c.getString(c.getColumnIndex("time_sent")));
 		               temp.time= d;
 					} catch (ParseException e) {
 						e.printStackTrace();
@@ -293,7 +294,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		// error here:
-		String secretKey = c.getString(0);
+		String secretKey = c.getString(c.getColumnIndex("_id"));
 		return secretKey;
 	}
 	
@@ -309,7 +310,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT encryption_type From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
-		EncryptionType encryption_type = EncryptionType.values()[c.getInt(3)];
+		EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex("encryption_type"))];
 		return encryption_type;
 	}
 	
