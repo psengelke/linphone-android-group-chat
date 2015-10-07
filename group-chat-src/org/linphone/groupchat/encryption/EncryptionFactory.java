@@ -13,7 +13,7 @@ public class EncryptionFactory {
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type) {
 		switch (type) {
 		case AES256:
-			EncryptionHandler handler = new AES256EncryptionHandler();
+			SymmetricEncryptionHandler handler = new AES256EncryptionHandler();
 			try {
 				handler.setSecretKey(handler.generateSeed());
 			} catch (InvalidKeySeedException e) {
@@ -36,7 +36,7 @@ public class EncryptionFactory {
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type, String seed) throws InvalidKeySeedException{
 		switch (type) {
 		case AES256:
-			EncryptionHandler handler = new AES256EncryptionHandler();
+			SymmetricEncryptionHandler handler = new AES256EncryptionHandler();
 			handler.setSecretKey(seed);
 			MessagingStrategy strategy = new EncryptedMessagingStrategy(handler);
 			return strategy;

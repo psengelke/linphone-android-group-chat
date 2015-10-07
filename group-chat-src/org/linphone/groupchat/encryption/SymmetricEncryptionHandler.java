@@ -10,8 +10,9 @@ import java.lang.String;
  * @author Paul Engelke
  */
 
-interface EncryptionHandler {
+interface SymmetricEncryptionHandler {
     
     public String encrypt(String message);
     public String decrypt(String message);
+    public void setSecretKey(String key);
 }

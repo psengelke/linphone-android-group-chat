@@ -14,7 +14,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
-class AES256EncryptionHandler extends EncryptionHandlerImpl implements EncryptionHandler {
+class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 
 	/*private static String salt;
 	private static int keyIterations=65536;

@@ -5,7 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 
-class EncryptionHandlerImpl implements EncryptionHandler {
+class SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 	
 	// asymmetric
 	protected long key_private;
@@ -18,7 +18,7 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	protected EncryptionType encryption_type;
 
 	
-	public EncryptionHandlerImpl(){}
+	public SymmetricEncryptionHandlerImpl(){}
 
 	@Override
 	public String encrypt(String message) {
@@ -28,5 +28,11 @@ class EncryptionHandlerImpl implements EncryptionHandler {
 	@Override
 	public String decrypt(String message) {
 		return null;
+	}
+
+	@Override
+	public void setSecretKey(String key) {
+		// TODO Auto-generated method stub
+		
 	}
 }

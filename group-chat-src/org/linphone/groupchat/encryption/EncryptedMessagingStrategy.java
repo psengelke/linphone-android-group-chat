@@ -16,9 +16,9 @@ import org.linphone.groupchat.storage.GroupChatStorage;
 
 class EncryptedMessagingStrategy implements MessagingStrategy {
 
-	private final EncryptionHandler handler;
+	private final SymmetricEncryptionHandler handler;
 
-	public EncryptedMessagingStrategy(EncryptionHandler handler) {
+	public EncryptedMessagingStrategy(SymmetricEncryptionHandler handler) {
 
 		this.handler = handler;
 	}

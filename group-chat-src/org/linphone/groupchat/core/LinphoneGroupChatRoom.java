@@ -365,7 +365,8 @@ public class LinphoneGroupChatRoom {
 		group.members = members;
 		
 		LinphoneChatRoom cr = lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
-		LinphoneChatMessage _message = cr.createLinphoneChatMessage("");
+		String m = MessageParser.stringifyGroupChatData(group);
+		LinphoneChatMessage _message = cr.createLinphoneChatMessage(m);
 		_message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_RECEIVE_GROUP_INFO);
 		cr.sendChatMessage(_message);
 		cr.deleteMessage(_message);
