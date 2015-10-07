@@ -314,6 +314,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.allChats)		// All Chats tab clicked
 		{
 			displayGroupChats = false;
+			toggleContactsTab();
 			noChatHistory.setVisibility(View.VISIBLE);
 			refresh();
 		}

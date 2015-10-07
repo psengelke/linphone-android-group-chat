@@ -21,6 +21,8 @@ import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 import org.linphone.groupchat.storage.GroupChatStorageFactory;
 
+import android.util.Log;
+
 /**
  *	This class is responsible for handling the creation and deletion of groups, handling incoming 
  *	group chat messages and various other administrative functions.
@@ -35,6 +37,7 @@ public class LinphoneGroupChatManager {
 	private LinphoneGroupChatManager() {
 		
 		storage = GroupChatStorageFactory.getOrCreateGroupChatStorage(GroupChatStorageFactory.StorageAdapterType.SQLite);
+		chats = new LinkedList<>();
 		generateGroupChats();
 	}
 	
@@ -108,7 +111,8 @@ public class LinphoneGroupChatManager {
 	private void generateGroupChats(){
 		
 		LinkedList<GroupChatData> groups = storage.getChatList();
-		if (groups != null)
+		
+		if (groups != null && groups.size() != 0)
 		{
 			Iterator<GroupChatData> it = groups.iterator();
 			while (it.hasNext()) {
