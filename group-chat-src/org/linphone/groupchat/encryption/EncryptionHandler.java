@@ -10,7 +10,7 @@ import java.lang.String;
  * @author Paul Engelke
  */
 
-interface SymmetricEncryptionHandler {
+interface EncryptionHandler {
     
     public String encrypt(String message, String keySeed);
     public String decrypt(String message);
