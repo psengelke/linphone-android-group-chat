@@ -296,9 +296,11 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		// error here:
-		c.moveToFirst();
-		String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
-		return secretKey;
+		if(c.moveToFirst()){
+			String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
+			return secretKey;
+		}
+		return "";
 	}
 	
 	@Override
@@ -375,8 +377,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
             db.execSQL(query);
            
          //Delete from Groups table
-           String queryDelete = "Delete From Groups WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
-           db.execSQL(queryDelete); 
+           String queryDeleteGroup = "Delete From Groups WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
+           db.execSQL(queryDeleteGroup); 
         }
         else
         {
