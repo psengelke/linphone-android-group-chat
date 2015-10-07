@@ -29,6 +29,10 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 		return salt;
 	}*/
 	
+	public AES256EncryptionHandler(String keySeed) {
+		this.keySeed=keySeed;
+	}
+	
 	@Override
 	public String encrypt(String message) {
 		try {
@@ -54,7 +58,6 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 			
 //			SecretKeySpec sk=new SecretKeySpec(Arrays.copyOf(String.valueOf(key).getBytes("UTF-8"), 16), "AES");
 			SecretKeySpec sk=new SecretKeySpec(keySeed.getBytes("UTF-8"), "AES");
-			sks=sk;
 			Cipher cipher=Cipher.getInstance("AES/ECB/PKCS5Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, sk);
 			return Base64.encodeBase64String(cipher.doFinal(message.getBytes("UTF-8")));
@@ -85,18 +88,14 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 			decryptedTextBytes=cipher.doFinal(encryptedTextBytes);
 			return new String(decryptedTextBytes);*/
 			
+			SecretKeySpec sk=new SecretKeySpec(keySeed.getBytes("UTF-8"), "AES");
 			Cipher cipher=Cipher.getInstance("AES/ECB/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, sks);
+			cipher.init(Cipher.DECRYPT_MODE, sk);
 			return new String(cipher.doFinal(Base64.decodeBase64(message)));
 		} catch (Exception e){
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	@Override
-	public String getPublicKey() {
-		return super.getPublicKey();
 	}
 	
 }

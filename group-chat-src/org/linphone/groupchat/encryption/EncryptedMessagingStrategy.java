@@ -16,17 +16,19 @@ import org.linphone.groupchat.storage.GroupChatStorage;
 
 class EncryptedMessagingStrategy implements MessagingStrategy {
 
-	private final SymmetricEncryptionHandler handler;
+	private final SymmetricEncryptionHandler sHandler;
+	private final AsymmetricEncryptionHandler aHandler;
 
-	public EncryptedMessagingStrategy(SymmetricEncryptionHandler handler) {
+	public EncryptedMessagingStrategy(SymmetricEncryptionHandler handler, AsymmetricEncryptionHandler aHandler) {
 
-		this.handler = handler;
+		this.sHandler = handler;
+		this.aHandler=aHandler;
 	}
 
 	@Override
 	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		for (GroupChatMember member : members) {
-			String encryptedMessage=handler.encrypt(message);
+			String encryptedMessage=sHandler.encrypt(message);
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 			//			chatRoom.compose();
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(encryptedMessage);
@@ -38,7 +40,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	@Override
 	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc) {
 		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
-		String message=handler.encrypt(MessageParser.stringifyInitialContactInfo(info));
+		String message=sHandler.encrypt(MessageParser.stringifyInitialContactInfo(info));
 		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
 		chatRoom.sendChatMessage(newMessage);
 		chatRoom.deleteMessage(newMessage);
@@ -46,25 +48,25 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	@Override
 	public void sendMessage(MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
-		String message=handler.encrypt(MessageParser.stringifyMemberUpdateInfo(info));
+		String message=sHandler.encrypt(MessageParser.stringifyMemberUpdateInfo(info));
 		sendMessage(message, members, lc);
 	}
 
 	@Override
 	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
-		String message=handler.encrypt(MessageParser.stringifyGroupChatMember(info));
+		String message=sHandler.encrypt(MessageParser.stringifyGroupChatMember(info));
 		sendMessage(message, members, lc);
 	}
 
 	@Override
 	public MemberUpdateInfo handleMemberUpdate(String message) {
-		return MessageParser.parseMemberUpdateInfo(handler.decrypt(message));
+		return MessageParser.parseMemberUpdateInfo(sHandler.decrypt(message));
 	}
 
 	@Override
 	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
 		GroupChatMessage gcm=new GroupChatMessage();
-		gcm.message=handler.decrypt(message.getText());
+		gcm.message=sHandler.decrypt(message.getText());
 		return gcm;
 	}
 
@@ -75,7 +77,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	@Override
 	public GroupChatMember handleAdminChange(String message) {
-		return MessageParser.parseGroupChatMember(handler.decrypt(message));
+		return MessageParser.parseGroupChatMember(sHandler.decrypt(message));
 	}
 
 	@Override
@@ -128,21 +130,21 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 			
 			switch (header) {
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1: 
-				handler.generateAsymmetricKeys();
-				newMessage=chatRoom.createLinphoneChatMessage(handler.getPublicKey());
+//				handler.generateAsymmetricKeys();
+				newMessage=chatRoom.createLinphoneChatMessage(aHandler.getPublicKey());
 				chatRoom.sendChatMessage(newMessage);
 				chatRoom.deleteMessage(newMessage);
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2:
-				String encryptedKey=handler.encrypt(message.getText());
+				String encryptedKey=aHandler.encrypt(message.getText(), aHandler.getPublicKey());
 				newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
 				chatRoom.sendChatMessage(newMessage);
 				chatRoom.deleteMessage(newMessage);
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3:
-				String key=handler.decrypt(message.getText());
+				String key=aHandler.decrypt(message.getText());
 				try {
-					handler.setSecretKey(key);
+					sHandler.setSecretKey(key);
 				} catch (InvalidKeySeedException e) {
 					e.printStackTrace();
 					break;
