@@ -292,6 +292,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
+		// error here:
 		String secretKey = c.getString(0);
 		return secretKey;
 	}

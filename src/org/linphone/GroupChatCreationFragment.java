@@ -247,24 +247,31 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 			
 			// Create group
 			LinphoneGroupChatManager lGm = LinphoneGroupChatManager.getInstance();
-			try 
-			{
+			
 				// Create groupchat and Get new GroupChat id
-				String groupId = lGm.createGroupChat(groupNameString, usersip, members, et);
-				
-				GroupChatActivity activity =  (GroupChatActivity) getActivity();
-				Bundle extras = new Bundle();
-				extras.putString("groupID", groupId);
-				extras.putString("groupName", groupNameString);
-				// Replace this fragment with GroupChatMessagingFragment for the newly created group
-				activity.changeFragment("gcMessagingFragment", extras);
-				
-			} catch (GroupChatSizeException | InvalidGroupNameException
-					| GroupChatExistsException e) 
-			{
-				
+				String groupId;
+				Exception exc = null;
+				try {
+					groupId = lGm.createGroupChat(groupNameString, usersip, members, et);
+					GroupChatActivity activity =  (GroupChatActivity) getActivity();
+					Bundle extras = new Bundle();
+					extras.putString("groupID", groupId);
+					extras.putString("groupName", groupNameString);
+					// Replace this fragment with GroupChatMessagingFragment for the newly created group
+					activity.changeFragment("gcMessagingFragment", extras);
+					
+				} catch (GroupChatSizeException e) {
+					exc = e;
+					e.printStackTrace();
+				} catch (InvalidGroupNameException e) {
+					exc = e;
+					e.printStackTrace();
+				} catch (GroupChatExistsException e) {
+					exc = e;
+					e.printStackTrace();
+				}
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-	            builder1.setMessage(e.getMessage());
+	            builder1.setMessage(exc.getMessage());
 	            builder1.setCancelable(true);
 	            builder1.setPositiveButton("OK",
 	                    new DialogInterface.OnClickListener() {
@@ -275,8 +282,9 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	            AlertDialog alert11 = builder1.create();
 	            alert11.show();
 				
-				e.printStackTrace();
-			}
+				
+			
+			
 			
 		}
 		

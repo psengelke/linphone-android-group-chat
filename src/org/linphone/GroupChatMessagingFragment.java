@@ -66,12 +66,12 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		groupID = getArguments().getString("groupID");
 		groupName = getArguments().getString("groupName");
 		LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
-		try {
-			chatroom = lgm.getGroupChat(groupID);
-			//groupName = chatroom.getName();
-		} catch (GroupDoesNotExistException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			chatroom = lgm.getGroupChat(groupID);
+//			//groupName = chatroom.getName();
+//		} catch (GroupDoesNotExistException e1) {
+//			e1.printStackTrace();
+//		}
 		
 		// Use groupID to retrieve messages
 		LinphoneGroupChatManager lGM = LinphoneGroupChatManager.getInstance();
