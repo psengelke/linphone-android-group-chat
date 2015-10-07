@@ -6,7 +6,6 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
-import org.linphone.groupchat.encryption.MessagingStrategy;
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 
 /**

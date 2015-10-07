@@ -59,7 +59,7 @@ public class LinphoneGroupChatRoom {
 	private String group_name;
 	private Bitmap image;
 	
-	private MessagingStrategy encryption_strategy;
+	private MessagingStrategy messenger;
 	
 	private LinphoneCore lc;
 	private GroupChatStorage storage;
@@ -70,12 +70,12 @@ public class LinphoneGroupChatRoom {
 	 * Constructor.
 	 * 
 	 * @param group Contains the necessary data for group construction.
-	 * @param encryption_strategy The encryption strategy to be used.
+	 * @param messenger The encryption strategy to be used.
 	 * @param storage The storage adapter for persistence purposes.
 	 * @param lc The {@link LinphoneCore} instance for the client.
 	 */
 	public LinphoneGroupChatRoom(GroupChatData group, 
-			MessagingStrategy encryption_strategy, 
+			MessagingStrategy messenger, 
 			GroupChatStorage storage, 
 			LinphoneCore lc){
 		
@@ -84,7 +84,7 @@ public class LinphoneGroupChatRoom {
 		this.admin = group.admin;
 		this.members = group.members;
 		
-		this.encryption_strategy = encryption_strategy;
+		this.messenger = messenger;
 		
 		this.storage = storage;
 		this.lc = lc;
@@ -113,7 +113,7 @@ public class LinphoneGroupChatRoom {
 		Iterator<GroupChatMember> it = getOtherMembers().iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
-			encryption_strategy.sendMessage(info, member, lc);
+			messenger.sendMessage(info, member, lc);
 		}
 	}
 	
@@ -123,6 +123,8 @@ public class LinphoneGroupChatRoom {
 	 * Called by the constructor once the group has been initialised.
 	 */
 	private void requestGroupInfo(){
+		
+		// TODO delegate to messenger
 		
 		Iterator<GroupChatMember> it = getOtherMembers().iterator();
 		while (it.hasNext()){
@@ -149,7 +151,7 @@ public class LinphoneGroupChatRoom {
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
-		encryption_strategy.sendMessage(info, getOtherMembers(), lc);
+		messenger.sendMessage(info, getOtherMembers(), lc);
 	}
 	
 	/**
@@ -174,9 +176,9 @@ public class LinphoneGroupChatRoom {
 		info.group.group_id = group_id;
 		info.group.group_name = group_name;
 		info.group.members = members;
-		info.group.encryption_type = null; //TODO get from storage.
+		info.group.encryption_type = storage.getEncryptionType(group_id);
 		
-		encryption_strategy.sendMessage(info, member, lc);
+		messenger.sendMessage(info, member, lc);
 	}
 	
 	/**
@@ -193,7 +195,7 @@ public class LinphoneGroupChatRoom {
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
-			encryption_strategy.sendMessage(info, getOtherMembers(), lc);
+			messenger.sendMessage(info, getOtherMembers(), lc);
 		} catch (MemberDoesNotExistException e) {
 			
 			// member was removed before adding, send remove to user.
@@ -201,7 +203,7 @@ public class LinphoneGroupChatRoom {
 			m.add(member);
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
-			encryption_strategy.sendMessage(info, m, lc);
+			messenger.sendMessage(info, m, lc);
 		}
 	}
 	
@@ -229,7 +231,7 @@ public class LinphoneGroupChatRoom {
 		//now tell the group
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(member);
-		encryption_strategy.sendMessage(info, getOtherMembers(), lc);
+		messenger.sendMessage(info, getOtherMembers(), lc);
 	}
 	
 	/**
@@ -246,10 +248,10 @@ public class LinphoneGroupChatRoom {
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			encryption_strategy.handleInitialContactMessage(message, group_id, storage, lc);
+			messenger.handleInitialContactMessage(message, group_id, storage, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
-			encryption_strategy.handleInitialContactMessage(message, group_id, storage, lc);
+			messenger.handleInitialContactMessage(message, group_id, storage, lc);
 			break;
 		case MSG_HEADER_TYPE_INVITE_ACCEPT:
 			updateMember(message.getText());
@@ -284,7 +286,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handlePlainTextMessage(LinphoneChatMessage message){
 		
-		GroupChatMessage m = encryption_strategy.handlePlainTextMessage(message);
+		GroupChatMessage m = messenger.handlePlainTextMessage(message);
 		
 		storage.saveTextMessage(group_id, m);
 		
@@ -297,7 +299,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handleMemberUpdate(String message){
 		
-		MemberUpdateInfo info = encryption_strategy.handleMemberUpdate(message);
+		MemberUpdateInfo info = messenger.handleMemberUpdate(message);
 		
 		Iterator<GroupChatMember> it;
 
@@ -336,7 +338,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handleAdminChange(String message){
 		
-		GroupChatMember m = encryption_strategy.handleAdminChange(message);
+		GroupChatMember m = messenger.handleAdminChange(message);
 		
 		try {
 			storage.updateAdmin(group_id, m);
@@ -353,11 +355,13 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handleGroupInfoRequest(LinphoneChatMessage message){
 		
+		// TODO delegate to messenger
+		
 		GroupChatData group = new GroupChatData();
 		group.admin = admin;
 		group.group_id = group_id;
 		group.group_name = group_name;
-		group.encryption_type = null; //TODO get from storage.
+		group.encryption_type = storage.getEncryptionType(group_id);
 		group.members = members;
 		
 		LinphoneChatRoom cr = lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
@@ -538,7 +542,7 @@ public class LinphoneGroupChatRoom {
 		
 		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
-		encryption_strategy.sendMessage(member, getOtherMembers(), lc);
+		messenger.sendMessage(member, getOtherMembers(), lc);
 	}
 	
 	public String getAdmin(){
@@ -554,18 +558,18 @@ public class LinphoneGroupChatRoom {
 	public void setEncryptionStrategy(MessagingStrategy encryption_strategy) throws PermissionRequiredException {
 		
 		if (!admin.equals(lc.getDefaultProxyConfig().getIdentity())) throw new PermissionRequiredException();
-		//if (encryption_strategy.getEncryptionType() != EncryptionType.None) return; // TODO get from storage
+		if (storage.getEncryptionType(group_id) != EncryptionType.None) return;
 		
-		this.encryption_strategy = encryption_strategy;
+		this.messenger = encryption_strategy;
 	}
 	
 	public EncryptionType getEncryptionType(){
-		return EncryptionType.None;//encryption_strategy.getEncryptionType(); TODO get from storage.
+		return storage.getEncryptionType(group_id);
 	}
 
 	public void sendMessage(String message) {
 
-		encryption_strategy.sendMessage(message, getOtherMembers(), lc);
+		messenger.sendMessage(message, getOtherMembers(), lc);
 	}
 	
 	public void sendMedia(LinphoneContent content) {
