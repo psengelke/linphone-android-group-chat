@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Message;
 
 import org.linphone.LinphoneService;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
@@ -302,8 +301,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public String getSecretKey(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT secret_Key From Groups Where group_id = '" + id+"'";
+		String query = "SELECT * From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
+		
 		// error here:
 		if(c.moveToFirst()){
 			String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
@@ -442,7 +442,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			private static final String encryptionTypeType = " INTEGER "; 
 			private static final String adminId = "admin_id";
 			private static final String adminIdType = " INTEGER ";
-			private static final String secretKey = " secret_Key ";
+			private static final String secretKey = "secret_Key";
 			private static final String secretKeyType = " VARCHAR(50) ";
 
 		}
