@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.linphone.LinphoneService;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
@@ -162,7 +163,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatData> el = new LinkedList<>();
-		GroupChatData temp = new GroupChatData();
+		
 
 		/*if(c.moveToFirst()){
 		            do{	          
@@ -175,10 +176,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		        }*/
 		if (c!=null) {
 			while (c.moveToNext()) {
+				GroupChatData temp = new GroupChatData();
 				temp.group_id = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupId));
 				temp.group_name = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupName));
 				temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
-				temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));		
+				temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));	
+				temp.members = getMembers(temp.group_id);
 				el.add(temp);
 			}
 		}
@@ -220,13 +223,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	public LinkedList<GroupChatMember> getMembers(String groupId){
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "select * from members where members.group_id="+groupId + ")";
+		String query = "select * from members where members.group_id='"+groupId + "'";
 		Cursor c=db.rawQuery(query, null);
 
 		LinkedList<GroupChatMember> el=new LinkedList<>();
 		if(c.moveToFirst()){
 			do{	          	               		               
-				el.add(new GroupChatMember(c.getString(c.getColumnIndex(GroupChatHelper.Members.id)), c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress)), Boolean.valueOf(c.getString(c.getColumnIndex(GroupChatHelper.Members.pending)))));
+				el.add(new GroupChatMember(c.getString(c.getColumnIndex(GroupChatHelper.Members.name)), c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress)), Boolean.valueOf(c.getString(c.getColumnIndex(GroupChatHelper.Members.pending)))));
 			}while(c.moveToNext());
 		}
 		c.close();
@@ -511,7 +514,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 			String createMembersTable = "CREATE TABLE " + Members.tableName + "(" + Members.id + " " + Members.idType 
 					+ ", " +  Members.name + " " + Members.nameType + ", " + Members.sipAddress + " " + Members.sipAddressType 
-					+ ", " + Members.groupId + " " + Members.groupIdType + " )";
+					+ ", " + Members.groupId + " " + Members.groupIdType + ", " + Members.pending + " " + Members.pendingType + " )";
 
 			String createAttachmentsTable = "CREATE TABLE " + Attachments.tableName + "("
 					+ Attachments.id + " " + Attachments.idType + ", " +  Attachments.file + " " + Attachments.fileType 

@@ -26,14 +26,20 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -68,6 +74,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private LinphoneGroupChatManager manager;
 	private LinphoneGroupChatRoom chatroom;
 	private LinkedList<GroupChatMember> members = new LinkedList<GroupChatMember>();
+	private boolean chooseAdminMode;
 	
 	
 	@Override
@@ -79,6 +86,8 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		View view = inflater.inflate(R.layout.groupchat_info, container, false);
 		setRetainInstance(true);
 		mInflater = inflater;
+		
+		chooseAdminMode = false;
 		
 		groupID = args.getString("groupID");
 		groupName = args.getString("groupName");
@@ -122,6 +131,18 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		
 		newMember = (EditText) view.findViewById(R.id.newMemberGroupChat);
 		groupNameEdit = (EditText) view.findViewById(R.id.GroupChatNameEdit);
+		groupNameEdit.addTextChangedListener(new TextWatcher() {
+			   public void afterTextChanged(Editable s) {
+			   }
+			   public void beforeTextChanged(CharSequence s, int start, 
+			     int count, int after) {
+			   }
+			   public void onTextChanged(CharSequence s, int start, 
+			     int before, int count) {
+				   testDone();
+			   }
+			  });
+		
 		editEncryptionGroup = (RadioGroup) view.findViewById(R.id.groupchatinfo_radioGroup);
 		addMemberLayout = (RelativeLayout) view.findViewById(R.id.groupchatinfo_addMemberLayout);
 		
@@ -136,6 +157,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		
 		groupParticipants = (ListView) view.findViewById(R.id.memberList);
 		groupParticipants.setOnItemClickListener(this);
+		registerForContextMenu(groupParticipants);
 		groupParticipants.setAdapter(new MembersAdapter());
 		
 		return view;
@@ -152,7 +174,27 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		super.onResume();
 	}
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, v.getId(), 0, "Assign as admin");
+	}
 	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		if (info == null || info.targetView == null) {
+			return false;
+		}
+		GroupChatMember member = (GroupChatMember) info.targetView.getTag();
+		
+		try {
+			chatroom.setAdmin(member);
+		} catch (PermissionRequiredException e) {
+			showAlert(e.getMessage());
+		}
+		return true;
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -262,6 +304,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private void refreshAdapter() 
 	{
 		members = chatroom.getMembers();
+		chooseAdminMode = false;
 		// Update groupParticipants ListView
 		groupParticipants.setAdapter(new MembersAdapter());
 	}
@@ -280,7 +323,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			}
 			members.remove(view.getTag());
 			groupParticipants.setAdapter(new MembersAdapter());
-			
+			testDone();
 			if (members.size() < 2)	// show alert invalid group size
 				showAlert("Invalid group size");
 		}
@@ -313,6 +356,20 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	public static void closeKeyboard(Context c, IBinder windowToken) {
 	    InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
 	    mgr.hideSoftInputFromWindow(windowToken, 0);
+	}
+	
+	/**
+	 * Method to test conditions for enabling next button
+	 * Conditions: GroupName not empty  && At least one member
+	 */
+	private void testDone() 
+	{
+		groupName = groupNameEdit.getText().toString();
+		if (!members.isEmpty() && !groupName.isEmpty())
+			next.setEnabled(true);
+		else
+			next.setEnabled(false);
+		
 	}
 
 
@@ -353,7 +410,11 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			view.setTag(member);
 			
 			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
-			sipUri.setText(member.name);
+			
+			if (chatroom.getAdmin().equals(member.sip))
+				sipUri.setText(member.name + " (admin)");
+			else
+				sipUri.setText(member.name);
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			if (isEditMode)

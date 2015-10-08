@@ -244,18 +244,54 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		if (info == null || info.targetView == null) {
-			return false;
+		if (!displayGroupChats)
+		{
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			if (info == null || info.targetView == null) {
+				return false;
+			}
+			String sipUri = (String) info.targetView.getTag();
+			
+			LinphoneActivity.instance().removeFromChatList(sipUri);
+			mConversations = LinphoneActivity.instance().getChatList();
+			mDrafts = LinphoneActivity.instance().getDraftChatList();
+			mConversations.removeAll(mDrafts);
+			hideAndDisplayMessageIfNoChat();
+			return true;
 		}
-		String sipUri = (String) info.targetView.getTag();
+		else
+		{
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			if (info == null || info.targetView == null) {
+				return false;
+			}
+			final LinphoneGroupChatRoom group = (LinphoneGroupChatRoom) info.targetView.getTag();
+			
+			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+            builder1.setMessage("Are you sure you want to leave group " + group.getName());
+            builder1.setCancelable(true);
+			builder1.setPositiveButton("Yes",
+                    new DialogInterface.OnClickListener() {
+                
+				public void onClick(DialogInterface dialog, int id) {
+					leaveGroup(groups.indexOf(group));
+                }
+            });
+            builder1.setNegativeButton("No", 
+            		new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+			
+			hideAndDisplayMessageIfNoChat();
+			
+			
+			return true;
+		}
 		
-		LinphoneActivity.instance().removeFromChatList(sipUri);
-		mConversations = LinphoneActivity.instance().getChatList();
-		mDrafts = LinphoneActivity.instance().getDraftChatList();
-		mConversations.removeAll(mDrafts);
-		hideAndDisplayMessageIfNoChat();
-		return true;
 	}
 	
 	@Override

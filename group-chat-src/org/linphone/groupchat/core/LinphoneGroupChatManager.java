@@ -117,6 +117,7 @@ public class LinphoneGroupChatManager {
 			Iterator<GroupChatData> it = groups.iterator();
 			while (it.hasNext()) {
 				GroupChatData group = it.next();
+				Log.e("members", "" + group.members.size());
 				try {
 					chats.add(new LinphoneGroupChatRoom(
 							group, 
