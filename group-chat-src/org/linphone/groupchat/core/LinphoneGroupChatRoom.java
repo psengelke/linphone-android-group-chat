@@ -58,7 +58,7 @@ public class LinphoneGroupChatRoom {
 	private String group_id;
 	private String group_name;
 	private Bitmap image;
-	
+	private EncryptionType encType;
 	private MessagingStrategy messenger;
 	
 	private LinphoneCore lc;
@@ -85,7 +85,7 @@ public class LinphoneGroupChatRoom {
 		this.members = group.members;
 		
 		this.messenger = messenger;
-		
+		this.encType = group.encryption_type;
 		this.storage = storage;
 		this.lc = lc;
 		
@@ -104,7 +104,7 @@ public class LinphoneGroupChatRoom {
 		group.admin = this.admin;
 		group.members = getMembers();
 		group.encryption_type = this.getEncryptionType();
-		// encryption type null here. Fix in AES256EncryptionHandler
+		
 		storage.createGroupChat(group);
 		
 		InitialContactInfo info = new InitialContactInfo();
@@ -565,7 +565,8 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	public EncryptionType getEncryptionType(){
-		return storage.getEncryptionType(group_id);
+		//return storage.getEncryptionType(group_id);
+		return encType;
 	}
 
 	public void sendMessage(String message) {

@@ -62,6 +62,9 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
+		
+		msgList = (ListView) view.findViewById(R.id.group_message_list);
+		
 		// Determine which groupChat to create interface for
 		groupID = getArguments().getString("groupID");
 		groupName = getArguments().getString("groupName");
@@ -107,7 +110,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		sendMsgBtn = (TextView) view.findViewById(R.id.sendMessage);
 		msgToSend = (EditText) view.findViewById(R.id.message);
 		
-		msgList = (ListView) view.findViewById(R.id.group_message_list);
+		
 		
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		

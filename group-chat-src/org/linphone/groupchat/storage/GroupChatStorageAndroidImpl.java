@@ -76,7 +76,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		values.put(GroupChatHelper.Members.sipAddress, member.sip);
 		values.put(GroupChatHelper.Members.groupId, id);
 
-		db.insert(GroupChatHelper.Groups.tableName, null, values);
+		db.insert(GroupChatHelper.Members.tableName, null, values);
 		db.close();
 
 	}
@@ -324,9 +324,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT encryption_type From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
-		c.moveToFirst();
-		EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
-		return encryption_type;
+		if (c.moveToFirst())
+		{
+			EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
+			return encryption_type;
+		}
+		return null;
+		
 	}
 
 	@Override

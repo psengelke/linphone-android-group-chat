@@ -357,8 +357,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 				Bundle b = new Bundle();
 				b.putString("fragment", "gcMessagingFragment");
-				b.putString("groupID", groups.get(position).getGroupId());
-				b.putString("groupName", (String) view.getTag());
+				LinphoneGroupChatRoom group = (LinphoneGroupChatRoom) view.getTag();
+				b.putString("groupID", group.getGroupId());
+				b.putString("groupName", group.getName());
 				intent.putExtras(b);
 				startActivity(intent);
 				
@@ -645,10 +646,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
 			
 			LinphoneGroupChatRoom group = groups.get(position);
-			view.setTag(group.getName());
+			view.setTag(group);
 			
-//			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
-//			groupName.setText(group);
+			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
+			groupName.setText(group.getName());
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			

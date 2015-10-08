@@ -109,7 +109,8 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		next.setOnClickListener(this);
 		
 		groupNameView = (TextView) view.findViewById(R.id.strGroupName);
-		groupNameView.setText(args.getString("groupName"));
+		//groupNameView.setText(args.getString("groupName"));
+		groupNameView.setText(chatroom.getGroupId());
 		encryptionType = (TextView) view.findViewById(R.id.encType);
 		encryptionTypeLbl = (TextView) view.findViewById(R.id.encTypeLabel);
 		
@@ -343,10 +344,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 				view = mInflater.inflate(R.layout.memberlist_cell, parent, false);
 			
 			GroupChatMember member = members.get(position);
-			view.setTag(member.name);
+			view.setTag(member);
 			
-//			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
-//			sipUri.setText(contact);
+			TextView sipUri = (TextView) view.findViewById(R.id.sipUri);
+			sipUri.setText(member.name);
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			if (isEditMode)
