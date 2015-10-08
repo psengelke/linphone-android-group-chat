@@ -178,7 +178,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 				temp.group_id = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupId));
 				temp.group_name = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupName));
 				temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
-				temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));		               		               
+				temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));		
 				el.add(temp);
 			}
 		}
@@ -303,13 +303,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT * From Groups Where group_id = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
-		
-		// error here:
+		String secretKey = "";
 		if(c.moveToFirst()){
-			String secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
-			return secretKey;
+			secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
 		}
-		return "";
+		c.close();
+		db.close();
+		return secretKey;
 	}
 
 	@Override

@@ -109,9 +109,15 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		next.setOnClickListener(this);
 		
 		groupNameView = (TextView) view.findViewById(R.id.strGroupName);
-		//groupNameView.setText(args.getString("groupName"));
-		groupNameView.setText(chatroom.getGroupId());
+		groupNameView.setText(args.getString("groupName"));
+		
 		encryptionType = (TextView) view.findViewById(R.id.encType);
+		EncryptionType enctype = chatroom.getEncryptionType();
+		if (enctype == EncryptionType.AES256)
+			encryptionType.setText("AES encryption");
+		else
+			encryptionType.setText("No encryption");
+		
 		encryptionTypeLbl = (TextView) view.findViewById(R.id.encTypeLabel);
 		
 		newMember = (EditText) view.findViewById(R.id.newMemberGroupChat);

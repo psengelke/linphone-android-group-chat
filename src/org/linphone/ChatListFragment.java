@@ -366,7 +366,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 			else	// Leave this group
 			{
-				String group = (String) view.getTag();
+				String group = ((LinphoneGroupChatRoom) view.getTag()).getName();
 				// Alert to confirm leave group
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
 	            builder1.setMessage("Are you sure you want to leave group " + group);
