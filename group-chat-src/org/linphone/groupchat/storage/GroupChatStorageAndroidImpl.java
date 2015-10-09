@@ -87,7 +87,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	public void markChatAsRead(String groupId){
 
-		String query = "Update Messages SET message_state = 0 WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupId + "')" ;
+		String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
+				+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL(query);       
@@ -121,7 +122,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public LinkedList<GroupChatMessage> getMessages(String id) {
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')" ;
+		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
@@ -159,7 +161,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	public LinkedList<GroupChatData> getChatList(){
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Groups" ;
+		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName ;
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatData> el = new LinkedList<>();
@@ -223,7 +225,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	public LinkedList<GroupChatMember> getMembers(String groupId){
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "select * from members where members.group_id='"+groupId + "'";
+		String query = "SELECT * FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id='"+groupId + "'";
 		Cursor c=db.rawQuery(query, null);
 
 		LinkedList<GroupChatMember> el=new LinkedList<>();
@@ -241,7 +243,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')" ;
+		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
@@ -277,7 +280,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public int getUnreadMessageCount(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "') and messages.message_state=0";
+		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName +
+				" WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName
+				+ " WHERE Members.group_id = '"+id + "') and Messages.message_state=0";
 		Cursor c=db.rawQuery(query, null);
 		c.moveToFirst();
 		int count=0;
@@ -290,21 +295,22 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void updateGroupName(String groupId, String name) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="update Groups set" + GroupChatHelper.Groups.groupName + "='"+name+"' where " + GroupChatHelper.Groups.groupId + "='"+groupId+"'";
+		String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET" + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
+				+ GroupChatHelper.Groups.groupId + "='"+groupId+"'";
 		db.execSQL(query);
 	}
 
 	@Override
 	public void setSecretKey(String id, String key) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "Update Groups SET secret_Key="+ key +" Where group_id = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "="+ key +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
 	@Override
 	public String getSecretKey(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * From Groups Where group_id = '" + id+"'";
+		String query = "SELECT * From " + GroupChatHelper.Groups.tableName + " WHERE " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		String secretKey = "";
 		if(c.moveToFirst()){
@@ -318,14 +324,16 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setEncryptionType(String id, EncryptionType type) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "Update Groups SET encryption_type="+ type.ordinal() +" Where group_id = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.encryptionType
+				+ "="+ type.ordinal() +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
 	@Override
 	public EncryptionType getEncryptionType(String id){
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT encryption_type From Groups Where group_id = '" + id+"'";
+		String query = "SELECT " + GroupChatHelper.Groups.encryptionType + " From " + GroupChatHelper.Groups.tableName
+				+ " Where " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
 		Cursor c=db.rawQuery(query, null);
 		if (c.moveToFirst())
 		{
@@ -339,28 +347,33 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void updateMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="update Members set pending='"+member.pending+"' where sip_address='"+member.sip+"' and where group_id='"+id+"'";
+		String query="UPDATE " + GroupChatHelper.Members.tableName  + " SET " + GroupChatHelper.Members.pending + "='"+member.pending
+				+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
 		db.execSQL(query);
 	}
 
 	@Override
 	public void updateAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "Update Groups SET admin_id= (Select Members._id From Members Where Members.sip_address = '"+member.sip+"')"+" Where group_id = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.adminId
+				+ "= (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + +" WHERE Members.sip_address = '"+member.sip+"')"
+				+" WHERE " + GroupChatHelper.Members.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
 	@Override
 	public void removeMember(String id, GroupChatMember member) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="delete from Members where sip_address='"+member.sip+"' and where group_id='"+id+"'";
+		String query="DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE " + GroupChatHelper.Members.sipAddress
+				+ "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
 		db.execSQL(query);
 	}
 
 	@Override
 	public void deleteMessages(String id) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="delete FROM Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+id + "')";
+		String query="DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')";
 		db.execSQL(query);
 	}
 
@@ -382,18 +395,20 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		//Delete from messages table
-		String querySelect = "Select * From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+		String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
 		Cursor c = db.rawQuery(querySelect,null);
 		if(c.moveToFirst()){
-			String queryDelete = "Delete From Messages WHERE Messages.member_id = (SELECT Members._id FROM Members WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+			String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
 			db.execSQL(queryDelete);
 
 			//Delete from Members table
-			String query = "Delete From Members WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
+			String query = "DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
 			db.execSQL(query);
 
 			//Delete from Groups table
-			String queryDeleteGroup = "Delete From Groups WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
+			String queryDeleteGroup = "DELETE FROM " + GroupChatHelper.Groups.tableName + " WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
 			db.execSQL(queryDeleteGroup); 
 		}
 		else
