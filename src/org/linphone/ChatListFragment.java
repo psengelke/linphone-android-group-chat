@@ -244,18 +244,54 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		if (info == null || info.targetView == null) {
-			return false;
+		if (!displayGroupChats)
+		{
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			if (info == null || info.targetView == null) {
+				return false;
+			}
+			String sipUri = (String) info.targetView.getTag();
+			
+			LinphoneActivity.instance().removeFromChatList(sipUri);
+			mConversations = LinphoneActivity.instance().getChatList();
+			mDrafts = LinphoneActivity.instance().getDraftChatList();
+			mConversations.removeAll(mDrafts);
+			hideAndDisplayMessageIfNoChat();
+			return true;
 		}
-		String sipUri = (String) info.targetView.getTag();
+		else
+		{
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			if (info == null || info.targetView == null) {
+				return false;
+			}
+			final LinphoneGroupChatRoom group = (LinphoneGroupChatRoom) info.targetView.getTag();
+			
+			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+            builder1.setMessage("Are you sure you want to leave group " + group.getName());
+            builder1.setCancelable(true);
+			builder1.setPositiveButton("Yes",
+                    new DialogInterface.OnClickListener() {
+                
+				public void onClick(DialogInterface dialog, int id) {
+					leaveGroup(groups.indexOf(group));
+                }
+            });
+            builder1.setNegativeButton("No", 
+            		new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+			
+			hideAndDisplayMessageIfNoChat();
+			
+			
+			return true;
+		}
 		
-		LinphoneActivity.instance().removeFromChatList(sipUri);
-		mConversations = LinphoneActivity.instance().getChatList();
-		mDrafts = LinphoneActivity.instance().getDraftChatList();
-		mConversations.removeAll(mDrafts);
-		hideAndDisplayMessageIfNoChat();
-		return true;
 	}
 	
 	@Override
@@ -314,6 +350,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		else if (id == R.id.allChats)		// All Chats tab clicked
 		{
 			displayGroupChats = false;
+			toggleContactsTab();
 			noChatHistory.setVisibility(View.VISIBLE);
 			refresh();
 		}
@@ -356,15 +393,16 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				Intent intent = new Intent(getActivity(), GroupChatActivity.class);
 				Bundle b = new Bundle();
 				b.putString("fragment", "gcMessagingFragment");
-				b.putString("groupID", groups.get(position).getGroupId());
-				b.putString("groupName", (String) view.getTag());
+				LinphoneGroupChatRoom group = (LinphoneGroupChatRoom) view.getTag();
+				b.putString("groupID", group.getGroupId());
+				b.putString("groupName", group.getName());
 				intent.putExtras(b);
 				startActivity(intent);
 				
 			}
 			else	// Leave this group
 			{
-				String group = (String) view.getTag();
+				String group = ((LinphoneGroupChatRoom) view.getTag()).getName();
 				// Alert to confirm leave group
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
 	            builder1.setMessage("Are you sure you want to leave group " + group);
@@ -644,10 +682,10 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
 			
 			LinphoneGroupChatRoom group = groups.get(position);
-			view.setTag(group.getName());
+			view.setTag(group);
 			
-//			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
-//			groupName.setText(group);
+			TextView groupName = (TextView) view.findViewById(R.id.sipUri);
+			groupName.setText(group.getName());
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			

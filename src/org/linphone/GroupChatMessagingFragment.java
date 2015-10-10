@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +63,9 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		View view = inflater.inflate(R.layout.groupchat, container, false);
 		setRetainInstance(true);
+		
+		msgList = (ListView) view.findViewById(R.id.group_message_list);
+		
 		// Determine which groupChat to create interface for
 		groupID = getArguments().getString("groupID");
 		groupName = getArguments().getString("groupName");
@@ -77,9 +81,9 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		try {
 			LinphoneGroupChatRoom groupChat = lgm.getGroupChat(groupID);
 			history = groupChat.getHistory();
-			adapter = new GroupChatMessageAdapter(history);
-			if (history != null)
-				msgList.setAdapter(adapter);
+			
+			refreshMsgList();
+			
 		} catch (GroupDoesNotExistException e) {
 			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage(e.getMessage());
@@ -105,9 +109,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		info.setOnClickListener(this);
 		
 		sendMsgBtn = (TextView) view.findViewById(R.id.sendMessage);
+		sendMsgBtn.setOnClickListener(this);
 		msgToSend = (EditText) view.findViewById(R.id.message);
-		
-		msgList = (ListView) view.findViewById(R.id.group_message_list);
 		
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
@@ -172,11 +175,20 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		else if (id == R.id.sendMessage)
 		{
 			String message = msgToSend.getText().toString();
+			msgToSend.setText("");
 			if (!message.isEmpty())
 			{
 				chatroom.sendMessage(message);
+				refreshMsgList();
 			}
 		}
+	}
+	
+	public void refreshMsgList()
+	{
+		history = chatroom.getHistory();
+		Log.e("history.size: ", "" + history.size());
+		msgList.setAdapter(new GroupChatMessageAdapter());
 	}
 	
 	/**
@@ -185,20 +197,10 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	 */
 	public class GroupChatMessageAdapter extends BaseAdapter
 	{
-		LinkedList<GroupChatMessage> history;
-		
-		public GroupChatMessageAdapter(LinkedList<GroupChatMessage> history)
-		{
-			this.history = history;
-		}
-		
-		public void refreshHistory()
-		{
-			this.history = chatroom.getHistory();
-		}
 		
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
+			Log.e("here", "here");
 			GroupChatMessage message = history.get(position);
 			Context context = getActivity();
 			GroupBubbleChat bubble = new GroupBubbleChat(context, message);//, GroupChatMessagingFragment.this);
@@ -226,7 +228,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 
 	@Override
 	public void onMessageReceived(GroupChatMessage message) {
-		adapter.refreshHistory();
+		//adapter.refreshHistory();
 		
 	}
 }
