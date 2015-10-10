@@ -16,8 +16,8 @@ public class EncryptionFactory {
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type) {
 		switch (type) {
 		case AES256:
-			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(GenerateEncryptionSeeds.generateSeed(AES256_SEED_LENGTH));
-			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(GenerateEncryptionSeeds.generateSeed(RSA_SEED_LENGTH));
+			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(EncryptionSeedGenerator.generateSeed(AES256_SEED_LENGTH));
+			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
 			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
 			return strategy;
 		default:
@@ -36,7 +36,7 @@ public class EncryptionFactory {
 		switch (type) {
 		case AES256:
 			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(seed);
-			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(GenerateEncryptionSeeds.generateSeed(RSA_SEED_LENGTH));
+			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
 			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
 			return strategy;
 		default:

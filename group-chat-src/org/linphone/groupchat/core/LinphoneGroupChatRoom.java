@@ -1,5 +1,6 @@
 package org.linphone.groupchat.core;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -11,6 +12,8 @@ import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage.MessageDirection;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage.MessageState;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
 import org.linphone.groupchat.encryption.MessagingStrategy;
@@ -58,7 +61,6 @@ public class LinphoneGroupChatRoom {
 	private String group_id;
 	private String group_name;
 	private Bitmap image;
-	private EncryptionType encType;
 	private MessagingStrategy messenger;
 	
 	private LinphoneCore lc;
@@ -85,11 +87,8 @@ public class LinphoneGroupChatRoom {
 		this.members = group.members;
 		
 		this.messenger = messenger;
-		this.encType = group.encryption_type;
 		this.storage = storage;
 		this.lc = lc;
-		
-		requestGroupInfo();
 	}
 	
 	/**
@@ -122,7 +121,9 @@ public class LinphoneGroupChatRoom {
 	 * group chat state.
 	 * Called by the constructor once the group has been initialised.
 	 */
-	private void requestGroupInfo(){
+	public void requestGroupInfo(){
+		
+		if (updated) return;
 		
 		// TODO delegate to messenger
 		
@@ -463,7 +464,8 @@ public class LinphoneGroupChatRoom {
 		
 		this.group_name = name;
 		
-		// broadcast name change -- not supported yet.
+		// TODO broadcast name change -- not supported yet.
+		// TODO store change
 	}
 	
 	public String getName(){
@@ -522,7 +524,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException{
 		
-		if (this.listener != null) throw new GroupChatListenerIsSetException();
+		if (this.listener != null) throw new GroupChatListenerIsSetException(); // TODO not sure if necessary, might use a lock instead.
 		this.listener = listner;
 	}
 	
@@ -543,7 +545,13 @@ public class LinphoneGroupChatRoom {
 		
 		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
-		messenger.sendMessage(member, getOtherMembers(), lc);
+		try {
+			storage.updateAdmin(group_id, member);
+			messenger.sendMessage(member, getOtherMembers(), lc);
+			
+		} catch (GroupDoesNotExistException e){
+			// TODO decide how to handle
+		}
 	}
 	
 	public String getAdmin(){
@@ -552,25 +560,36 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
-	 * Changes the current encryption strategy, only if that new strategy is uses none.
-	 * @param encryption_strategy The new encryption strategy.
+	 * Changes the current messaging strategy, only if that new strategy is uses no encryption.
+	 * @param messenger The new encryption strategy.
 	 * @throws PermissionRequiredException 
 	 */
-	public void setEncryptionStrategy(MessagingStrategy encryption_strategy) throws PermissionRequiredException {
+	public void setEncryptionStrategy(MessagingStrategy messenger) throws PermissionRequiredException {
 		
 		if (!admin.equals(lc.getDefaultProxyConfig().getIdentity())) throw new PermissionRequiredException();
 		if (storage.getEncryptionType(group_id) != EncryptionType.None) return;
 		
-		this.messenger = encryption_strategy;
+		this.messenger = messenger;
 	}
 	
 	public EncryptionType getEncryptionType(){
-		//return storage.getEncryptionType(group_id);
-		return encType;
+		return storage.getEncryptionType(group_id);
 	}
 
+	/**
+	 * Send a text message to the group.
+	 * @param message The message string.
+	 */
 	public void sendMessage(String message) {
 
+		GroupChatMessage m = new GroupChatMessage();
+		m.sender = lc.getDefaultProxyConfig().getIdentity();
+		m.direction = MessageDirection.Outgoing;
+		m.state = MessageState.Read;
+		m.time = new Date();
+		m.message = message;
+		storage.saveTextMessage(group_id, m);
+		
 		messenger.sendMessage(message, getOtherMembers(), lc);
 	}
 	

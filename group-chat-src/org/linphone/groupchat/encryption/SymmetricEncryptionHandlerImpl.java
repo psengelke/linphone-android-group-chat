@@ -1,7 +1,5 @@
 package org.linphone.groupchat.encryption;
 
-import javax.crypto.spec.SecretKeySpec;
-
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 

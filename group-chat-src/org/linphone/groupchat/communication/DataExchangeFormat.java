@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
-import org.linphone.groupchat.storage.GroupChatStorage.MessageDirection;
-import org.linphone.groupchat.storage.GroupChatStorage.MessageState;
 
 /**
  *	This interface serves as a description of data exchange formats for communication 
@@ -86,8 +84,17 @@ public interface DataExchangeFormat {
 			removed = new LinkedList<>();
 		}
 	}
+
 	
 	public class GroupChatMessage {
+		
+	    public static enum MessageState{
+	        Unread, Read
+	    }
+	    
+	    public static enum MessageDirection{
+	        Incoming, Outgoing
+	    }
 		
 		public int id;
 		public String sender;

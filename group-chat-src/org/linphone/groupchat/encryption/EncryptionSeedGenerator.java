@@ -3,7 +3,7 @@ package org.linphone.groupchat.encryption;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-class GenerateEncryptionSeeds {
+class EncryptionSeedGenerator {
 	
 	public static String generateSeed(int bitLength) {
 		SecureRandom rng=new SecureRandom();
