@@ -34,9 +34,9 @@ import java.util.Locale;
 class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	private GroupChatHelper helper;
-	private Context context;
-    public GroupChatStorageAndroidImpl(){
-    	helper = new GroupChatHelper(LinphoneService.instance().getApplicationContext());
+	
+    private GroupChatStorageAndroidImpl(Context c){
+    	helper = new GroupChatHelper(c);
     }
 
     public void close(){}
@@ -539,10 +539,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
      */
     private static class InstanceHolder {
 
-        private static final GroupChatStorageAndroidImpl INSTANCE = new GroupChatStorageAndroidImpl();
+        private static final GroupChatStorageAndroidImpl INSTANCE = 
+        		new GroupChatStorageAndroidImpl(LinphoneService.instance().getApplicationContext());
     }
-
-
-	
-
 }
