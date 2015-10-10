@@ -73,7 +73,7 @@ public class LinphoneGroupChatManager {
 				LinphoneGroupChatListener.getLinphoneCore()
 		);
 		
-		chat.doInitialization();
+		//chat.doInitialization();
 		chats.add(chat);
 		
 		return group.group_id;

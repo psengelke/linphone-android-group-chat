@@ -89,6 +89,23 @@ public class LinphoneGroupChatRoom {
 		this.messenger = messenger;
 		this.storage = storage;
 		this.lc = lc;
+		
+		
+		try {
+			this.storage.createGroupChat(group);
+			
+			//if this point it reached, the group is new: invite members.
+			InitialContactInfo info = new InitialContactInfo();
+			info.group = group;
+			
+			Iterator<GroupChatMember> it = getOtherMembers().iterator();
+			while (it.hasNext()) {
+				GroupChatMember member = (GroupChatMember) it.next();
+				messenger.sendMessage(info, member, lc);
+			}
+		} catch (GroupChatExistsException e){
+			// ignore, this group exists, no further action required.
+		}
 	}
 	
 	/**
