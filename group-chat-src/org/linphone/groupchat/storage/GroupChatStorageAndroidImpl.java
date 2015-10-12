@@ -49,22 +49,29 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		// check if group chat exists in the database. If so, throw error, else continue.
-		
-		ContentValues values = new ContentValues();
+		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ="+ data.group_id ;
+		Cursor c = db.rawQuery(query, null);
+		if (c.moveToFirst())
+		{
+			throw new GroupChatExistsException("Group already exists with the same name.");
+		}
+		else
+		{
+			ContentValues values = new ContentValues();
 
-		values.put(GroupChatHelper.Groups.groupId, data.group_id);
-		values.put(GroupChatHelper.Groups.groupName, data.group_name);
-		values.put(GroupChatHelper.Groups.adminId, data.admin);
-		values.put(GroupChatHelper.Groups.encryptionType, data.encryption_type.ordinal());
-		values.put(GroupChatHelper.Groups.secretKey,"");
+			values.put(GroupChatHelper.Groups.groupId, data.group_id);
+			values.put(GroupChatHelper.Groups.groupName, data.group_name);
+			values.put(GroupChatHelper.Groups.adminId, data.admin);
+			values.put(GroupChatHelper.Groups.encryptionType, data.encryption_type.ordinal());
+			values.put(GroupChatHelper.Groups.secretKey,"");
 
-		db.insert(GroupChatHelper.Groups.tableName, null, values);
-		db.close();
+			db.insert(GroupChatHelper.Groups.tableName, null, values);
+			db.close();
 
-		Iterator<GroupChatMember> it = data.members.iterator();
-		while (it.hasNext()){
-			addMember(data.group_id, it.next());
+			Iterator<GroupChatMember> it = data.members.iterator();
+			while (it.hasNext()){
+				addMember(data.group_id, it.next());
+			}			
 		}
 	}
 	/***********************************************************************************************************************/
