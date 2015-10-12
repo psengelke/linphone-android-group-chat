@@ -49,7 +49,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ="+ data.group_id ;
+		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ data.group_id + "'" ;
 		Cursor c = db.rawQuery(query, null);
 		if (c.moveToFirst())
 		{
