@@ -110,7 +110,7 @@ public class LinphoneGroupChatManager {
 	private void generateGroupChats(){
 		
 		LinkedList<GroupChatData> groups = storage.getChatList();
-
+		Log.e("groups.size in LM", "" + groups.size());
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();

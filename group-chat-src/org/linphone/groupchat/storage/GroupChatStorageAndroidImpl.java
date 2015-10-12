@@ -127,7 +127,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
-		Log.e("c.size", "" + c.getColumnCount());
+		Log.e("c.size in getMessages Storage", "" + c.getCount());
 		
 
 		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
@@ -166,7 +166,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName ;
 		Cursor c = db.rawQuery(query, null);
-
+		Log.e("c.getCount in Storage", "" + c.getCount());
 		LinkedList<GroupChatData> el = new LinkedList<>();
 		
 		if (c!=null) {

@@ -654,6 +654,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		public GroupListAdapter()
 		{
 			groups = lgm.getGroupChatList();
+			Log.e("groups.size in ChatListFragment", "" + groups.size());
 		}
 		
 		@Override
