@@ -137,16 +137,29 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 		else
 		{
+			String queryMember = "Select * from " +  GroupChatHelper.Members.tableName + " where " + GroupChatHelper.Members.sipAddress
+					+ " = '" + message.sender + "' and " + GroupChatHelper.Members.groupId + "='" + id + "'";
+			Cursor c1 = db.rawQuery(queryMember, null);
+			// Retrieve memberId for message.sender which is a sipAddress
+			int memberId = 0;
+			if (c1.moveToFirst())
+				memberId = c1.getInt(c1.getColumnIndex(GroupChatHelper.Members.id));
+//			else
+//				throw new MemberDoesNotExistException();
+			Log.e("memberId retrieved in saveTextMessage", "" + memberId);
 			ContentValues values = new ContentValues();
 	
 			values.put(GroupChatHelper.Messages.messageText, message.message);
-			values.put(GroupChatHelper.Messages.memberId, message.sender);
+			values.put(GroupChatHelper.Messages.memberId, memberId);
 			values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
 			values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
 			values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
-			Log.e("saveTextMessage", "saveTextMessage");
+			
 			// Inserting Row
 			db.insert(GroupChatHelper.Messages.tableName, null, values);
+			
+String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
+			
 			db.close(); // Closing database connection
 		}
 
@@ -169,11 +182,23 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			/*String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
 					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;*/
 			
-			String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName + "," + GroupChatHelper.Members.tableName + " WHERE "+ GroupChatHelper.Messages.memberId + "="+GroupChatHelper.Members.id+" AND "+GroupChatHelper.Members.groupId + "=" + "'"+ id + "'" ;
-			
-			
+			String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName + " msg," + GroupChatHelper.Members.tableName + " mem WHERE " + "msg."+ GroupChatHelper.Messages.memberId + "=mem." + GroupChatHelper.Members.id+" AND mem."+GroupChatHelper.Members.groupId + "=" + "'"+ id + "'" ;
 			Cursor c = db.rawQuery(query, null);
-
+			// For debugging
+//			String query1 = "Select * from " + GroupChatHelper.Members.tableName + " where " + GroupChatHelper.Members.groupId + "='" + id + "'";
+//			Cursor c1 = db.rawQuery(query1,  null);
+//			String query3 = "Select * from " + GroupChatHelper.Messages.tableName;
+//			Cursor c2 = db.rawQuery(query3, null);
+//			Log.e("c2.size", "" + c2.getCount());
+//			if (c2.moveToFirst())
+//			Log.e("memberId in c2", "" +c2.getInt(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
+//			Log.e("c1.size", "" + c1.getCount());
+//			if (c1.moveToFirst())
+//			{
+//				Log.e("member 1 Id in c1", "" +c1.getInt(0));
+//				if (c1.moveToNext())
+//					Log.e("member 2 Id in c1", "" +c1.getInt(0));
+//			}
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
 			Log.e("c.size in getMessages Storage", "" + c.getCount());
 			

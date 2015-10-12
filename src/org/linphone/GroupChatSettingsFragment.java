@@ -314,18 +314,23 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			long id) {
 		if (isEditMode)	// Action only needed when editMode (after edit button clicked)
 		{
-			try {
-				chatroom.removeMember(members.get(position));
-			} catch (PermissionRequiredException | IsAdminException
-					| GroupDoesNotExistException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			members.remove(view.getTag());
-			groupParticipants.setAdapter(new MembersAdapter());
-			testDone();
 			if (members.size() < 2)	// show alert invalid group size
-				showAlert("Invalid group size");
+				showAlert("A group should have at least two members");
+			else
+			{
+				try {
+					chatroom.removeMember(members.get(position));
+				} catch (PermissionRequiredException | IsAdminException
+						| GroupDoesNotExistException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				members.remove(view.getTag());
+				groupParticipants.setAdapter(new MembersAdapter());
+				testDone();
+			}
+			
+			
 		}
 	}
 	

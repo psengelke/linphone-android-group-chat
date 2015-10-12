@@ -289,7 +289,7 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private void testDone() 
 	{
 		groupNameString = groupName.getText().toString();
-		if (!members.isEmpty() && !groupNameString.isEmpty() && !encryptionChoice.isEmpty())
+		if (members.size() >= 2 && !groupNameString.isEmpty() && !encryptionChoice.isEmpty())
 			next.setEnabled(true);
 		else
 			next.setEnabled(false);
@@ -307,6 +307,25 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	}
 	
 	/**
+	 * Method to show an alert dialog
+	 * @param message The message to show
+	 */
+	public void showAlert(String message)
+	{
+		AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder1.setMessage(message);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+	}
+	
+	/**
 	 * Event handler for click events on ListView items
 	 */
 	@Override
@@ -316,6 +335,9 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		for (int k = 0; k < members.size(); ++k)
 			if (members.get(k).name.equals(member))
 				members.remove(k);
+		if (members.size() < 2)
+			showAlert("You need at least two members in a group");
+		testDone();
 		
 		refreshParticipantsList();
 		

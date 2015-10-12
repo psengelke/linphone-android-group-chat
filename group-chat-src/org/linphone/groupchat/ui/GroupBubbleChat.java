@@ -128,6 +128,22 @@ public class GroupBubbleChat {
 	    		layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.chat_bubble_incoming, null);
 	    	}
     	}
+    	
+    	TextView msgView = (TextView) layout.findViewById(R.id.message);
+    	if (msgView != null) {
+        	Spanned text = null;
+        	String msg = message.message;
+        	if (msg != null) {
+    	    	if (context.getResources().getBoolean(R.bool.emoticons_in_messages)) {
+    	    		text = getSmiledText(context, getTextWithHttpLinks(msg));
+    	    	} else {
+    	    		text = getTextWithHttpLinks(msg);
+    	    	}
+    	    	msgView.setText(text);
+    	    	msgView.setMovementMethod(LinkMovementMethod.getInstance());
+        		msgView.setVisibility(View.VISIBLE);
+        	}
+    	}
 
 //    	String externalBodyUrl = message.getExternalBodyUrl();
 //    	LinphoneContent fileTransferContent = message.getFileTransferInformation();
@@ -172,8 +188,8 @@ public class GroupBubbleChat {
 //	    	}
 //    	}
     	
-    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-    	timeView.setText(message.time.toString());
+//    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+//    	timeView.setText(message.time.toString());
     	
 //    	LinphoneChatMessage.State status = message.getStatus();
 //    	statusView = (ImageView) layout.findViewById(R.id.status);
@@ -243,48 +259,48 @@ public class GroupBubbleChat {
 //                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
 //    }
 //	
-//	public static Spannable getSmiledText(Context context, Spanned spanned) {
-//		SpannableStringBuilder builder = new SpannableStringBuilder(spanned);
-//		String text = spanned.toString();
-//
-//		for (Entry<String, Integer> entry : emoticons.entrySet()) {
-//			String key = entry.getKey();
-//			int indexOf = text.indexOf(key);
-//			while (indexOf >= 0) {
-//				int end = indexOf + key.length();
-//				builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//				indexOf = text.indexOf(key, end);
-//			}
-//		}
-//		
-//		return builder;
-//	}
-//	
-//	public static Spanned getTextWithHttpLinks(String text) {
-//		if (text.contains("<")) {
-//			text = text.replace("<", "&lt;");
-//		}
-//		if (text.contains(">")) {
-//			text = text.replace(">", "&gt;");
-//		}
-//		if (text.contains("http://")) {
-//			int indexHttp = text.indexOf("http://");
-//			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
-//			String link = text.substring(indexHttp, indexFinHttp);
-//			String linkWithoutScheme = link.replace("http://", "");
-//			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-//		}
-//		if (text.contains("https://")) {
-//			int indexHttp = text.indexOf("https://");
-//			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
-//			String link = text.substring(indexHttp, indexFinHttp);
-//			String linkWithoutScheme = link.replace("https://", "");
-//			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-//		}
-//		
-//		return Html.fromHtml(text);
-//	}
-//	
+	public static Spannable getSmiledText(Context context, Spanned spanned) {
+		SpannableStringBuilder builder = new SpannableStringBuilder(spanned);
+		String text = spanned.toString();
+
+		for (Entry<String, Integer> entry : emoticons.entrySet()) {
+			String key = entry.getKey();
+			int indexOf = text.indexOf(key);
+			while (indexOf >= 0) {
+				int end = indexOf + key.length();
+				builder.setSpan(new ImageSpan(context, entry.getValue()), indexOf, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				indexOf = text.indexOf(key, end);
+			}
+		}
+		
+		return builder;
+	}
+	
+	public static Spanned getTextWithHttpLinks(String text) {
+		if (text.contains("<")) {
+			text = text.replace("<", "&lt;");
+		}
+		if (text.contains(">")) {
+			text = text.replace(">", "&gt;");
+		}
+		if (text.contains("http://")) {
+			int indexHttp = text.indexOf("http://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("http://", "");
+			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+		if (text.contains("https://")) {
+			int indexHttp = text.indexOf("https://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("https://", "");
+			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+		
+		return Html.fromHtml(text);
+	}
+	
 	public String getTextMessage() {
 		return message.message;
 	}
