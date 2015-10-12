@@ -334,9 +334,19 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 	}
 
-	private boolean groupExists(String id) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean groupExists(String id) 
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (!cCheck.moveToFirst())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	@Override
