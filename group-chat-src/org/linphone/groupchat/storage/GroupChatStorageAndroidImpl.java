@@ -174,8 +174,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 		else
 		{
-			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
+			/*String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;*/
+			
+			String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName + "," + GroupChatHelper.Members.tableName + " WHERE "+ GroupChatHelper.Messages.memberId + "="+GroupChatHelper.Members.id+" AND "+GroupChatHelper.Members.groupId + "=" + "'"+ id + "'" ;
+			
+			
 			Cursor c = db.rawQuery(query, null);
 
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
@@ -190,7 +194,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 					GroupChatMessage temp = new GroupChatMessage();
 					temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
 					temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
-					temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
+					//String sip = "SELECT "+ GroupChatHelper.Members.sipAddress + " FROM " + GroupChatHelper.Members.tableName + " WHERE " +  GroupChatHelper.Members.tableName+"."+GroupChatHelper.Members.id +"='"+c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId))+"'";
+					//Cursor cSip = db.rawQuery(sip,null);
+					temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress));/*cSip.getString(cSip.getColumnIndex(GroupChatHelper.Members.sipAddress))*/; 
 					temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
 					temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
 					try {
