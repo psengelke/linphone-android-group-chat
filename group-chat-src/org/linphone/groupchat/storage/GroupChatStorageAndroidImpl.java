@@ -111,7 +111,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
 		values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
 		values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
-
+		Log.e("saveTextMessage", "saveTextMessage");
 		// Inserting Row
 		db.insert(GroupChatHelper.Messages.tableName, null, values);
 		db.close(); // Closing database connection
@@ -131,12 +131,15 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
-		GroupChatMessage temp = new GroupChatMessage();
+		Log.e("c.size", "" + c.getColumnCount());
+		
 
 		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
 		Date d=null;
 		if(c.moveToFirst()){
 			do{	          
+				Log.e("add one here", "add one here");
+				GroupChatMessage temp = new GroupChatMessage();
 				temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
 				temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
 				temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
@@ -170,16 +173,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 		LinkedList<GroupChatData> el = new LinkedList<>();
 		
-
-		/*if(c.moveToFirst()){
-		            do{	          
-		               temp.group_id = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupId));
-		               temp.group_name = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupName));
-		               temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
-		               temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));		               		               
-		               el.add(temp);
-		            }while(c.moveToNext());
-		        }*/
 		if (c!=null) {
 			while (c.moveToNext()) {
 				GroupChatData temp = new GroupChatData();
@@ -244,13 +237,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
-		GroupChatMessage temp = new GroupChatMessage();
 
 		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
 		Date d=null;
 		int i=0;
 		if(c.moveToFirst()){
 			do{	          
+				GroupChatMessage temp = new GroupChatMessage();
 				temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
 				temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
 				temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
