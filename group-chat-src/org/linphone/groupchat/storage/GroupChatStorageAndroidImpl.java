@@ -49,9 +49,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ data.group_id + "'" ;
-		Cursor c = db.rawQuery(query, null);
-		if (c.moveToFirst())
+		if (groupExists(data.group_id))
 		{
 			throw new GroupChatExistsException("Group already exists with the same name.");
 		}
@@ -87,9 +85,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -113,9 +110,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public void markChatAsRead(String groupId) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(groupId))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -135,9 +131,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public void saveTextMessage(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
-		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor c = db.rawQuery(query, null);
-		if (c.moveToFirst())
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -166,9 +160,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public LinkedList<GroupChatMessage> getMessages(String id) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -275,9 +267,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	public LinkedList<GroupChatMember> getMembers(String groupId) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		if (!groupExists(groupId))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -302,8 +292,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public LinkedList<GroupChatMessage> getMessages(String id, int limit) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
 		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
@@ -354,9 +342,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public int getUnreadMessageCount(String id) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -378,9 +364,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setGroupName(String groupId, String name)  throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(groupId))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -395,9 +380,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setSecretKey(String id, String key) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -411,9 +395,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public String getSecretKey(String id) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -434,9 +417,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setEncryptionType(String id, EncryptionType type) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -451,9 +433,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public EncryptionType getEncryptionType(String id) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -475,9 +456,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setMemberStatus(String id, GroupChatMember member)  throws GroupDoesNotExistException, MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -492,9 +472,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void setAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException, MemberDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -510,9 +489,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void removeMember(String id, GroupChatMember member) throws GroupDoesNotExistException, MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+	
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
@@ -527,9 +505,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void deleteMessages(String id) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (cCheck.moveToFirst())
+		
+		if (!groupExists(id))
 		{
 			throw new GroupDoesNotExistException("Group does not exist.");
 		}
