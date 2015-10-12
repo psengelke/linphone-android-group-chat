@@ -314,7 +314,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			long id) {
 		if (isEditMode)	// Action only needed when editMode (after edit button clicked)
 		{
-			if (members.size() < 2)	// show alert invalid group size
+			if (members.size() == 2)	// show alert invalid group size
 				showAlert("A group should have at least two members");
 			else
 			{
