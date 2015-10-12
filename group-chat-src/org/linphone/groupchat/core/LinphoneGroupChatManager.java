@@ -125,8 +125,10 @@ public class LinphoneGroupChatManager {
 				chats.add(cr);
 			} catch (InvalidKeySeedException e) {
 				// TODO handle error appropriately...
+				e.printStackTrace();
 			} catch (GroupDoesNotExistException e){
 				// TODO handle case where not all groups could be instantiated.
+				e.printStackTrace();
 			}
 		}
 		
