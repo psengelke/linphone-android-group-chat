@@ -137,6 +137,7 @@ The following is a list of tests are to be performed:
 \end{enumerate}
 \item Send Message
 \item Receive Message
+\item Send Voice Recording
 \end{enumerate}
 
 
@@ -313,6 +314,22 @@ group from which the message is broadcast.
 All sent messages are received on the corresponding group chat members devices.
 \subsubsection{Result}
 
+\subsection{Test 7: Send Voice Recording}
+\subsubsection{Description}
+A user may be able to record voice messages and then send them via IM\\
+\textbf{Preconditions:} 
+\begin{itemize}
+\item The user's device must support voice recording - the device requires a microphone to support this.
+\end{itemize}
+\textbf{Postconditions:}
+\begin{itemize}
+\item A message has been sent to the recipient containing the voice recording.
+\end{itemize}
+\subsubsection{Expected Result to Pass Test}
+The sent voice message must be delivered on the receivers device
+\subsubsection{Result}
+The functionality for this was not implemented as it has a "nice-to-have" priority. Thus this use case failed.
+
 \section{Summary Test Report}
 \begin{table}[h]
 \begin{tabular}{ll}
@@ -327,6 +344,7 @@ All sent messages are received on the corresponding group chat members devices.
 \multicolumn{1}{|L{10cm}|}{Test 4.4} & \multicolumn{1}{L{2cm}|}{} \\ \hline
 \multicolumn{1}{|L{10cm}|}{Test 5} & \multicolumn{1}{L{2cm}|}{} \\ \hline
 \multicolumn{1}{|L{10cm}|}{Test 6} & \multicolumn{1}{L{2cm}|}{} \\ \hline
+\multicolumn{1}{|L{10cm}|}{Test 7} & \multicolumn{1}{L{2cm}|}{Fail} \\ \hline
 \end{tabular}
 \end{table}
 
