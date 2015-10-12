@@ -11,6 +11,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.InitialContactInfo;
 import org.linphone.groupchat.communication.DataExchangeFormat.MemberUpdateInfo;
+import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
@@ -149,7 +150,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 					e.printStackTrace();
 					break;
 				}
-				storage.setSecretKey(id, key);
+				try {storage.setSecretKey(id, key);} catch (GroupDoesNotExistException e){/*TODO*/}
 				GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
 				newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);

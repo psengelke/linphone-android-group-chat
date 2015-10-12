@@ -14,6 +14,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage.MessageDirection;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage.MessageState;
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
+import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 
@@ -43,9 +44,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
     public void close(){}
     
-	public void createGroupChat(GroupChatData data) {
+    @Override
+	public void createGroupChat(GroupChatData data) throws GroupChatExistsException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
+		
+		// check if group chat exists in the database. If so, throw error, else continue.
+		
 		ContentValues values = new ContentValues();
 
 		values.put(GroupChatHelper.Groups.groupId, data.group_id);
@@ -78,7 +83,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 		db.insert(GroupChatHelper.Members.tableName, null, values);
 		db.close();
-
 	}
 
 
@@ -193,34 +197,26 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 	/***********************************************************************************************************************/
-	/**
-	 * @return A list of group IDs for existing group chats.
-	 */
 
 	@Override
 	public LinkedList<String> getChatIdList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	/*	@Override
-	public LinkedList<String> getChatIdList() {
+		
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM Groups" ;
+		String query = "SELECT "+GroupChatHelper.Groups.groupId+" FROM Groups" ;
 		Cursor c = db.rawQuery(query, null);
 
 		LinkedList<String> el = new LinkedList<>();
-		GroupChatData temp = new GroupChatData();
-
-		 if(c.moveToFirst()){
-	            do{	          
-	               temp.group_id = c.getString(1);		               		               
-	               el.add(temp);
-	            }while(c.moveToNext());
-	        }
-	        c.close();
-	        db.close();
+		if(c != null){
+			while (c.moveToNext()){
+				el.add(c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupId)));		
+			}
+		}
+		 
+        c.close();
+        db.close();
+        
 		return el;
-	}*/
+	}
 
 
 	public LinkedList<GroupChatMember> getMembers(String groupId){
@@ -293,7 +289,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 	@Override
-	public void updateGroupName(String groupId, String name) {
+	public void setGroupName(String groupId, String name) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET" + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
 				+ GroupChatHelper.Groups.groupId + "='"+groupId+"'";
@@ -345,7 +341,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 	@Override
-	public void updateMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException {
+	public void setMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String query="UPDATE " + GroupChatHelper.Members.tableName  + " SET " + GroupChatHelper.Members.pending + "='"+member.pending
 				+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
@@ -353,7 +349,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 	@Override
-	public void updateAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException {
+	public void setAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.adminId
 				+ "= (SELECT Members._id FROM " + GroupChatHelper.Members.tableName +" WHERE Members.sip_address = '"+member.sip+"')"

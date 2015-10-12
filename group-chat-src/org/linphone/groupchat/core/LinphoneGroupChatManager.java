@@ -105,7 +105,7 @@ public class LinphoneGroupChatManager {
 	}
 	
 	/**
-	 * A function for handling the instantiation of group chats on {@link LinphoneGroupChatManager} initialisation.
+	 * A function for handling the instantiation of group chats on {@link LinphoneGroupChatManager} initialization.
 	 */
 	private void generateGroupChats(){
 		
@@ -125,6 +125,8 @@ public class LinphoneGroupChatManager {
 				chats.add(cr);
 			} catch (InvalidKeySeedException e) {
 				// TODO handle error appropriately...
+			} catch (GroupDoesNotExistException e){
+				// TODO handle case where not all groups could be instantiated.
 			}
 		}
 		
