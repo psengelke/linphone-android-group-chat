@@ -70,7 +70,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 			Iterator<GroupChatMember> it = data.members.iterator();
 			while (it.hasNext()){
-				addMember(data.group_id, it.next());
+				try {
+					addMember(data.group_id, it.next());
+				} catch (GroupDoesNotExistException e) 
+				{
+					e.printStackTrace();
+				}
 			}			
 		}
 	}
@@ -79,49 +84,77 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	/***********************************************************************************************************************/
 
 	@Override
-	public void addMember(String id, GroupChatMember member) {
+	public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
-		ContentValues values = new ContentValues();
-
-		values.put(GroupChatHelper.Members.name, member.name);
-		values.put(GroupChatHelper.Members.sipAddress, member.sip);
-		values.put(GroupChatHelper.Members.groupId, id);
-
-		db.insert(GroupChatHelper.Members.tableName, null, values);
-		db.close();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			ContentValues values = new ContentValues();
+	
+			values.put(GroupChatHelper.Members.name, member.name);
+			values.put(GroupChatHelper.Members.sipAddress, member.sip);
+			values.put(GroupChatHelper.Members.groupId, id);
+	
+			db.insert(GroupChatHelper.Members.tableName, null, values);
+			db.close();
+		}
 	}
 
 
 	/***********************************************************************************************************************/
 	/***********************************************************************************************************************/
 
-	public void markChatAsRead(String groupId){
-
-		String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
-				+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
+	public void markChatAsRead(String groupId) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL(query);       
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
+					+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
+			db.execSQL(query);
+		}
+       
 	}
 
 
 	/***********************************************************************************************************************/
 	/***********************************************************************************************************************/
 	@Override
-	public void saveTextMessage(String id, GroupChatMessage message) {
+	public void saveTextMessage(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		ContentValues values = new ContentValues();
-
-		values.put(GroupChatHelper.Messages.messageText, message.message);
-		values.put(GroupChatHelper.Messages.memberId, message.sender);
-		values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
-		values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
-		values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
-		Log.e("saveTextMessage", "saveTextMessage");
-		// Inserting Row
-		db.insert(GroupChatHelper.Messages.tableName, null, values);
-		db.close(); // Closing database connection
+		
+		String query = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor c = db.rawQuery(query, null);
+		if (c.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			ContentValues values = new ContentValues();
+	
+			values.put(GroupChatHelper.Messages.messageText, message.message);
+			values.put(GroupChatHelper.Messages.memberId, message.sender);
+			values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
+			values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
+			values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
+			Log.e("saveTextMessage", "saveTextMessage");
+			// Inserting Row
+			db.insert(GroupChatHelper.Messages.tableName, null, values);
+			db.close(); // Closing database connection
+		}
 
 	}
 
@@ -130,40 +163,50 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 	/***********************************************************************************************************************/
 	@Override
-	public LinkedList<GroupChatMessage> getMessages(String id) {
+	public LinkedList<GroupChatMessage> getMessages(String id) throws GroupDoesNotExistException {
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
-		Cursor c = db.rawQuery(query, null);
-
-		LinkedList<GroupChatMessage> el = new LinkedList<>();
-		Log.e("c.size in getMessages Storage", "" + c.getCount());
-		
-
-		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
-		Date d=null;
-		if(c.moveToFirst()){
-			do{	          
-				Log.e("add one here", "add one here");
-				GroupChatMessage temp = new GroupChatMessage();
-				temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
-				temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
-				temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
-				temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
-				temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
-				try {
-					d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
-					temp.time= d;
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				el.add(temp);
-			}while(c.moveToNext());
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
 		}
-		c.close();
-		db.close();
-		return el;
+		else
+		{
+			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
+			Cursor c = db.rawQuery(query, null);
+
+			LinkedList<GroupChatMessage> el = new LinkedList<>();
+			Log.e("c.size in getMessages Storage", "" + c.getCount());
+			
+
+			SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
+			Date d=null;
+			if(c.moveToFirst()){
+				do{	          
+					Log.e("add one here", "add one here");
+					GroupChatMessage temp = new GroupChatMessage();
+					temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
+					temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
+					temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
+					temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
+					temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
+					try {
+						d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
+						temp.time= d;
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					el.add(temp);
+				}while(c.moveToNext());
+			}
+			c.close();
+			db.close();
+			return el;			
+		}
+		
 	}
 
 	/***********************************************************************************************************************/   	 
@@ -187,7 +230,12 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 				temp.group_name = c.getString(c.getColumnIndex(GroupChatHelper.Groups.groupName));
 				temp.encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
 				temp.admin = c.getString(c.getColumnIndex(GroupChatHelper.Groups.adminId));	
-				temp.members = getMembers(temp.group_id);
+				try {
+					temp.members = getMembers(temp.group_id);
+				} catch (GroupDoesNotExistException e) 
+				{
+					e.printStackTrace();
+				}
 				el.add(temp);
 			}
 		}
@@ -219,206 +267,306 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	}
 
 
-	public LinkedList<GroupChatMember> getMembers(String groupId){
+	public LinkedList<GroupChatMember> getMembers(String groupId) throws GroupDoesNotExistException {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id='"+groupId + "'";
-		Cursor c=db.rawQuery(query, null);
-
-		LinkedList<GroupChatMember> el=new LinkedList<>();
-		if(c.moveToFirst()){
-			do{	          	               		               
-				el.add(new GroupChatMember(c.getString(c.getColumnIndex(GroupChatHelper.Members.name)), c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress)), Boolean.valueOf(c.getString(c.getColumnIndex(GroupChatHelper.Members.pending)))));
-			}while(c.moveToNext());
-		}
-		c.close();
-		db.close();
-		return el;
-	}
-
-
-	@Override
-	public LinkedList<GroupChatMessage> getMessages(String id, int limit) {
-		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
-		Cursor c = db.rawQuery(query, null);
-
-		LinkedList<GroupChatMessage> el = new LinkedList<>();
-
-		SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
-		Date d=null;
-		int i=0;
-		if(c.moveToFirst()){
-			do{	          
-				GroupChatMessage temp = new GroupChatMessage();
-				temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
-				temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
-				temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
-				temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
-				temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
-				try {
-					d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
-					temp.time= d;
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				el.add(temp);
-				i++;
-				if (i==limit)
-					break;
-			}while(c.moveToNext());
-		}
-		c.close();
-		db.close();
-		return el;
-	}
-
-	@Override
-	public int getUnreadMessageCount(String id) {
-		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName +
-				" WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName
-				+ " WHERE Members.group_id = '"+id + "') and Messages.message_state=0";
-		Cursor c=db.rawQuery(query, null);
-		c.moveToFirst();
-		int count=0;
-		if (c!=null)
-			while (c.moveToNext())
-				count++;
-		return count;
-	}
-
-	@Override
-	public void setGroupName(String groupId, String name) {
-		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET" + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
-				+ GroupChatHelper.Groups.groupId + "='"+groupId+"'";
-		db.execSQL(query);
-	}
-
-	@Override
-	public void setSecretKey(String id, String key) {
-		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "="+ key +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
-		db.execSQL(query);		
-	}
-
-	@Override
-	public String getSecretKey(String id) {
-		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT * From " + GroupChatHelper.Groups.tableName + " WHERE " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
-		Cursor c=db.rawQuery(query, null);
-		String secretKey = "";
-		if(c.moveToFirst()){
-			secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
-		}
-		c.close();
-		db.close();
-		return secretKey;
-	}
-
-	@Override
-	public void setEncryptionType(String id, EncryptionType type) {
-		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.encryptionType
-				+ "="+ type.ordinal() +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
-		db.execSQL(query);		
-	}
-
-	@Override
-	public EncryptionType getEncryptionType(String id){
-		SQLiteDatabase db = helper.getReadableDatabase();
-		String query = "SELECT " + GroupChatHelper.Groups.encryptionType + " From " + GroupChatHelper.Groups.tableName
-				+ " Where " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
-		Cursor c=db.rawQuery(query, null);
-		if (c.moveToFirst())
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
 		{
-			EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
-			return encryption_type;
+			throw new GroupDoesNotExistException("Group does not exist.");
 		}
-		return null;
+		else
+		{
+			String query = "SELECT * FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id='"+groupId + "'";
+			Cursor c=db.rawQuery(query, null);
+	
+			LinkedList<GroupChatMember> el=new LinkedList<>();
+			if(c.moveToFirst()){
+				do{	          	               		               
+					el.add(new GroupChatMember(c.getString(c.getColumnIndex(GroupChatHelper.Members.name)), c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress)), Boolean.valueOf(c.getString(c.getColumnIndex(GroupChatHelper.Members.pending)))));
+				}while(c.moveToNext());
+			}
+			c.close();
+			db.close();
+			return el;
+		}
+	}
+
+
+	@Override
+	public LinkedList<GroupChatMessage> getMessages(String id, int limit) throws GroupDoesNotExistException {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+		
+			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')" ;
+			Cursor c = db.rawQuery(query, null);
+	
+			LinkedList<GroupChatMessage> el = new LinkedList<>();
+	
+			SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
+			Date d=null;
+			int i=0;
+			if(c.moveToFirst()){
+				do{	          
+					GroupChatMessage temp = new GroupChatMessage();
+					temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
+					temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));
+					temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId));
+					temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
+					temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
+					try {
+						d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
+						temp.time= d;
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					el.add(temp);
+					i++;
+					if (i==limit)
+						break;
+				}while(c.moveToNext());
+			}
+			c.close();
+			db.close();
+			return el;
+		}
+	}
+
+	@Override
+	public int getUnreadMessageCount(String id) throws GroupDoesNotExistException{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName +
+					" WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName
+					+ " WHERE Members.group_id = '"+id + "') and Messages.message_state=0";
+			Cursor c=db.rawQuery(query, null);
+			c.moveToFirst();
+			int count=0;
+			if (c!=null)
+				while (c.moveToNext())
+					count++;
+			return count;
+		}
+	}
+
+	@Override
+	public void setGroupName(String groupId, String name)  throws GroupDoesNotExistException {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ groupId + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET" + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
+					+ GroupChatHelper.Groups.groupId + "='"+groupId+"'";
+			db.execSQL(query);
+		}
+	}
+
+	@Override
+	public void setSecretKey(String id, String key) throws GroupDoesNotExistException {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "="+ key +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
+			db.execSQL(query);		
+		}
+	}
+
+	@Override
+	public String getSecretKey(String id) throws GroupDoesNotExistException {
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "SELECT * From " + GroupChatHelper.Groups.tableName + " WHERE " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
+			Cursor c=db.rawQuery(query, null);
+			String secretKey = "";
+			if(c.moveToFirst()){
+				secretKey = c.getString(c.getColumnIndex(GroupChatHelper.Groups.secretKey));
+			}
+			c.close();
+			db.close();
+			return secretKey;
+		}
+	}
+
+	@Override
+	public void setEncryptionType(String id, EncryptionType type) throws GroupDoesNotExistException {
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.encryptionType
+					+ "="+ type.ordinal() +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
+			db.execSQL(query);
+		}
+	}
+
+	@Override
+	public EncryptionType getEncryptionType(String id) throws GroupDoesNotExistException{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "SELECT " + GroupChatHelper.Groups.encryptionType + " From " + GroupChatHelper.Groups.tableName
+					+ " Where " + GroupChatHelper.Groups.groupId + " = '" + id+"'";
+			Cursor c=db.rawQuery(query, null);
+			if (c.moveToFirst())
+			{
+				EncryptionType encryption_type = EncryptionType.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Groups.encryptionType))];
+				return encryption_type;
+			}
+			return null;
+		}
 		
 	}
 
 	@Override
-	public void setMemberStatus(String id, GroupChatMember member) throws MemberDoesNotExistException {
+	public void setMemberStatus(String id, GroupChatMember member)  throws GroupDoesNotExistException, MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="UPDATE " + GroupChatHelper.Members.tableName  + " SET " + GroupChatHelper.Members.pending + "='"+member.pending
-				+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
-		db.execSQL(query);
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query="UPDATE " + GroupChatHelper.Members.tableName  + " SET " + GroupChatHelper.Members.pending + "='"+member.pending
+					+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
+			db.execSQL(query);
+		}
 	}
 
 	@Override
-	public void setAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException {
+	public void setAdmin(String id, GroupChatMember member) throws GroupDoesNotExistException, MemberDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.adminId
-				+ "= (SELECT Members._id FROM " + GroupChatHelper.Members.tableName +" WHERE Members.sip_address = '"+member.sip+"')"
-				+" WHERE " + GroupChatHelper.Members.groupId + " = '"+id+"'";
-		db.execSQL(query);
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.adminId
+					+ "= (SELECT Members._id FROM " + GroupChatHelper.Members.tableName +" WHERE Members.sip_address = '"+member.sip+"')"
+					+" WHERE " + GroupChatHelper.Members.groupId + " = '"+id+"'";
+			db.execSQL(query);
+		}
 	}
 
 	@Override
-	public void removeMember(String id, GroupChatMember member) {
+	public void removeMember(String id, GroupChatMember member) throws GroupDoesNotExistException, MemberDoesNotExistException {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE " + GroupChatHelper.Members.sipAddress
-				+ "='"+member.sip+"' AND " + GroupChatHelper.Members.groupId + "='"+id+"'";
-		db.execSQL(query);
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query="DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE " + GroupChatHelper.Members.sipAddress
+					+ "='"+member.sip+"' AND " + GroupChatHelper.Members.groupId + "='"+id+"'";
+			db.execSQL(query);
+		}
 	}
 
 	@Override
-	public void deleteMessages(String id) {
+	public void deleteMessages(String id) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String query="DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')";
-		db.execSQL(query);
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (cCheck.moveToFirst())
+		{
+			throw new GroupDoesNotExistException("Group does not exist.");
+		}
+		else
+		{
+			String query="DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')";
+			db.execSQL(query);
+		}
 	}
 
 	@Override
-	public void saveImageMessage(String id, GroupChatMessage message) {
+	public void saveImageMessage(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		// TODO Auto-generated method stub
 
 	}
 
 
 	@Override
-	public void saveVoiceRecording(String id, GroupChatMessage message) {
+	public void saveVoiceRecording(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException {
+	public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-
 		//Delete from messages table
 		String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
 				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
 		Cursor c = db.rawQuery(querySelect,null);
-		if(c.moveToFirst()){
-			String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
-			db.execSQL(queryDelete);
-
-			//Delete from Members table
-			String query = "DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
-			db.execSQL(query);
-
-			//Delete from Groups table
-			String queryDeleteGroup = "DELETE FROM " + GroupChatHelper.Groups.tableName + " WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
-			db.execSQL(queryDeleteGroup); 
-		}
-		else
-		{
-			throw new GroupDoesNotExistException("Group could not be found in the database!");
-		}
-
-
-
-
-
-
-
-
+			if(c.moveToFirst()){
+				String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
+						+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
+				db.execSQL(queryDelete);
+	
+				//Delete from Members table
+				String query = "DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
+				db.execSQL(query);
+	
+				//Delete from Groups table
+				String queryDeleteGroup = "DELETE FROM " + GroupChatHelper.Groups.tableName + " WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
+				db.execSQL(queryDeleteGroup); 
+			}
+			else
+			{
+				throw new GroupDoesNotExistException("Group could not be found in the database!");
+			}
 
 		/*      
         //delete groupIdToDelete from Groups table
