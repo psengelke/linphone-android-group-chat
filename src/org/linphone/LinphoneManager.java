@@ -448,7 +448,7 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
 			//TODO this is where LinphoneManager is wrapped by the LinphoneGroupChatListener
-			mLc = LinphoneCoreFactory.instance().createLinphoneCore(LinphoneGroupChatListener.getInstance(), mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
+			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
 			try {
 				initLiblinphone();
