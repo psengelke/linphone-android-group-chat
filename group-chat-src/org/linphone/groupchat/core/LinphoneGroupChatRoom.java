@@ -93,18 +93,11 @@ public class LinphoneGroupChatRoom {
 		
 		try {
 			this.storage.createGroupChat(group);
-			
 			//if this point it reached, the group is new: invite members.
-			InitialContactInfo info = new InitialContactInfo();
-			info.group = group;
-			
-			Iterator<GroupChatMember> it = getOtherMembers().iterator();
-			while (it.hasNext()) {
-				GroupChatMember member = (GroupChatMember) it.next();
-				messenger.sendMessage(info, member, lc);
-			}
+			doInitialization(group);
 		} catch (GroupChatExistsException e){
-			// ignore, this group exists, no further action required.
+			// group exists, request updated group info instead.
+			requestGroupInfo();
 		}
 	}
 	
@@ -112,16 +105,7 @@ public class LinphoneGroupChatRoom {
 	 * Sends invites to all group members. Call only when this is a new group.
 	 * @throws GroupChatExistsException In the case that the group has already been initialised.
 	 */
-	public void doInitialization() throws GroupChatExistsException {
-		
-		GroupChatData group = new GroupChatData();
-		group.group_id = this.group_id;
-		group.group_name = this.group_name;
-		group.admin = this.admin;
-		group.members = getMembers();
-		group.encryption_type = this.getEncryptionType();
-		
-		storage.createGroupChat(group);
+	private void doInitialization(GroupChatData group) throws GroupChatExistsException {
 		
 		InitialContactInfo info = new InitialContactInfo();
 		info.group = group;
@@ -138,9 +122,7 @@ public class LinphoneGroupChatRoom {
 	 * group chat state.
 	 * Called by the constructor once the group has been initialised.
 	 */
-	public void requestGroupInfo(){
-		
-		if (updated) return;
+	private void requestGroupInfo(){
 		
 		// TODO delegate to messenger
 		

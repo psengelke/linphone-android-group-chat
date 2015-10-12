@@ -123,7 +123,6 @@ public class LinphoneGroupChatManager {
 						LinphoneGroupChatListener.getLinphoneCore()
 				);
 				chats.add(cr);
-				cr.requestGroupInfo();
 			} catch (InvalidKeySeedException e) {
 				// TODO handle error appropriately...
 			}
