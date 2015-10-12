@@ -354,7 +354,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	public void removeMember(String id, GroupChatMember member) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String query="DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE " + GroupChatHelper.Members.sipAddress
-				+ "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
+				+ "='"+member.sip+"' AND " + GroupChatHelper.Members.groupId + "='"+id+"'";
 		db.execSQL(query);
 	}
 
