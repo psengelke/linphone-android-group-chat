@@ -34,12 +34,30 @@ import org.linphone.core.SubscriptionState;
  */
 public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	
+	private static LinphoneGroupChatListener instance;
+	
 	private LinphoneManager linphone_manager;
 	private LinphoneGroupChatManager chat_manager;
 	
-	private LinphoneGroupChatListener() {
-		linphone_manager = LinphoneManager.getInstance();
-		chat_manager = LinphoneGroupChatManager.getInstance();
+	private LinphoneGroupChatListener(LinphoneManager m) {
+		
+		linphone_manager = m;
+		
+		// wait for 500ms before trying to initialize everything, 
+		// gives the LinphoneService time to configure.
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				try {
+					Thread.sleep(500);
+					chat_manager = LinphoneGroupChatManager.getInstance();
+				} catch (InterruptedException e) {
+					// TODO 
+				}
+			}
+		});
 	}
 	
 	/**
@@ -51,21 +69,23 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 		return LinphoneManager.getLc();
 	}
 	
+	// TODO neaten up
+	public static synchronized LinphoneGroupChatListener init(LinphoneManager m){
+		
+		if (instance == null) return instance = new LinphoneGroupChatListener(m);
+		
+		return instance;
+	}
+	
 	/**
 	 * Getter method for the singleton.
 	 * @return The {@link LinphoneCoreListener} singleton instance.
 	 */
-	public static LinphoneGroupChatListener getInstance(){
+	public static synchronized LinphoneGroupChatListener getInstance(){
 		
-		return InstanceHolder.INSTANCE;
-	}
-	
-	/**
-	 * This class provides a thread-safe lazy initialisation of the singleton.
-	 */
-	private static class InstanceHolder {
+		if (instance != null) return instance;
 		
-		private static final LinphoneGroupChatListener INSTANCE = new LinphoneGroupChatListener();
+		return new LinphoneGroupChatListener(LinphoneManager.getInstance());
 	}
 
 	/* LinphoneCoreListener implementation*/
