@@ -62,6 +62,7 @@ import org.linphone.core.PresenceModel;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.core.TunnelConfig;
+import org.linphone.groupchat.core.LinphoneGroupChatListener;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -446,8 +447,8 @@ public class LinphoneManager implements LinphoneCoreListener {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugLogEnabled, getString(R.string.app_name));
 			LinphoneCoreFactory.instance().enableLogCollection(isDebugLogEnabled);
 
-			// at this point, LinphoneManager should be initialised. Call LinphoneGroupChatManager.getInstance() and send as listener to LC.
-			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
+			//TODO this is where LinphoneManager is wrapped by the LinphoneGroupChatListener
+			mLc = LinphoneCoreFactory.instance().createLinphoneCore(LinphoneGroupChatListener.getInstance(), mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
 
 			try {
 				initLiblinphone();
