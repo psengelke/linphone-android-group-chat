@@ -6,7 +6,7 @@ import org.linphone.groupchat.exception.InvalidKeySeedException;
 public class EncryptionFactory {
 	
 	private final static int AES256_SEED_LENGTH = 256;
-	private final static int RSA_SEED_LENGTH = 256;
+	private final static int RSA_SEED_LENGTH = 1024;
     
 	/**
 	 * Factory method for creating {@link MessagingStrategy} instances.
