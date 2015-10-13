@@ -81,7 +81,6 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_weight="1"/>
-
         <TextView
             android:contentDescription="@string/content_description_all_contacts"
             android:id="@+id/allChats"
@@ -96,7 +95,6 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_weight="1"/>
-
         <TextView
             android:contentDescription="@string/content_description_all_contacts"
             android:id="@+id/allGroups"
@@ -111,6 +109,10 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_weight="1"/>
+
+
+
+
 
         <TextView
             android:visibility="invisible"
