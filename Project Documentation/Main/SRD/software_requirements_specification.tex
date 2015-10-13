@@ -28,7 +28,7 @@
 \textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
 \multicolumn{1}{|R{2cm}|}{26/05/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
 \multicolumn{1}{|l|}{10/06/2015} & \multicolumn{1}{l|}{Document Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{l|}{Version 2} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|l|}{13/10/2015} & \multicolumn{1}{l|}{Spelling and Grammar} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{l|}{Version 2.1} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
@@ -63,19 +63,19 @@ The purpose of this document is to provide a detailed discussion of the Linphone
 \subsection{Scope}
 The scope of this document will cover the requirements of the features for the Linphone Group Chat Extension project, which are listed as follows:
 \begin{itemize}
-\item providing group chat capabilities such as:
-\subitem  - creation and deletion of groups,
-\subitem  - adding and removing members,
-\subitem  - broadcasting all messages to all members,
-\item sending messages using AES256 encryption for secure messaging,
-\item sending messages without encryption where it is not needed,
-\item sending voice recordings over IM,
-\item making changes to the messaging user interface such as:
-\subitem  - improving the spacing between words,
-\subitem  - increasing the font sizes,
-\subitem  - improving message indentation for sender clarity,
-\subitem  - adding indication of another user typing a message,
-\subitem  - improving user profile picture displays.
+\item Providing group chat capabilities such as:
+\subitem  - Creation and deletion of groups,
+\subitem  - Adding and removing members,
+\subitem  - Broadcasting all messages to all members,
+\item Sending messages using AES256 encryption for secure messaging,
+\item Sending messages without encryption where it is not needed,
+\item Sending voice recordings over IM,
+\item Making changes to the messaging user interface such as:
+\subitem  - Improving the spacing between words,
+\subitem  - Increasing the font sizes,
+\subitem  - Improving message indentation for sender clarity,
+\subitem  - Adding indication of another user typing a message,
+\subitem  - Improving user profile picture displays.
 \end{itemize}
 \begin{figure}[H]
 \centering
@@ -85,12 +85,11 @@ The scope of this document will cover the requirements of the features for the L
 \end{figure}
 \subsection{Definitions, Acronyms \& Abbreviations}
 \subsubsection{Internal Documentation}
-\paragraph{FR:}
- Stands for Functional Requirement. Functional requirements define the internal workings of the software to show how the use cases are satisfied.
-\paragraph{NFR:} Stands for Non-functional Requirement. Non-functional requirements impose constraints on the design or implementation of the software.
-\paragraph{UC:} Stands for Use Case. Use Cases describe the external behaviour of the software when a user interacts with it.
+\paragraph{FR:} Functional Requirement. Functional requirements define the internal workings of the software to show how the use cases are satisfied.
+\paragraph{NFR:} Non-functional Requirement. Non-functional requirements impose constraints on the design or implementation of the software.
+\paragraph{UC:} Use Case. Use Cases describe the external behaviour of the software when a user interacts with it.
 \subsubsection{External Documentation}
-\paragraph{AES256:} AES stands for Advanced Encryption Standard and is a specification for encryption of electronic data. AES256 is a specific encryption algorithm that uses block sizes of 256 bits.
+\paragraph{AES256:} AES - Advanced Encryption Standard - is a specification for encryption of electronic data. AES256 is a particular encryption algorithm that uses block sizes of 256 bits.
 
 \section{Specific Requirements}
 \subsection{User Interfaces}
@@ -164,7 +163,7 @@ The post-conditions specify the conditions which must hold true when the service
 \end{itemize}
 
 \subsubsection{Delete Group Chat} \label{UC-delete-group}
-\paragraph{Summary:}A user shall be able to leave a group chat. When all the users leave a group chat, it will be deleted. If only one person remains in a group chat, that person will be unable to send messages to the chat until at least one other person is added to the chat. If the group owner leaves the group, a new owner is automatically assigned.
+\paragraph{Summary:}A user shall be able to leave a group chat. When all the users leave a group chat, it will be deleted. If only one user remains in a group chat, that user will be unable to send messages to the chat until at least one other user is added to the chat. If the group owner leaves the group, a new owner is automatically assigned.
 \paragraph{Rationale:}When an owner of a group leaves the group, the administrative privileges need to be reallocated. The group chat should persist as long as there is at least one user in the group. In the case of only one user remaining, preventing that user from sending messages will guard against misuse of the group chat, as well acting as an alert that the user's message would not have been seen by any other users.
 \paragraph{Users:} Any user of the Linphone application.
 \paragraph{Preconditions:} The user must be part of a group.
@@ -172,7 +171,7 @@ The post-conditions specify the conditions which must hold true when the service
 \begin{itemize}
 	\item The chat is locally deleted from the user's phone.
 	\item The user is removed/unlinked from the group chat.
-	\item If the user leaving is the administrator: The administrative priveleges are assigned to another group member.
+	\item If the user leaving is the administrator: The administrative privileges are assigned to another group member.
 	\item If the user is the last user in the group, their ability to send messages to the group is locked.
 \end{itemize}
 
@@ -192,7 +191,7 @@ The current name, subject, or profile picture has been changed.
 \paragraph{Summary:}
 The administrator shall be able to add new users to the group.
 \paragraph{Rationale:}
-The group does not have a static amount of users, this is inefficient. If the creator of the group has forgotten to add a user to the group after initial creation, the creator shall still be able to add the user later. Should a user relevant to the group appear after creation of the group, the user shall still be able to join the group. In addition, should a user leave, the user shall be able to come back to the group.
+The group does not have a static amount of users - this would be inefficient for end-users. If the creator of the group has forgotten to add a user to the group after initial creation, the creator shall still be able to add the user later. Should a user relevant to the group appear after creation of the group, the user shall still be able to join the group. In addition, should a user leave, the user shall be able to come back to the group.
 \paragraph{Users:}
 Creator or the current administrator of the group.
 \paragraph{Preconditions:}
@@ -210,7 +209,7 @@ All users. (Administration can remove other users, all users can remove themselv
 \paragraph{Preconditions:}
 A group exists with more than one member.
 \paragraph{{Postconditions:}}
-The user is no longer a part of the group which entails the user not receiving messages from the group, etc.
+The user which has been removed is no longer a part of the group which entails the user not receiving messages/notifications from the group.
 %\begin{figure}[H]
 %\centering
 %\includegraphics[width=5in]{./images/UC_AddRemove_Member.jpg}
@@ -222,7 +221,7 @@ The user is no longer a part of the group which entails the user not receiving m
 \paragraph{Summary:}
 The administrator shall be able to reassign a group administrator. This removes administrator privileges from the current administrator and reassigns them to another user within the group.
 \paragraph{Rationale:}
-If a user prefers not to be administrator anymore or the current administrator would like to leave the group, assigning a new user within the group with administrator privileges makes management of the group easier.
+If a user prefers to not be administrator anymore, or the current administrator would like to leave the group, assigning a new user within the group with administrator privileges makes management of the group easier.
 \paragraph{Users:}
 Administrator of the group.
 \paragraph{Preconditions:}
@@ -268,7 +267,7 @@ The user selected receives administrator privileges while the current administra
 \paragraph{Summary:} A user may be able to record voice messages and send them via IM.
 \paragraph{Rationale:} A user may be pressed for time, unable type a message, or the recipient may be unable to read the message, due to some external factor and thus require a means other than text messaging to convey a message. The ability to record one's voice and send the recording as a message may cater for the described scenarios and more.
 \paragraph{Users:} Any user of the Linphone application.
-\paragraph{Preconditions:} The user's device must support voice recording --- the device requires a microphone to support this.
+\paragraph{Preconditions:} The user's device must support voice recording - the device requires a microphone to support this.
 \paragraph{{Postconditions:}} A message has been sent to the recipient containing the voice recording.
 %\begin{figure}[H]
 %\centering
@@ -291,25 +290,25 @@ The user selected receives administrator privileges while the current administra
 
 \subsection{Functional Requirements}
 \subsubsection{Create Group Chat} \label{FR-create-group}
-\paragraph{Summary:} The create group use case should allow a user who has the Linphone service to create a group, name it, set details such as the profile picture and add contacts to it.
-\paragraph{Rationale:} A user may need a central way of communicating with several users at a time and wish to have a way of communicating and exchanging messages with several people at a time and observe their replies to each other etc. Thus a group chat is needed.
-\paragraph{Requirements:} When the user decides to create a group, the user must be afforded the option to do so. Once selected the user must be provided with the opportunity to give the group a name and picture. The system should check the validity of the above activities and then allow the user to proceed if all options are valid. The user should then be allowed to add contacts to the group. Once more than one contact is added the user is allowed to continue and finish creating the group.
+\paragraph{Summary:} The create group use case should allow a user who has the Linphone service to create a group, name it, set details such as the profile picture, and add contacts to it.
+\paragraph{Rationale:} A user may need a central way of communicating with several users at a time and may wish to have a way of communicating and exchanging messages with several people at a time and observe their replies to each other etc. Thus a group chat is needed.
+\paragraph{Requirements:} When the user decides to create a group, the user must be afforded the option to do so. Once selected, the user must be provided with the opportunity to give the group a name and picture. The system should check the validity of the above activities and then allow the user to proceed if all options are valid. The user should then be allowed to add contacts to the group. Once more than one contact is added, the user is allowed to continue and finish creating the group.
 \paragraph{References:} UC \ref{UC-create-group}
 
 \subsubsection{Send Invite} \label{FR-invite}
-\paragraph{Summary:} Checks to see whether the user is a member. If so, and invite is sent.
-\paragraph{Rationale:} Users need to be addded to the group via an invite. If the user being invited is already a member, they should not receive an invite.
-\paragraph{Requirements:} User must be added to the group by a member with the neccessary priveleges.
+\paragraph{Summary:} Checks whether the user is a member. If so, and invite is sent.
+\paragraph{Rationale:} Users need to be added to the group via an invite. If the user being invited is already a member, they should not receive an invite.
+\paragraph{Requirements:} User must be added to the group by a member with the necessary privileges.
 \paragraph{References:} UC \ref{UC-create-group}
  
  \subsubsection{Local Delete} \label{FR-Local-Delete}
- \paragraph{Summary:} The Delete Group should remove the group chat from the user's device.
+ \paragraph{Summary:} The \textit{Delete Group} request should remove the group chat from the user's device.
  \paragraph{Rationale:} When a user deletes a group, the group chat that is stored locally must be removed.
- \paragraph{Requirements:} The Delete Group request must call a Local Delete on the group chat to remove it from the user's device.
+ \paragraph{Requirements:} The \textit{Delete Group} request must call a \textit{Local Delete} on the group chat to remove it from the user's device.
  \paragraph{References:} UC \ref{UC-delete-group}
  
 \subsubsection{Check If Last Member} \label{FR-Check-Last-User}
-\paragraph{Summary:} The Delete Group should call a check to see whether the user is the only user in the group. If so, the group is completely deleted.
+\paragraph{Summary:} The \textit{Delete Group} should call a check on whether the user is the only user in the group. If so, the group is completely deleted.
 \paragraph{Rationale:} If all the users have a left a group, it should cease to be.
 \paragraph{Requirements:} When a user leaves a group, a check should be done to determine whether they are the last remaining user.
 \paragraph{References:} UC \ref{UC-delete-group}
@@ -320,50 +319,50 @@ Updating may allow a user to remove the profile picture from the group or choose
 \paragraph{Rationale:}
 A user will often change the profile picture of the group, allowing the user to choose an image from local storage will afford the user more options.
 \paragraph{Requirements:}
-If the user chooses to change the profile picture, the application may display the new picture to all group members within 60 seconds.
+If the user chooses to change the profile picture, the application should display the new picture to all group members within sixty (60) seconds.
 \paragraph{References:} UC \ref{UC-update-group}
 
 \subsubsection{Add Member} \label{FR-add-member}
 \paragraph{Summary:}
 Once the user has been added to the group, the user shall be able to receive messages from the group and other members.
 \paragraph{Rationale:}
-Users will be added at different times to other users therefore it shall be guaranteed that each user receives the same messages as other group members.
+Some users will be added at different times to other users, therefore it shall be guaranteed that each user receives the same messages as other group members.
 \paragraph{Requirements:}
-Once a user is added, the user shall be able to receive messages and notifications from the group within 10 seconds.
+Once a user is added, the user shall receive messages and notifications from the group within ten (10) seconds.
 \paragraph{References:} UC \ref{UC-add-member}
 
 \subsubsection{Remove Member} \label{FR-remove-member}
 \paragraph{Summary:}
 Once the user has been removed from the group, the user should not receive any messages from the group.
 \paragraph{Rationale:}
-Users will be removed at different times to other users therefore it must be guaranteed that the user who is removed does not receive any messages from the group to ensure that the user is not a part of the group.
+Some users will be removed at different times to other users therefore it must be guaranteed that the user who is removed does not receive any messages from the group to ensure that the user is not a part of the group.
 \paragraph{Requirements:}
 %Once the administrator opts to remove a user from the list of users currently in the group, the user selected must be removed from the group and should no longer receive any messages from the group.
 Once a user is removed, the user shall not receive messages or notifications from the group.
 \paragraph{References:} UC \ref{UC-remove-member}
 
 \subsubsection{Encryption for Send Message} \label{FR-send-message-encrypted}
-\paragraph{Summary:} The send message feature shall provide for encryption.
+\paragraph{Summary:} The \textit{Send Message} feature shall support optional encryption.
 \paragraph{Rationale:} If the group administrator decides that messages should be encrypted for secure communication amongst members, the ability to do so shall be provided.
-\paragraph{Requirements:} When encryption is enabled, the send message feature shall use the AES265 encryption algorithm to encrypt the message before broadcasting it to the group members. If encryption is not enabled, the message will be broadcast in it's original state.
+\paragraph{Requirements:} When encryption is enabled, the \textit{Send Message} feature shall use the AES265 encryption algorithm to encrypt the message before broadcasting it to the group members. If encryption is not enabled, the message will be broadcast in its original state.
 \paragraph{References:} UC \ref{UC-send-message}
 
 \subsubsection{Sent Message Indication} \label{FR-send-message-indicator}
-\paragraph{Summary:} The send message feature shall provide indication of a successful broadcast or the failure thereof.
-\paragraph{Rationale:} Users need to know whether or not their messages have been sent else they must assume one or the other, and that is not reliable. If some indication is given of the success of sending a message, a user will be able to take any necessary action in the event of a failure.
-\paragraph{Requirements:} When a user invokes the send message feature, the feature will provide an indication of the success after completing it's execution.
+\paragraph{Summary:} The \textit{Send Message} feature shall provide indication of a successful broadcast or the failure thereof.
+\paragraph{Rationale:} Users need to know whether or not their messages have been sent otherwise they must assume one or the other, and that is not reliable. If some indication is given of the success of sending a message, a user will be able to take any necessary action in the event of a failure.
+\paragraph{Requirements:} When a user invokes the \textit{Send Message} feature, the feature will provide an indication of the success after completing its execution.
 \paragraph{References:} UC \ref{UC-send-message}
 
 \subsubsection{Voice Recording Support} \label{FR-voice-record-support}
-\paragraph{Summary:} The voice recording feature shall check that the device has a microphone.
-\paragraph{Rationale:} The voice recording feature can only operate if it can receive audio input from the device's microphone. Without such a check, trying to access the feature can lead to the possibility of a system crash.
-\paragraph{Requirements:} When the voice recording feature is invoked, the procedure will check that the device can record audio. If it can, it will proceed with normal execution: using the device microphone to record the audio and once done, wrap the audio file in a message object and send it; else it will abort the process and alert the user that the feature is not available.
+\paragraph{Summary:} The \textit{Voice Recording} feature shall check that the device has a microphone.
+\paragraph{Rationale:} The \textit{Voice Recording} feature can only operate if it can receive audio input from the device's microphone. Without such a check, trying to access the feature can lead to the possibility of a system crash.
+\paragraph{Requirements:} When the \textit{Voice Recording} feature is invoked, the procedure will check that the device can record audio. If it can, it will proceed with normal execution: using the device microphone to record the audio and once done, wrap the audio file in a message object and send it; else it will abort the process and alert the user that the feature is not available.
 \paragraph{References:} UC \ref{UC-send-voice}
 
 \subsubsection{Decryption of Received Message} \label{FR-decrypt-received-message}
 \paragraph{Summary:} The received message shall be decrypted before further processing and display.
 \paragraph{Rationale:} Group administrators can enable encryption for all messages sent on the group. These messages are encrypted before being sent and should be decrypted after received.
-\paragraph{Requirements:} When encryption is enabled, the send message feature shall use the AES265 encryption algorithm to encrypt the message before broadcasting it to the group members. In this case, the AES265 algorithm will also be used to decrypt the message once received by members subscribed to the group, given that encryption for messages sent on the group is enabled.
+\paragraph{Requirements:} When encryption is enabled, the \textit{Send Message} feature shall use the AES265 encryption algorithm to encrypt the message before broadcasting it to the group members. In this case, the AES265 algorithm will also be used to decrypt the message once received by members subscribed to the group, given that encryption for messages sent on the group is enabled.
 %\begin{figure}[H]
 %\centering
 %\includegraphics[width=5in]{./images/Activity_Receive_Message.png}
@@ -374,7 +373,7 @@ Once a user is removed, the user shall not receive messages or notifications fro
 
 \subsubsection{Other Functional Requirements}	\label{FR-nice-to-have}
 Some requirements which might be additionally implemented, but which are not required for product functionality.
-\paragraph{Message Received Indication} It may be indicated that the whole group has received the message.
+\paragraph{Message Received Indication} It may be indicated that the all members of a group have received the message.
 \paragraph{Message Read Indication} It may be indicated that a message has been read by the group.
 \paragraph{Deletion of Messages} A user may be allowed to delete messages from the group chat. This deletion will be local  and will not be propagated across all member devices.
 
@@ -382,24 +381,24 @@ Some requirements which might be additionally implemented, but which are not req
 
 \subsubsection{Scalability Constraints for Add User} \label{NFR-scalability-add-member}
 \paragraph{Summary:} Adding a new user may not negatively impact the performance of management of, and communication within, the group.
-\paragraph{Rationale:} If there are too many members in a group, it can become hard for the group administrator to keep track of members and there may be noticeable delays in message broadcasting with some users receiving messages much later than others. This can impact the service quality negatively cause people to stop using the service.
+\paragraph{Rationale:} If there are too many members in a group, it can become hard for the group administrator to keep track of members and there may be noticeable delays in message broadcasting with some users receiving messages much later than others. This can impact the service quality negatively and cause users to stop using the service.
 \paragraph{Requirements:} The number of users per group shall be limited to a reasonable size to prevent poor performance. This number should be between 50 and 100 users, although this number is subject to change as development and testing progress.
 \paragraph{References:} UC \ref{UC-add-member}
 
 \subsubsection{Performance Constraints for Send Message} \label{NFR-performance-send-message}
-\paragraph{Summary:} Sending messages should be quick.
-\paragraph{Rationale:} Broadcasting messages to the entire group should be quick for effective communication to take place. If broadcasting a message to the group is slow, the quality of the real-time communication experience becomes poor and may cause users to avoid the use of the service. 
-\paragraph{Requirements:} Messages should be sent to all group members within reasonable time, but as fast as possible. The time within which the message should be received should be about 5 seconds. However, factors to take into account may include user availability (the user may be off-line) and network congestion and/or connection issues. Refer to NFR \ref{NFR-reliability-send-message} for details on reliability of Send Message.
+\paragraph{Summary:} Sending messages should be relatively quick.
+\paragraph{Rationale:} Broadcasting messages to the entire group should be relatively quick for effective communication to take place. If broadcasting a message to the group is slow, the quality of the real-time communication experience becomes poor and may cause users to avoid the use of the service. 
+\paragraph{Requirements:} Messages should be sent to all group members within reasonable time, but as fast as possible. The time within which the message should be received should be around five (5) seconds. However, factors to take into account may include user availability (the user may be off-line) and network congestion and/or connection issues. Refer to NFR \ref{NFR-reliability-send-message-1} for details on reliability of \textit{Send Message}.
 \paragraph{References:} UC \ref{UC-send-message}
 
 \subsubsection{Reliability Constraint for Send Message: Time} \label{NFR-reliability-send-message-1}
-\paragraph{Summary:} The send message feature should be reliable, indicating failed or successful message broadcasts within 60 seconds.
-\paragraph{Rationale:} Users should be notified if their message was sent or not, allowing them to take the necessary action to complete their communication. If a user does not receive some form of confirmation of success or failure, the user will have to assume that the message was sent even if or when it was not, resulting in an unreliable service.
-\paragraph{Requirements:} The send message feature shall provide some indication of success after perform its tasks. If success is not determined after 60 seconds, a failure to send should be indicated.
+\paragraph{Summary:} The \textit{Send Message} feature should be reliable, indicating failed or successful message broadcasts within sixty (60) seconds.
+\paragraph{Rationale:} Users should be informed of whether or not their message was sent, allowing them to take the necessary action to complete their communication. If a user does not receive some form of confirmation of success or failure, the user will have to assume that the message was sent even if it was not, resulting in an unreliable service.
+\paragraph{Requirements:} The \textit{Send Message} feature shall provide some indication of success after perform its tasks. If success is not determined after sixty (60) seconds, a failure to send should be indicated.
 \paragraph{References:} UC \ref{UC-send-message}, FR \ref{FR-send-message-indicator}
 
 \subsubsection{Reliability Constraint for Send Message: Success Rate} \label{NFR-reliability-send-message-2}
-\paragraph{Summary:} The send message feature should be reliable, not failing more than 0.1\% of the time under ideal conditions.
+\paragraph{Summary:} The \textit{Send Message} feature should be reliable, not failing more than 0.1\% of the time under ideal conditions.
 \paragraph{Rationale:} If the application cannot ensure that messages are always sent when there are no external factors preventing the messages from being sent, then users will refrain from using the product any further.
 \paragraph{Requirements:} In the event that a message is not sent, it should retry a number of times before giving up.
 \paragraph{References:} UC \ref{UC-send-message}, FR \ref{FR-send-message-indicator}
@@ -407,12 +406,12 @@ Some requirements which might be additionally implemented, but which are not req
 \subsubsection{Security Constraints for Send Message and Receive Message} \label{NFR-security-send-message-and-receive-message}
 \paragraph{Summary:} The sending and receiving of message should be secured through reliable encryption and decryption.
 \paragraph{Rationale:} Messages are required to be encrypted if the group administrator indicates this requirement during group creation. Encryption of sent messages and subsequent decryption of all received messages is required using the AES 256 encryption algorithm. 
-\paragraph{Requirements:} The send message use case will incorporate encryption as a functional requirement and the receive message use case will incorporate decryption as a functional requirement.
+\paragraph{Requirements:} The \textit{Send Message} use case will incorporate encryption as a functional requirement and the \textit{Receive Message} use case will incorporate decryption as a functional requirement.
 \paragraph{References:} UC \ref{UC-send-message}, UC \ref{UC-receive-message}, FR \ref{FR-send-message-encrypted}, FR \ref{FR-decrypt-received-message}
 
 \subsubsection{Availability Constraints for Receive Message} \label{NFR-availability-receive-message}
 \paragraph{Summary:} A Linphone client should be able to receive a message whenever a message has been sent to it.
-\paragraph{Rationale:} Although already implemented, the receive message use case needs to incorporate decryption of a received message using the AES256 protocol and will therefore be modified or integrated with a decryption implementation. Evoking a receive request should maintain high availability, since many messages can be sent in sequence during a group chat session.
+\paragraph{Rationale:} Although already implemented, the \textit{Receive Message} use case needs to incorporate decryption of a received message using the AES256 protocol and will therefore be modified or integrated with a decryption implementation. Evoking a receive request should maintain high availability, since many messages can be sent in sequence during a group chat session.
 \paragraph{Requirements:} Evoking a receive request should maintain high availability in the form of multi-threading or a similar technique.
 \paragraph{References:} UC \ref{UC-receive-message}, FR \ref{FR-decrypt-received-message}
 

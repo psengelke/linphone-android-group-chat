@@ -31,7 +31,7 @@
 \textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
 \multicolumn{1}{|R{2cm}|}{23/06/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
 \multicolumn{1}{|R{2cm}|}{28/08/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.0} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|R{2cm}|}{13/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.1} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
@@ -72,7 +72,7 @@ This document discusses the design choices and implementation for the Linphone G
 This section discusses new interfaces, listed in alphabetical order.
 \subsubsection{EncryptionHandler}
 The \textit{EncryptionHandler} interface defines how interaction with an \textit{EncryptionHandler} implementation takes place. An encryption handler will be used by a \textit{ \hyperref[subsubsec: linphonegroupchatroom]{LinphoneGroupChatRoom}} instance to perform the necessary encryption/decryption operations.\\
-This interface and its implementing classes fulfil certain requirements specified in the \textbf{Software Requirements Specification} document, specifically those pertaining to encryption and message security.
+This interface and its implementing classes fulfill certain requirements specified in the \textbf{Software Requirements Specification} document, specifically those pertaining to encryption and message security.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/class_encryption_handler.png}
@@ -80,7 +80,7 @@ This interface and its implementing classes fulfil certain requirements specifie
 \label{cd-encryption-handler}
 \end{figure}
 \subsubsection{EncryptionStrategy}
-The \textit{EncryptionStrategy} interface describes how a \textit{ \hyperref[subsubsec: linphonegroupchatroom]{LinphoneGroupChatRoom}} instance will interact with the \textit{EncryptionStrategy} implementation. The motivation for using a strategy is that the code for an implementation that does not use encryption and one that does, may vary significantly. Using a strategy, we might reduce boiler-plate code and promote loose coupling between the \textit{LinphoneGroupChatRoom} instance and the encryption algorithm, if any.
+The \textit{EncryptionStrategy} interface describes how a \textit{ \hyperref[subsubsec: linphonegroupchatroom]{LinphoneGroupChatRoom}} instance will interact with the \textit{EncryptionStrategy} implementation. The motivation for using a strategy is that the code for an implementation that does not use encryption and one that does, may vary significantly. Using a strategy, we might reduce boiler-plate code and promote loose coupling between the \textit{ \hyperref[subsubsec: linphonegroupchatroom]{LinphoneGroupChatRoom}} instance and the encryption algorithm, if any.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/class_encryption_strategy.png}
@@ -97,7 +97,7 @@ This interface accommodates for certain requirements specified in the \textbf{So
 \label{cd-chat-storage}
 \end{figure}
 \subsection{Linphone Group Chat: Core Classes}
-This section discusses new class implementations, listed in alphabetical order.
+This section discusses new class implementations, listed alphabetically.
 \subsubsection{AES256EncryptionHandler}
 The \textit{AES256EncryptionHandler} performs AES256 encryption and decryption on strings.\\
 The class diagram can be seen in figure \ref{cd-encryption-handler}.
@@ -183,10 +183,10 @@ This fragment will be contained by the \textit{GroupChatActivity} instance. The 
 The Linphone Group Chat extension will form a separate package from the rest of the Linphone source code to simplify the implementation process. When the time comes for integration, certain changes to the existing code will be made to incorporate the new code. Any classes that have been identified, where changes are sure to take place, are listed and briefly discussed below.
 \begin{itemize}
 \item \textbf{LinphoneManager}\\
-This class is responsible for the management of the low-level \textit{Liblinphone} functionality. It's responsibilities include starting the C \textit{Liblinphone} services, reacting to changes in the state of these services and notifying the Android application of these state changes. It also handles notifications for the application that get communicated to the Android system as well as some SIP functionality.\\
+This class is responsible for the management of the low-level \textit{Liblinphone} functionality. Its responsibilities include starting the C \textit{Liblinphone} services, reacting to changes in the state of these services and notifying the Android application of these state changes. It also handles notifications for the application that get communicated to the Android system as well as some SIP functionality.\\
 This class will wrap itself in a \textit{LinphoneGroupChatListener} instance and initialize the \textit{LinphoneGroupChatManager} instance. The \textit{LinphoneGroupChatListener} will be registered as the \textit{LinphoneCoreListener} for the \textit{LinphoneCore} instance.
 \item \textbf{ChatListFragment}\\
-This class forms part of the Linphone Android user interface. It initialises and manages the chat-list view, reached when clicking on the chat button located on the bottom navigation bar of the linphone application. In order to create a new group chat, an additional button will be added to this implementation and relative listeners for it will be implemented as well inside the ChatListFragment class. The functionality to list group-chats will also be implemented here. Refer to figure ~\ref{cd-cg} for an illustration of interface modifications mentioned.
+This class forms part of the Linphone Android user interface. It initialises and manages the chat-list view, reached when clicking on the chat button located on the bottom navigation bar of the Linphone application. In order to create a new group chat, an additional button will be added to this implementation and relative listeners for it will be implemented as well inside the ChatListFragment class. The functionality to list group-chats will also be implemented here. Refer to figure ~\ref{cd-cg} for an illustration of interface modifications mentioned.
 
 \end{itemize}
 
@@ -203,8 +203,8 @@ When a Linphone user opens the application, he/she is greeted and interacts with
 \subsubsection{Chat Interface}
 The current default interface for a chat between two Linphone users consists of:
 \begin{itemize}
-\item	A plain blue/grey background
-\item	The name of the contact to which the user is currently chatting to is displayed at the top of the chat along with their profile picture.
+\item	A plain blue/grey background.
+\item	The name of the contact to which the user is currently chatting, is displayed at the top of the chat along with their profile picture.
 \subitem Thus functionality will be provided for users to change and update their profile pictures.
 \begin{figure}[H]
 \centering
@@ -213,20 +213,20 @@ The current default interface for a chat between two Linphone users consists of:
 \label{cd-chat-interface}
 \end{figure}
 \item	Speech bubbles to represent messages
-\subitem	Each speech bubble is either left or right aligned depending on whether it is a the users sent message or the users received message.
-\subitem	- A received message appears to be left aligned
-\subitem	- A message sent by the user appears to be right aligned
-\subitem	- All Speech bubbles representing received messages are represented by a light shade of blue
-\subitem	- All speech bubbles representing the users' sent messages are represented by a darker shade of blue.
-\item	A yellow arrow represents a sending message
-\item	A green tick represents a sent and delivered message
-\item	A red cross symbolizes a message that cannot be sent and thus not delivered
-\item	When the contact to which the user is chatting to types, the line “Remote is writing…” appears at the bottom of the chat screen
+\subitem	Each speech bubble is either left- or right-aligned, depending on whether it is received or sent, respectively.
+\subitem	- A received message appears to be left aligned.
+\subitem	- A message sent by the user appears to be right aligned.
+\subitem	- All speech bubbles representing received messages are represented by a light shade of blue.
+\subitem	- All speech bubbles representing a user's sent messages are represented by a darker shade of blue.
+\item	A yellow arrow represents a sending message.
+\item	A green tick represents a sent and delivered message.
+\item	A red cross symbolizes a message that cannot be sent and thus not delivered.
+\item	When the contact to which the user is chatting to types, the line “Remote is writing…” appears at the bottom of the chat screen.
 
 \end{itemize}
 
 \subsubsection{Potential upgrades and changes to Current interface}.\newline
-When looking at the current interface that Linphone, from a programmer's perspective, there are some immediate user interface issues that are noticeable, and that can be changed to accommodate the user better. However after comparing several social networking services, such as Skype, Whatsapp, iMessage, BBM etc, many patterns and standards were identified, answering to layout, presentation, and access to functions and options. To further assist with decision making and changes to be made to the user interface, several users were asked to play around with the application and suggest what they like and do not like about the interface, as well as any additional features and changes that could be made to the interface.\\\\
+When looking at the current interface that Linphone implements, from a programmer's perspective, there are some immediate user interface issues that are noticeable, and that can be changed to better accommodate the user. After comparing several Instant Messaging services, such as Skype, Whatsapp, iMessage and BBM, many patterns and standards were identified. These standards provided solutions to layout, presentation, and access to functionality and options. To further assist with decision making and changes to be made to the user interface, several users were asked to explore and test the application and suggest what they like and do not like about the interface, as well as any additional features and changes that could be made to the interface.\\\\
 Applying these noted patterns and standards along with the feedback collected from the few users, the following changes to the interface seem plausible: \\\\
 Starting from left to right, looking at each screen/option located on the bottom of the menu on the Linphone application:
 \paragraph{History Screen}
@@ -250,11 +250,11 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Chat Screen}
 \begin{itemize}
-\item	When one selects the text box to search for a chat the 'place-holder' will disappear and the cursor should be left-aligned.
+\item	When a user selects the text box to search for a chat the 'place-holder' text will disappear and the cursor should be left-aligned.
 
-\item When one is typing in the search bar the text as entered will appear to be left-aligned.
+\item When a user is typing in the search bar, the text entered will appear to be left-aligned.
 
-\item On the right to the text box, where one would type to search for a chat, the clear button appears as a small white cross in a red circle. This is so even if the user has not typed anything in the search box. The red circle will appear grey or a faded colour until the user types something in the search box after which the circle can return to its original red colour. 
+\item On the right of the text box, where a user would type to search for a chat, the clear button appears as a small white cross in a red circle. This is true even if the user has not typed anything in the search box. The red circle will appear grey or a faded colour until the user types something in the search box after which the circle can return to its original red colour. 
 
 \item The spacing between the search bar and the first chat in the list will be increased.
 
@@ -265,21 +265,21 @@ Starting from left to right, looking at each screen/option located on the bottom
 \end{itemize}
 \paragraph{Within a Chat}
 \begin{itemize}
-\item A	fine line appears to the right of the "Back" option - since there is not other option to the right this line is useless and will be removed and only added if further options are added to the right of the "Back" button.
+\item A	fine line appears to the right of the \textit{Back} option - since there is not other option to the right this line is useless and will be removed and only added if further options are added to the right of the \textit{Back} button.
 
-\item	Add a defined panel/ bar at the top of a chat to represent the contact to which the user is chatting to. 
+\item	Add a defined panel/ bar at the top of a chat to represent the contact to which the user is chatting. 
 
-\item	Left align the contact details such as picture and name.
+\item	Left-align the contact details, such as picture and name.
 
-\item When one selects the keyboard to type a message the contact's name to which they are talking to changes format. This will not occur and the panel will be kept standard as mentioned in the previous point.
+\item When a user selects the keyboard to type a message, the contact's name to which they are talking to changes format. This will not occur and the panel will be kept standard as mentioned in the previous point.
 
-\item	Change the colours of the speech bubbles that represent the messages to be more distinguishable to the background.
+\item	Change the colours of the speech bubbles that represent the messages to be more distinguishable from the background.
 
-\subitem	- The default colour of the speech bubble representing a users' sent message is very similar to the default background colour and thus it is difficult to distinguish the message from the background. Therefore changing the colour of this will allow the messages to stand out and improve visibility of a message.
-\subitem 	- The users' sent messages will be represented by a duller colour to the received messages as the received messages need more focus.
+\subitem	- The default colour of the speech bubble representing a user's sent message is very similar to the default background colour and thus it is difficult to distinguish the message from the background. Therefore changing the colour of this will allow the messages to stand out and improve visibility of a message.
+\subitem 	- The user's sent messages will be represented by a duller colour to the received messages as the received messages need more focus.
 
 \item	Limit the size of speech bubbles.
-\subitem - Speech bubbles representing a users' sent message will be limited to stretch to 80\% - 90\% of the screen while being right-aligned.
+\subitem - Speech bubbles representing a user's sent message will be limited to stretch to 80\% - 90\% of the screen while being right-aligned.
 \subitem	- Speech bubbles representing a received message will be limited to stretch to 80\% - 90\% of the screen while being left-aligned. 
 \subitem	- This will allow easier distinguish-ability between sent and received messages when dealing with longer messages.
 \subitem	- Improving on the location, direction and size of speech bubbles will provide for a better feedback system.
@@ -314,8 +314,8 @@ Starting from left to right, looking at each screen/option located on the bottom
 \item	In order to maintain consistency of design, the same colours chosen to represent the speech bubble and background throughout the application will be used for the user interface for group chats.
 \item	Within each speech bubble, each participant's name will appear in a different colour respectively thus to easily recognize which message came from which participant.
 \item	The colour of the text will remain standard.
-\item The timestamp will be a light grey and will appear at the bottom left of the received  messages and on the bottom right of the sent messages.
-\item The notification symbols such as the cross and tick to indicate the status of the message will remain their default colours.\\
+\item The timestamp will be light grey and will appear at the bottom left of the received  messages and on the bottom right of the sent messages.
+\item The notification symbols, such as the cross and tick to indicate the status of the message will remain their default colours.\\
 \end{itemize}
 
 \paragraph{Font}
@@ -334,7 +334,7 @@ Starting from left to right, looking at each screen/option located on the bottom
 \paragraph{Speech/Message Bubbles}
 \begin{itemize}
 \item	Each user will have a uniquely coloured name to represent their message.
-\item	The user sending a message will have their speech bubbles appear on the right such as “User 3” in the above diagram
+\item	The user sending a message will have their speech bubbles appear on the right such as \textit{User 3} in Figure 12\ref{cd-group-chat-interface}.
 \item	Each participant in the group, not being the main user will have their message bubbles appear on the left – such as user 1 and 2 in the above diagram.
 \item Each message bubble will contain a time stamp that will indicate when the message was sent or received.
 \item Sent messages from the user will contain a red cross, yellow or green tick depending on whether the message failed to deliver/send, is sending or sent respectively.\\
@@ -342,19 +342,19 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Space}
 \begin{itemize}
-\item	Moving the group name and picture to appear in the same panel as the "Back" button will allow for more chat space thus more space and less cluttered interface.
+\item	Moving the group name and picture to appear in the same panel as the \textit{Back} button will allow for more chat space, and a less cluttered interface.
 \end{itemize}
 
 \paragraph{Icons}
 \begin{itemize}
-\item	The send icon will be changed to a paper aeroplane symbol.  
-\item Since more than one type of media will be able to be sent as a message, the "Image" icon, to represent sending a picture will be replaced by a paper clip icon with the option to send images and voice notes. 
-\item The "Back" button will be replaced by a plain standard arrow to symbolize the "Back" option.  
+\item	The send icon will be changed to a paper-aeroplane symbol.  
+\item Since more than one type of media will be able to be sent as a message, the \textit{Image} icon, to represent sending a picture will be replaced by a paper-clip icon with the option to send images and voice notes. 
+\item The \textit{Back} button will be replaced by a plain standard arrow to symbolize the \textit{Back} option.  
 \end{itemize}
 
 \paragraph{Participants}
 \begin{itemize}
-\item	When the group name is selected a list of the participants will appear.
+\item	When the group name is selected, a list of the participants will appear.
 \end{itemize}
 
 
@@ -380,19 +380,19 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Space}
 \begin{itemize}
-\item	Moving the group name and picture to appear in the same panel as the "Back" button will allow for more chat space thus more space and less cluttered interface.
+\item	Moving the group name and picture to appear in the same panel as the \textit{Back} button will allow for more chat space and a less cluttered interface.
 \end{itemize}
 
 \paragraph{Icons}
 \begin{itemize}
-\item	"+" Will be used to symbolize adding a participant to the group.  
-\item "-" Will be used to symbolize removing a participant from the group.
-\item The "Back" button will be replaced by a plain standard arrow to symbolize the "Back" option.  
+\item	"\textbf{+}" Will be used to symbolize adding a participant to the group.  
+\item "\textbf{-}" Will be used to symbolize removing a participant from the group.
+\item The \textit{Back} button will be replaced by a plain standard arrow to symbolize the \textit{Back} option.  
 \end{itemize}
 
 \paragraph{Options Possible}
 \begin{itemize}
-\item	Add Participants: Selecting this option will open the contacts page where one can select contacts to add to the group.
+\item	Add Participants: Selecting this option will open the contacts page where the user can select contacts to add to the group.
 \item 	Remove Participants: Selecting this option will open the list of participants in the group where one can select contacts to remove from the group.
 \item Leave Group: Selecting this option will cause the user to leave the group and no longer receive messages from the specific group.\\
 \end{itemize}
@@ -411,8 +411,8 @@ Starting from left to right, looking at each screen/option located on the bottom
 \begin{itemize}
 \item	In order to maintain consistency of design, the same colours chosen to represent the background throughout the application will be used for the user interface for group chat creation option.
 \item	The colour of the text will remain standard. Text that is important or selectable will be highlighted with a colour to make it noticeable - the default colour is orange. 	\\
-\end{itemize}
-
+\end{itemize}  
+               
 \paragraph{Font}
 \begin{itemize}
 \item	In order to maintain consistency of design, the font size for each message will be the same as the chosen font size for the rest of the application.
@@ -421,41 +421,41 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Icons}
 \begin{itemize}
-\item	"+" Will be used to symbolize adding a participant to the group.  
-\item "-" Will be used to symbolize removing a participant from the group.
-\item The "Back" button will be replaced by a plain standard arrow to symbolize the "Back" option. 
-\item A paper clip represents attaching a media file, in this case a profile picture.  
+\item	"\textbf{+}" Will be used to symbolize adding a participant to the group.  
+\item "\textbf{-}" Will be used to symbolize removing a participant from the group.
+\item The \textit{Back} button will be replaced by a plain standard arrow to symbolize the \textit{Back} option. 
+\item A paper-clip represents attaching a media file, in this case a profile picture.  
 \end{itemize}
 
 \paragraph{Options Possible}
 \begin{itemize}
 \item Type group name.
 \item Select or browse phone gallery to set a profile picture for the group.
-\item	Add Participants: Selecting this option will open the contacts page where one can select contacts to add to the group.
-\item 	Remove Participants: Selecting this option will open the list of participants in the group where one can select contacts to remove from the group.
+\item	Add Participants: Selecting this option will open the contacts page where the user can select contacts to add to the group.
+\item 	Remove Participants: Selecting this option will open the list of participants in the group where the user can select contacts to remove from the group.
 \end{itemize}
 
 \paragraph{Process}
 \begin{enumerate}
-\item The user will, in the "Chat" interface select the option "New Group Chat" - number 1 in the diagram.
-\item The Group chat set up page will be displayed. Here the user will fill in the necessary information needed in order to create a group chat - number 2 in the diagram.
-\item Finally, once the group chat has been created, the Group chat name will appear in the list of the user's chats and will be able to be selected and used - number 3 in the diagram.
+\item The user will, in the \textit{Chat} interface, select the option \textit{New Group Chat} - number 1 in Figure\ref{cd-cg}.
+\item The Group chat set up page will be displayed. Here the user will fill in the necessary information needed in order to create a group chat - number 2 in Figure\ref{cd-cg}.
+\item Finally, once the group chat has been created, the Group chat name will appear in the list of the user's chats and will be able to be selected and used - number 3 in Figure\ref{cd-cg}.
 \end{enumerate}
 
 
 
 
 \section{Software Interactions}
-This section discusses and illustrates the activities that may take place within the extension. These activities are directly related to the functional requirements discussed in the System Requirements Specification document.
-\subsection{Creating A Group}
-Once a user attempts to create a group, the user will be afforded options to provide parameters for the instantiation of the group chat (which members, encryption type, etc.). Should the parameters be invalid, an exception will be thrown in order to indicate why validity has been voided. If the check has been passed, the group chat is initialised via \textit{LinphoneGroupChatManager}.
+This section discusses and illustrates the activities that may take place within the extension. These activities are directly related to the functional requirements discussed in the \textbf{System Requirements Specification} (\textbf{SRS}) document.
+\subsection{Creating a Group}
+Once a user attempts to create a group, the user will be afforded options to provide parameters for the instantiation of the group chat (members, encryption type, and other options). Should the parameters be invalid, an exception will be thrown in order to indicate why validity has been voided. If the check has been passed, the group chat is initialised via \textit{LinphoneGroupChatManager}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=3in]{./images/activity_create_group.png}
 \caption[Create Group Activity Diagram]{This figure shows the action flow for creating a group chat.}
 \label{ad-create-group}
 \end{figure}
-\subsection{Deleting A Group}
+\subsection{Deleting a Group}
 Once any member of a group opts to delete the group, that member is removed from the current member list of the group in order to reflect that they are no longer a part of the group to the system. Checks should be performed in post to this operation in order to delete the group entirely should no members be left or assign a new administrator should the current administrator leave.
 \begin{figure}[H]
 \centering
@@ -471,16 +471,16 @@ Group management consists of members of a group being able to perform certain ac
 \caption[Manage Group Activity Diagram]{This figure shows the action flow for managing a group chat.}
 \label{ad-manage-group}
 \end{figure}
-\subsubsection{Adding A New Member}
-Adding a member to the group chat consists of an interaction between two clients: the administrator of the group and the member to be added. The administrator initiates the process by adding the new member which is followed by the new member's client creating an instance of the existing group chat.
+\subsubsection{Adding a New Member}
+Adding a member to the group chat consists of an interaction between two clients: the administrator of the group and the member to be added. The administrator initiates the process by adding the new member, followed by the new member's client creating an instance of the existing group chat.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/activity_add_member.png}
 \caption[Add Member Activity Diagram]{This figure shows the action flow for adding a member to a group chat.}
 \label{ad-add-member}
 \end{figure}
-\subsubsection{Removing A Member}
-Removing a member from the group chat is similar to adding a member with regards to having two clients involved. The administrator initiates the process by attempting to remove a member, the member's client then handles the removal from the member list and the removal of the local group chat instance.
+\subsubsection{Removing a Member}
+Removing a member from the group chat is similar to adding a member, as two clients are involved. The administrator initiates the process by attempting to remove a member, the member's client then handles the removal from the member list and the removal of the local group chat instance.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/activity_remove_member.png}
@@ -488,7 +488,7 @@ Removing a member from the group chat is similar to adding a member with regards
 \label{ad-remove-member}
 \end{figure}
 \subsection{Sending Messages}
-Each message one member sends to the group will be handled by the \textit{LinphoneGroupChatRoom} instance for that group chat. A message object will be created and sent to each of the group members using \textit{LinphoneChatRoom} instances to initiate the transaction.\\
+Each message sent to the group by a member will be handled by the \textit{LinphoneGroupChatRoom} instance for that group chat. A message object will be created and sent to each of the group members using \textit{LinphoneChatRoom} instances to initiate the transaction.\\
 If encryption is enabled for the group chat, the message will be encrypted using the public key of each group member before the message is sent. In the case that the current \textit{LinphoneGroupChatRoom} instance has no record of a specific member's public encryption key, the instance shall request the public key of that member before sending the message to them. Once the message has been sent to all members, the process is complete.
 \begin{figure}[H]
 \centering
@@ -498,11 +498,11 @@ If encryption is enabled for the group chat, the message will be encrypted using
 \end{figure}
 In the case that no encryption is used, the above diagram is simplified such that a \textit{LinphoneChatMessage} object is created and sent to each member without any of the finer details present in the broken-line container.\\
 
-During the implementation phase, the send message feature will be optimized to meet the timing and success rate requirements specified in the \textbf{Software Requirements Specification}. Sending text messages should easily meet these requirements. However, due to the nature of media files (including images and voice recordings), it is highly likely that such files will take longer to process and send --- network conditions can sometimes be unreliable and sending larger files can often fail.
+During the implementation phase, the \textit{Send Message} feature will be optimized to meet the timing and success rate requirements specified in the \textbf{Software Requirements Specification} (\textbf{SRS}). Sending text messages should easily meet these requirements. However, due to the nature of media files (including images and voice recordings), it is highly likely that such files will take longer to process and send --- network conditions can sometimes be unreliable and sending larger files can often fail.
 \subsubsection{Recording A Voice Note}
 A voice note/recording will be handled in a similar way to a text message, except that the \textit{LinphoneChatMessage} will be created using a different operation, where the sound recording will be the content of the message.\\
 Before a voice note can be recorded, the application must first check if the system can provide the service of making a voice recording. If not, the process should be terminated.\\
-Figure \ref{ad-voice-record} describes the above, while figure \ref{ad-send-message} describes the way in which such a message may be sent to a group. The process may also be applied to private \textit{LinphoneChatRoom} instances.
+Figure \ref{ad-voice-record} describes the above, while Figure \ref{ad-send-message} describes the way in which such a message may be sent to a group. The process may also be applied to private \textit{LinphoneChatRoom} instances.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/activity_voice_record.png}
@@ -510,11 +510,11 @@ Figure \ref{ad-voice-record} describes the above, while figure \ref{ad-send-mess
 \label{ad-voice-record}
 \end{figure}
 \subsection{Receiving Messages}
-Each message received by the application will first be intercepted by a \textit{LinphoneGroupChatListener}. If the message headers contain a specific header that identifies the message as a group chat message, that message will be delegated to the \textit{LinphoneGroupChatManager}. The \textit{LinphoneGroupChatManager} will then determine which group chat the message is intended for by looking at the group chat identity specified by the message header. It will then delegate the message to the correct \textit{LinphoneGroupChatRoom} instance, which will decrypt the message before it is displayed and stored.
+Each message received by the application will first be intercepted by a \textit{LinphoneGroupChatListener}. If the message headers contain a specific header that identifies the message as a group chat message, that message will be delegated to the \textit{LinphoneGroupChatManager}. The \textit{LinphoneGroupChatManager} will then determine which group chat the message is intended for by inspecting the message header for the group chat identity for which the message is intended. It will then delegate the message to the correct \textit{LinphoneGroupChatRoom} instance, which will decrypt the message before it is displayed and stored.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in]{./images/activity_receive_message.png}
-\caption[Receive Message Activity Diagram]{This figure shows the action flow for sending a group chat message.}
+\caption[Receive Message Activity Diagram]{This diagram shows the action flow for sending a group chat message.}
 \label{ad-receive-message}
 \end{figure}
 
