@@ -27,7 +27,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	}
 
 	@Override
-	public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+	public void sendMessage(String id, String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		for (GroupChatMember member : members) {
 			String encryptedMessage=sHandler.encrypt(message);
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
@@ -39,7 +39,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	}
 
 	@Override
-	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc) {
+	public void sendMessage(String id, InitialContactInfo info, GroupChatMember member, LinphoneCore lc) {
 		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 		String message=sHandler.encrypt(MessageParser.stringifyInitialContactInfo(info));
 		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
@@ -48,15 +48,15 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	}
 
 	@Override
-	public void sendMessage(MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+	public void sendMessage(String id, MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		String message=sHandler.encrypt(MessageParser.stringifyMemberUpdateInfo(info));
-		sendMessage(message, members, lc);
+		sendMessage(id, message, members, lc);
 	}
 
 	@Override
-	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
+	public void sendMessage(String id, GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		String message=sHandler.encrypt(MessageParser.stringifyGroupChatMember(info));
-		sendMessage(message, members, lc);
+		sendMessage(id, message, members, lc);
 	}
 
 	@Override

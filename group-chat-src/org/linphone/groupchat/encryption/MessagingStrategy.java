@@ -29,35 +29,39 @@ public interface MessagingStrategy {
 	
 	/**
 	 * Sends a plain text message to the group.
+	 * @param id The group's id, needed for header.
 	 * @param message The message to be sent.
 	 * @param members The members of the group.
 	 * @param lc The {@link LinphoneCore} instance.
 	 */
-    public void sendMessage(String message, LinkedList<GroupChatMember> members, LinphoneCore lc);
+    public void sendMessage(String id, String message, LinkedList<GroupChatMember> members, LinphoneCore lc);
     
     /**
      * Sends a message containing initial contact information. (An invite to the group.)
+     * @param id The group's id, needed for header.
      * @param info The initial contact information.
      * @param member The communicating member, i.e. the admin or the invitee.
      * @param lc The {@link LinphoneCore} instance.
      */
-	public void sendMessage(InitialContactInfo info, GroupChatMember member, LinphoneCore lc);
+	public void sendMessage(String id, InitialContactInfo info, GroupChatMember member, LinphoneCore lc);
 	
 	/**
 	 * Sends a message containing new additions or removals from the group, also confirmed members.
+	 * @param id The group's id, needed for header.
 	 * @param info The information object containing member changes.
 	 * @param members The group chat members.
 	 * @param lc The {@link LinphoneCore} instance.
 	 */
-	public void sendMessage(MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc);
+	public void sendMessage(String id, MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc);
 	
 	/**
 	 * Sends a message containing an admin change.
+	 * @param id The group's id, needed for header.
 	 * @param info The new admin information.
 	 * @param members The group chat members.
 	 * @param lc The {@link LinphoneCore} instance.
 	 */
-	public void sendMessage(GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc);
+	public void sendMessage(String id, GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc);
 	
     /**
      * Handler for the initial contact messages.
