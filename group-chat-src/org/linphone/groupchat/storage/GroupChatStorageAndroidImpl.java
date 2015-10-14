@@ -69,12 +69,16 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 
 			Iterator<GroupChatMember> it = data.members.iterator();
 			while (it.hasNext()){
-				try {
+				try 
+				{
 					addMember(data.group_id, it.next());
-				} catch (GroupDoesNotExistException e) 
+				} 
+				catch (GroupDoesNotExistException e) 
 				{
 					e.printStackTrace();
-				} catch (MemberExistsException e) {
+				} 
+				catch (MemberExistsException e) 
+				{
 					e.printStackTrace();
 				}
 			}			
@@ -96,12 +100,15 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		else
 		{
 
-			if (!MemberExists(member.name , id))
+			if (MemberExists(member.sip , id))
 			{
+				//Log.e("Exception", "Member Exists");
 				throw new MemberExistsException();
 			}
 			else
 			{
+
+				//Log.e("Else", "" + member.sip);
 				ContentValues values = new ContentValues();
 		
 				values.put(GroupChatHelper.Members.name, member.name);
@@ -114,6 +121,26 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 	}
 
+	private boolean MemberExists(String memberId, String GroupId) 
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		
+		/* Sip-address vs Member id??????????*/
+		
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Members.tableName +" WHERE "+ GroupChatHelper.Members.sipAddress +" ='"+ memberId + "' AND " + GroupChatHelper.Members.groupId +"='"+ GroupId + "'";
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		//Log.e("",GroupId+ "  " +cCheck.getCount()/*+ "  " + cCheck.getString(cCheck.getColumnIndex("group_id"))*/);
+		if (cCheck.getCount()>0)
+		{
+			//Log.e("Returns True","Returns True");
+			return true;
+		}
+		else
+		{
+			//Log.e("Returns False","Returns False");
+			return false;
+		}
+	}
 
 	/***********************************************************************************************************************/
 	/***********************************************************************************************************************/
@@ -385,24 +412,6 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		}
 	}
 	
-	private boolean MemberExists(String memberId, String GroupId) 
-	{
-		SQLiteDatabase db = helper.getReadableDatabase();
-		
-		/* Sip-address vs Member id??????????*/
-		
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Members.tableName +" WHERE "+ GroupChatHelper.Members.id +" ='"+ memberId + "' AND " + GroupChatHelper.Members.groupId +" ='"+ GroupId + "'" ;
-		Cursor cCheck = db.rawQuery(queryCheck, null);
-		if (!cCheck.moveToFirst())
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
 	@Override
 	public int getUnreadMessageCount(String id) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getReadableDatabase();
