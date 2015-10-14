@@ -24,6 +24,7 @@ import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
+import org.linphone.groupchat.exception.MemberExistsException;
 import org.linphone.groupchat.exception.PermissionRequiredException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
@@ -160,8 +161,10 @@ public class LinphoneGroupChatRoom {
 	 * @param member The member to be added.
 	 * @throws PermissionRequiredException If not the admin.
 	 * @throws GroupChatSizeException If the new member addition exceeds the maximum group size.
+	 * @throws MemberExistsException If the new member is an existing member in the group.
 	 */
-	public void addMember(GroupChatMember member) throws PermissionRequiredException, GroupChatSizeException {
+	public void addMember(GroupChatMember member) throws PermissionRequiredException, 
+		GroupChatSizeException, MemberExistsException {
 		
 		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
@@ -243,7 +246,7 @@ public class LinphoneGroupChatRoom {
 			info.removed.add(member);
 			messenger.sendMessage(info, getOtherMembers(), lc);
 		} catch (MemberDoesNotExistException e) {
-			// TODO handle
+			// member should not show up on group if deleted.
 		}
 	}
 	
@@ -303,11 +306,10 @@ public class LinphoneGroupChatRoom {
 		
 		try {
 			storage.saveTextMessage(group_id, m);
+			if (listener != null) listener.onMessageReceived(m);
 		} catch (GroupDoesNotExistException e) {
-			// TODO handle error
+			// should not occur, this group uses it's own valid id
 		}
-		
-		if (listener != null) listener.onMessageReceived(m);
 	}
 	
 	/**
@@ -323,13 +325,19 @@ public class LinphoneGroupChatRoom {
 	
 			it = info.added.iterator();
 			while (it.hasNext()){
-				storage.addMember(group_id, it.next());
+				try {storage.addMember(group_id, it.next());} catch (MemberExistsException e) {
+					// member exists would have been handled on admin side
+				}
 			}
 	
 			it = info.removed.iterator();
 			while (it.hasNext()){
 				GroupChatMember m = it.next();
-				storage.removeMember(group_id, m);
+				try {
+					storage.removeMember(group_id, m);
+				} catch (MemberDoesNotExistException e1) {
+					// ignore this case as it should not happen
+				}
 				
 				if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 					
@@ -342,13 +350,24 @@ public class LinphoneGroupChatRoom {
 			
 			it = info.confirmed.iterator();
 			while (it.hasNext()) {
-				storage.setMemberStatus(group_id, it.next());
+				GroupChatMember member = it.next();
+				try {
+					storage.setMemberStatus(group_id, member);
+				} catch (MemberDoesNotExistException e) {
+					
+					// add the member and update
+					try {
+						storage.addMember(group_id, member);
+						storage.setMemberStatus(group_id, member);
+					} catch (GroupDoesNotExistException | MemberExistsException | MemberDoesNotExistException ex){
+						// ignore
+					}
+				
+				}
 			}
 			
 			// get updated versions from database.
 			members = storage.getMembers(group_id); 
-		} catch (MemberDoesNotExistException e){
-			// TODO
 		} catch (GroupDoesNotExistException e){
 			
 		}
@@ -366,9 +385,9 @@ public class LinphoneGroupChatRoom {
 			storage.setAdmin(group_id, m);
 			admin = m.sip;
 		} catch (GroupDoesNotExistException e) {
-			//TODO: handle error
+			// reached this group, valid group_id in use.
 		} catch (MemberDoesNotExistException e) {
-			
+			// TODO
 		}
 	}
 	
@@ -395,7 +414,7 @@ public class LinphoneGroupChatRoom {
 			cr.sendChatMessage(_message);
 			cr.deleteMessage(_message);
 		} catch (GroupDoesNotExistException e){
-			// TODO
+			// group uses valid id
 		}
 	}
 	
@@ -410,23 +429,25 @@ public class LinphoneGroupChatRoom {
 		
 		GroupChatData group = MessageParser.parseGroupChatData(message.getText());
 		
-		if (!group.group_id.equals(group_id)) return; // not meant for this group
+		if (!group.group_id.equals(this.group_id)) return; // not meant for this group
 		
 		try {
 			// compare details
 			if (!group.admin.equals(admin)){
-				admin = group.admin;
-				storage.setAdmin(group_id, new GroupChatMember("", admin, false));
+				this.admin = group.admin;
+				try {
+					storage.setAdmin(group_id, new GroupChatMember("", this.admin, false));
+				} catch (MemberDoesNotExistException e) {
+					// valid admin is handled on admin side.
+				}
 			}
 			
 			if (!group.group_name.equals(group_name)){
-				group_name = group.group_name;
+				this.group_name = group.group_name;
 				storage.setGroupName(group_id, group_name);
 			}
 		} catch (GroupDoesNotExistException e){
-			
-		} catch (MemberDoesNotExistException e){
-			// TODO
+			// group uses valid id
 		}
 		
 		// copy members
@@ -457,21 +478,32 @@ public class LinphoneGroupChatRoom {
 			
 			GroupChatMember m = it1.next();
 			
-			if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
-				// TODO: remove this group.
-				return;
+			if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){ // member is this client
+				
+				try {// delete group chat
+					LinphoneGroupChatManager.getInstance().deleteGroupChat(group_name);
+					return;
+				} catch (IsAdminException e) {
+					// ignore, 
+				}
+			} else { // else not this client
+				
+				try{
+					storage.removeMember(group_id, m);
+				} catch (GroupDoesNotExistException | MemberDoesNotExistException e){
+					// valid id, ignore member if not in group
+				}
 			}
-			
-			try{storage.removeMember(group_id, m);} catch (GroupDoesNotExistException | MemberDoesNotExistException e){
-				// TODO
-			}
+		
 			it1.remove();
 		}
 		
 		// add members
 		it2 = group.members.iterator();
 		while (it2.hasNext()){
-			storage.addMember(group_id, it2.next());
+			try {storage.addMember(group_id, it2.next());} catch (MemberExistsException e){
+				//member exists, ignore
+			}
 		}
 		
 		members = storage.getMembers(group_id);
@@ -495,10 +527,13 @@ public class LinphoneGroupChatRoom {
 		
 		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin)) throw new PermissionRequiredException();
 		
-		this.group_name = name;
-		
-		// TODO broadcast name change -- not supported yet.
-		// TODO store change
+		try {
+			storage.setGroupName(group_id, name);
+			this.group_name = name;
+			// TODO broadcast name change -- not supported yet.
+		} catch (GroupDoesNotExistException e) {
+			// valid group id
+		}
 	}
 	
 	public String getName(){
@@ -566,6 +601,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	public void unsetGroupChatListner(){
 		
+		// TODO maybe check that the caller is the set listener, if not deny permission.
 		listener = null;
 	}
 	
@@ -583,9 +619,9 @@ public class LinphoneGroupChatRoom {
 			storage.setAdmin(group_id, member);
 			messenger.sendMessage(member, getOtherMembers(), lc);
 		} catch (GroupDoesNotExistException e){
-			// TODO decide how to handle
+			// valid id
 		} catch (MemberDoesNotExistException e) {
-
+			// member should not show if not valid
 		}
 	}
 	
@@ -606,7 +642,7 @@ public class LinphoneGroupChatRoom {
 			if (storage.getEncryptionType(group_id) != EncryptionType.None) return;
 			this.messenger = messenger;
 		} catch (GroupDoesNotExistException e) {
-			// TODO
+			// valid id
 		}
 	}
 	
@@ -614,7 +650,7 @@ public class LinphoneGroupChatRoom {
 		try {
 			return storage.getEncryptionType(group_id);
 		} catch (GroupDoesNotExistException e){
-			return null; //TODO dangerous
+			return EncryptionType.None; // default, should not reach here, as valid id
 		}
 	}
 
@@ -634,7 +670,7 @@ public class LinphoneGroupChatRoom {
 			storage.saveTextMessage(group_id, m);
 			messenger.sendMessage(message, getOtherMembers(), lc);
 		} catch (GroupDoesNotExistException e){
-			// TODO
+			// valid id
 		}
 	}
 	
@@ -691,7 +727,7 @@ public class LinphoneGroupChatRoom {
 		try {
 			storage.deleteMessages(group_id);
 		} catch (GroupDoesNotExistException e){
-			// TODO
+			// valid id
 		}
 	}
 
@@ -707,7 +743,7 @@ public class LinphoneGroupChatRoom {
 		try {
 			storage.markChatAsRead(group_id);
 		} catch (GroupDoesNotExistException e){
-			// TODO
+			// valid id
 		}
 	}
 
