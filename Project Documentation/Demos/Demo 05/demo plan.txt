@@ -1,0 +1,42 @@
+##
+Guys, my suggestion is to do the final demo a bit differently. I would like to direct a question at each of you, which you then answer. Think along the lines of a simple talk show. It will be unique, more chilled, and easy to be very prepared for. It will also be more professional, with one presenter, while still adhering to the COS way of everyone says something.
+
+I'll give an introduction about how we experienced the module (This will engage with Vreda and Fritz)
+I'll then direct a question at each of you. You are welcome to have a slide or few, but it will also be fine if you don't.
+after the questions, I'll demo our app.
+?? Perhaps we can make a video of it mock working and play that??
+?? I want to print all of our documentation and have it on hand for the demo. It's impressive
+##
+
+DEMO OUTLINE
+=============
++ We are Team Eclectic
+
++ Presented with unique challenges in our project
++ Challenged Individually, and as a group
++ Mini Project Helped group dynamics
++ Assistance on offer from COS (Vreda and Stacey)
++ Feeling and feedback from peers - Consistenct work is key
+
+Jess, please share the learning curve of practically using Waterfall
+
+Prenolan, please share your experience in the mixture of technologies and environments used for this project.
+
+Izak, please share your experience learning and working with Android activities and fragments
+
+Paul, please share your experience of working on a large existing project, as opposed to one from scratch.
+
+GEW Technologies Prize for Software Engineering Excellence!!
+
+This is Linphone Android group Chat - our product 
+Objectives
+- make group chat
+- create group
+- add members
+- remove members
+- encryption/decryption
+
+Play the demo video, or similar
+
+
+Questions?
