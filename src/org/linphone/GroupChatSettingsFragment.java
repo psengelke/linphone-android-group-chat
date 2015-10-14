@@ -17,6 +17,7 @@ import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatSizeException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
+import org.linphone.groupchat.exception.MemberExistsException;
 import org.linphone.groupchat.exception.PermissionRequiredException;
 
 import android.widget.TextView;
@@ -275,7 +276,12 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 				
 				//add member to chatroom
 				try {
-					chatroom.addMember(new GroupChatMember(newSip, sipUri, false));
+					try {
+						chatroom.addMember(new GroupChatMember(newSip, sipUri, false));
+					} catch (MemberExistsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					refreshAdapter();
 				} catch (PermissionRequiredException | GroupChatSizeException e) {
 					showAlert("You need to be an administrator to add members");
