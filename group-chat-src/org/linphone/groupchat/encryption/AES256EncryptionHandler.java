@@ -22,7 +22,7 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 			
 			Cipher cipher=Cipher.getInstance("AES");
 			cipher.init(Cipher.ENCRYPT_MODE, sk);
-			return Base64.encodeToString(cipher.doFinal(message.getBytes), Base64.DEFAULT);
+			return Base64.encodeToString(cipher.doFinal(message.getBytes()), Base64.DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
