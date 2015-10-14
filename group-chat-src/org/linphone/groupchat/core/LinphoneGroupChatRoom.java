@@ -252,7 +252,9 @@ public class LinphoneGroupChatRoom {
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
 			messenger.sendMessage(group_id, info, getOtherMembers(), lc);
+			
 		} catch (MemberDoesNotExistException e) {
+			
 			// member should not show up on group if deleted.
 			// TODO throw this error, hide group exists error
 		}
@@ -272,8 +274,6 @@ public class LinphoneGroupChatRoom {
 			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_1:
 		case MSG_HEADER_TYPE_INVITE_STAGE_2:
-			messenger.handleInitialContactMessage(message, group_id, storage, lc);
-			break;
 		case MSG_HEADER_TYPE_INVITE_STAGE_3:
 			messenger.handleInitialContactMessage(message, group_id, storage, lc);
 			break;
@@ -558,7 +558,12 @@ public class LinphoneGroupChatRoom {
 	public LinkedList<GroupChatMember> getMembers(){
 		
 		LinkedList<GroupChatMember> members = new LinkedList<>();
-		
+		try {
+			this.members = storage.getMembers(group_id);
+		} catch (GroupDoesNotExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Iterator<GroupChatMember> it = this.members.iterator();
 		while (it.hasNext()){
 			

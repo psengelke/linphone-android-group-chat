@@ -76,6 +76,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private LinphoneGroupChatRoom chatroom;
 	private LinkedList<GroupChatMember> members = new LinkedList<GroupChatMember>();
 	private boolean chooseAdminMode;
+	private String ownSip;
 	
 	
 	@Override
@@ -89,6 +90,9 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		mInflater = inflater;
 		
 		chooseAdminMode = false;
+		
+		
+		ownSip = LinphoneManager.getInstance().getLc().getDefaultProxyConfig().getIdentity();
 		
 		groupID = args.getString("groupID");
 		groupName = args.getString("groupName");
@@ -140,6 +144,8 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			   }
 			   public void onTextChanged(CharSequence s, int start, 
 			     int before, int count) {
+				   if (groupNameEdit.getText().toString().isEmpty())
+					   showAlert("Group Name cannot be empty");
 				   testDone();
 			   }
 			  });
@@ -200,7 +206,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+		String temp=groupName;
 		if (id == R.id.back)		// back button clicked. call popBackStack() to make previous fragment (GroupChatMessagingFragme) visible
 		{
 			getActivity().getSupportFragmentManager().popBackStack();
@@ -209,6 +215,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			// Change interface to accomodate for edit functionality
 			// Make delete members buttons visible
+			temp=groupName;
 			isEditMode = true;
 			edit.setVisibility(View.GONE);
 			next.setVisibility(View.VISIBLE);
@@ -236,10 +243,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			encryptionTypeLbl.setVisibility(View.VISIBLE);
 			
 			// Check if groupName Changed
-			if (groupNameEdit.getText().toString().equals(groupName) == false)
+			
+			if (groupNameEdit.getText().toString().equals(temp) == false)
 			{
 				//TODO Update group name via appropriate GroupChatStorage interface
-				
 				try {
 					groupName = groupNameEdit.getText().toString();
 					chatroom.setName(groupName);
@@ -322,18 +329,24 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			if (members.size() == 2)	// show alert invalid group size
 				showAlert("A group should have at least two members");
+			else if (((GroupChatMember) view.getTag()).sip.equals(ownSip))	// Trying to remove self
+			{
+				showAlert("You cannot remove yourself from this group. " +
+						"\nPlease delete the group from the group listing screen to leave it");
+			}
 			else
 			{
 				try {
 					chatroom.removeMember(members.get(position));
+					refreshAdapter();
+					testDone();
 				} catch (PermissionRequiredException | IsAdminException
 						| GroupDoesNotExistException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					showAlert(e.getMessage());
 				}
-				members.remove(view.getTag());
-				groupParticipants.setAdapter(new MembersAdapter());
-				testDone();
+				
 			}
 			
 			
@@ -375,8 +388,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	 */
 	private void testDone() 
 	{
-		groupName = groupNameEdit.getText().toString();
-		if (!members.isEmpty() && !groupName.isEmpty())
+		if (!members.isEmpty() && !groupNameEdit.getText().toString().isEmpty())
 			next.setEnabled(true);
 		else
 			next.setEnabled(false);
