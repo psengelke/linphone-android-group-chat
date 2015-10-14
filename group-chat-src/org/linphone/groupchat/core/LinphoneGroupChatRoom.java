@@ -116,6 +116,12 @@ public class LinphoneGroupChatRoom {
 			GroupChatMember member = (GroupChatMember) it.next();
 			messenger.sendMessage(info, member, lc);
 		}
+		
+		try {
+			this.members = storage.getMembers(group_id);
+		} catch (GroupDoesNotExistException e) {
+			// valid id
+		}
 	}
 	
 	/**
