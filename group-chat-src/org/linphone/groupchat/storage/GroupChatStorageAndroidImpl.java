@@ -96,7 +96,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		else
 		{
 
-			if (!MemberExists(member.sip , id))
+			if (!MemberExists(member.name , id))
 			{
 				throw new MemberExistsException();
 			}
@@ -391,7 +391,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		
 		/* Sip-address vs Member id??????????*/
 		
-		String queryCheck = "SELECT * FROM " + GroupChatHelper.Members.tableName +" WHERE "+ GroupChatHelper.Members.sipAddress +" ='"+ memberId + "' AND " + GroupChatHelper.Members.groupId +" ='"+ GroupId + "'" ;
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Members.tableName +" WHERE "+ GroupChatHelper.Members.id +" ='"+ memberId + "' AND " + GroupChatHelper.Members.groupId +" ='"+ GroupId + "'" ;
 		Cursor cCheck = db.rawQuery(queryCheck, null);
 		if (!cCheck.moveToFirst())
 		{
