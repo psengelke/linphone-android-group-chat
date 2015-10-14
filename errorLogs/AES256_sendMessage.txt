@@ -1,0 +1,28 @@
+10-14 21:12:27.656: E/Linphone(1436): header_address parser error for [izakblom]
+10-14 21:12:27.656: E/Linphone(1436): Cannot create LinphoneAddress, bad uri [izakblom]
+10-14 21:12:27.657: E/Linphone(1436): header_address parser error for [izakblom@sip.linphone.org]
+10-14 21:12:27.657: E/Linphone(1436): Cannot create LinphoneAddress, bad uri [izakblom@sip.linphone.org]
+10-14 21:12:33.440: E/Linphone(1436): header_address parser error for [ijblom]
+10-14 21:12:33.440: E/Linphone(1436): Cannot create LinphoneAddress, bad uri [ijblom]
+10-14 21:12:33.441: E/Linphone(1436): header_address parser error for [ijblom@sip.linphone.org]
+10-14 21:12:33.441: E/Linphone(1436): Cannot create LinphoneAddress, bad uri [ijblom@sip.linphone.org]
+10-14 21:12:35.993: E/AndroidRuntime(1436): FATAL EXCEPTION: main
+10-14 21:12:35.993: E/AndroidRuntime(1436): Process: org.linphone, PID: 1436
+10-14 21:12:35.993: E/AndroidRuntime(1436): java.lang.NoSuchMethodError: org.apache.commons.codec.binary.Base64.encodeBase64String
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.groupchat.encryption.AES256EncryptionHandler.encrypt(AES256EncryptionHandler.java:25)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.groupchat.encryption.EncryptedMessagingStrategy.sendMessage(EncryptedMessagingStrategy.java:44)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.groupchat.core.LinphoneGroupChatRoom.doInitialization(LinphoneGroupChatRoom.java:118)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.groupchat.core.LinphoneGroupChatRoom.<init>(LinphoneGroupChatRoom.java:99)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.groupchat.core.LinphoneGroupChatManager.createGroupChat(LinphoneGroupChatManager.java:69)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at org.linphone.GroupChatCreationFragment.onClick(GroupChatCreationFragment.java:257)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.view.View.performClick(View.java:4464)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.view.View$PerformClick.run(View.java:18801)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.os.Handler.handleCallback(Handler.java:808)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.os.Handler.dispatchMessage(Handler.java:103)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.os.Looper.loop(Looper.java:193)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at android.app.ActivityThread.main(ActivityThread.java:5292)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at java.lang.reflect.Method.invokeNative(Native Method)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at java.lang.reflect.Method.invoke(Method.java:515)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:824)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:640)
+10-14 21:12:35.993: E/AndroidRuntime(1436): 	at dalvik.system.NativeStart.main(Native Method)
