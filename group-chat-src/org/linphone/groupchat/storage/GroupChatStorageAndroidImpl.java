@@ -238,14 +238,12 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 //					Log.e("member 2 Id in c1", "" +c1.getInt(0));
 //			}
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
-			Log.e("c.size in getMessages Storage", "" + c.getCount());
 			
 
 			SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
 			Date d=null;
 			if(c.moveToFirst()){
 				do{	          
-					Log.e("add one here", "add one here");
 					GroupChatMessage temp = new GroupChatMessage();
 					temp.id = c.getInt(c.getColumnIndex(GroupChatHelper.Messages.id));
 					temp.message = c.getString(c.getColumnIndex(GroupChatHelper.Messages.messageText));

@@ -187,7 +187,6 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	public void refreshMsgList()
 	{
 		history = chatroom.getHistory();
-		Log.e("history.size: ", "" + history.size());
 		msgList.setAdapter(new GroupChatMessageAdapter());
 	}
 	
@@ -200,7 +199,6 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-			Log.e("here", "here");
 			GroupChatMessage message = history.get(position);
 			Context context = getActivity();
 			GroupBubbleChat bubble = new GroupBubbleChat(context, message);//, GroupChatMessagingFragment.this);

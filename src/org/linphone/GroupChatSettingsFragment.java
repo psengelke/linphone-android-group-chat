@@ -144,6 +144,8 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			   }
 			   public void onTextChanged(CharSequence s, int start, 
 			     int before, int count) {
+				   if (groupNameEdit.getText().toString().isEmpty())
+					   showAlert("Group Name cannot be empty");
 				   testDone();
 			   }
 			  });
@@ -242,13 +244,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			
 			// Check if groupName Changed
 			
-			Log.e("Group Name1111",temp);
-			//if (groupNameEdit.getText().toString().equals(temp) == false)
-			//{
+			if (groupNameEdit.getText().toString().equals(temp) == false)
+			{
 				//TODO Update group name via appropriate GroupChatStorage interface
-				Log.e("Group Name2222222222",groupName);
 				try {
-					Log.e("Group Name333333333",groupName);
 					groupName = groupNameEdit.getText().toString();
 					chatroom.setName(groupName);
 					groupNameView.setText(groupName);
@@ -256,7 +255,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 					showAlert("You need to be an administrator to change the group name");
 					e.printStackTrace();
 				}
-			//}
+			}
 
 			closeKeyboard(getActivity(), groupNameEdit.getWindowToken());
 		}
@@ -389,8 +388,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	 */
 	private void testDone() 
 	{
-		groupName = groupNameEdit.getText().toString();
-		if (!members.isEmpty() && !groupName.isEmpty())
+		if (!members.isEmpty() && !groupNameEdit.getText().toString().isEmpty())
 			next.setEnabled(true);
 		else
 			next.setEnabled(false);
