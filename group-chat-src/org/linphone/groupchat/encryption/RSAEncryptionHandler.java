@@ -5,7 +5,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -49,7 +49,7 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			Cipher cipher=Cipher.getInstance("RSA/None/NoPadding", "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey, rng);
 //			byte[] cipherText=cipher.doFinal(message.getBytes());
-			return Base64.encodeBase64String(cipher.doFinal(message.getBytes("UTF-8")));
+			return Base64.encodeToString(cipher.doFinal(message.getBytes), Base64.DEFAULT);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +81,7 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 		try {
 			cipher = Cipher.getInstance("RSA/None/NoPadding", "BC");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			return new String(cipher.doFinal(Base64.decodeBase64(messsage)));
+			return new String(cipher.doFinal(Base64.decode(message, Base64.DEFAULT)));
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
