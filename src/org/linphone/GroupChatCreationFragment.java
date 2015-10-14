@@ -71,6 +71,8 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	private String groupNameString = "";
 	private final String ENC_NONE = "None";
 	private final String ENC_AES = "AES";
+	private String usersip;
+	private String username;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
@@ -81,6 +83,15 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		setRetainInstance(true);
 		
 		mInflater = inflater;
+		
+		// Add user to members list:
+		LinphoneManager lm = LinphoneManager.getInstance();
+		LinphoneCore lc = lm.getLc();
+		// get user sip:
+		usersip = lc.getDefaultProxyConfig().getIdentity();
+		// get user name
+		username = usersip.substring(0, usersip.indexOf('@'));
+		members.add(new DataExchangeFormat.GroupChatMember(username, usersip, true));
 		
 		back = (TextView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
@@ -230,14 +241,6 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		{
 			//Check UI data and create group => Make MessagingFragment Visible
 			
-			LinphoneManager lm = LinphoneManager.getInstance();
-			LinphoneCore lc = lm.getLc();
-			// get user sip:
-			String usersip = lc.getDefaultProxyConfig().getIdentity();
-			// get user name
-			String username = usersip.substring(0, usersip.indexOf('@'));
-			members.add(new DataExchangeFormat.GroupChatMember(username, usersip, true));
-			
 			// Determine Encryption type:
 			EncryptionType et;
 			if (encryptionChoice.equals(ENC_AES))
@@ -332,14 +335,20 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 	{
 		String member = (String) view.getTag();
-		for (int k = 0; k < members.size(); ++k)
-			if (members.get(k).name.equals(member))
-				members.remove(k);
-		if (members.size() < 2)
-			showAlert("You need at least two members in a group");
-		testDone();
+		if (!member.equals(username))
+		{
+			for (int k = 0; k < members.size(); ++k)
+				if (members.get(k).name.equals(member))
+					members.remove(k);
+			if (members.size() < 2)
+				showAlert("You need at least two members in a group");
+			testDone();
+			
+			refreshParticipantsList();
+		}
+		else
+			showAlert("You cannot remove yourself from this group");
 		
-		refreshParticipantsList();
 		
 	}
 	

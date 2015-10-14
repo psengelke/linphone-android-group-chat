@@ -605,14 +605,24 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 	@Override
 	public void deleteChat(String groupIdToDelete) throws GroupDoesNotExistException{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		//Delete from messages table
-		String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-				+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
-		Cursor c = db.rawQuery(querySelect,null);
-			if(c.moveToFirst()){
-				String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-						+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "')" ;
-				db.execSQL(queryDelete);
+		if (groupExists(groupIdToDelete))
+		{
+			//Delete from messages table
+			String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " mes, " + GroupChatHelper.Members.tableName + " mem WHERE mem.group_id = '"+groupIdToDelete+ "'" ;
+			Cursor c = db.rawQuery(querySelect,null);
+			LinkedList<String> members = new LinkedList<>();
+			
+			while (c.moveToNext())
+				members.add(c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
+			
+			if(c.getCount() > 0){
+				
+				for (int k = 0; k < members.size(); ++k)
+				{
+					String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = '" + members.get(k) + "'";
+					db.execSQL(queryDelete);
+				}
+			}
 	
 				//Delete from Members table
 				String query = "DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
@@ -621,11 +631,12 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 				//Delete from Groups table
 				String queryDeleteGroup = "DELETE FROM " + GroupChatHelper.Groups.tableName + " WHERE Groups.group_id = '"+groupIdToDelete+ "'" ;
 				db.execSQL(queryDeleteGroup); 
-			}
-			else
-			{
-				throw new GroupDoesNotExistException("Group could not be found in the database!");
-			}
+			
+		}
+		else
+		{
+			throw new GroupDoesNotExistException("Group could not be found in the database!");
+		}
 
 		/*      
         //delete groupIdToDelete from Groups table
