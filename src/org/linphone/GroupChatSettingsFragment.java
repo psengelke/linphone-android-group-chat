@@ -76,6 +76,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	private LinphoneGroupChatRoom chatroom;
 	private LinkedList<GroupChatMember> members = new LinkedList<GroupChatMember>();
 	private boolean chooseAdminMode;
+	private String ownSip;
 	
 	
 	@Override
@@ -89,6 +90,9 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		mInflater = inflater;
 		
 		chooseAdminMode = false;
+		
+		
+		ownSip = LinphoneManager.getInstance().getLc().getDefaultProxyConfig().getIdentity();
 		
 		groupID = args.getString("groupID");
 		groupName = args.getString("groupName");
@@ -326,18 +330,24 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			if (members.size() == 2)	// show alert invalid group size
 				showAlert("A group should have at least two members");
+			else if (((GroupChatMember) view.getTag()).sip.equals(ownSip))	// Trying to remove self
+			{
+				showAlert("You cannot remove yourself from this group. " +
+						"\nPlease delete the group from the group listing screen to leave it");
+			}
 			else
 			{
 				try {
 					chatroom.removeMember(members.get(position));
+					refreshAdapter();
+					testDone();
 				} catch (PermissionRequiredException | IsAdminException
 						| GroupDoesNotExistException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					showAlert(e.getMessage());
 				}
-				members.remove(view.getTag());
-				groupParticipants.setAdapter(new MembersAdapter());
-				testDone();
+				
 			}
 			
 			

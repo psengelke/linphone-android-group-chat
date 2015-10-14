@@ -444,7 +444,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		}
 		else
 		{
-			String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET" + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
+			String query="UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.groupName + "='"+name+"' WHERE "
 					+ GroupChatHelper.Groups.groupId + "='"+groupId+"'";
 			db.execSQL(query);
 		}
@@ -571,6 +571,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		{
 			String query="DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE " + GroupChatHelper.Members.sipAddress
 					+ "='"+member.sip+"' AND " + GroupChatHelper.Members.groupId + "='"+id+"'";
+			Log.e("query in removeMember", query);
 			db.execSQL(query);
 		}
 	}

@@ -253,6 +253,8 @@ public class LinphoneGroupChatRoom {
 			messenger.sendMessage(info, getOtherMembers(), lc);
 		} catch (MemberDoesNotExistException e) {
 			// member should not show up on group if deleted.
+		} catch (GroupDoesNotExistException e) {
+			// TODO handle here
 		}
 	}
 	
