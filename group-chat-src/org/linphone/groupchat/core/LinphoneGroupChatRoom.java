@@ -29,6 +29,7 @@ import org.linphone.groupchat.exception.PermissionRequiredException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 /**
  * This class serves as the chat {@link LinphoneChatRoom} for group chats. It provides all the functionality 
@@ -246,7 +247,6 @@ public class LinphoneGroupChatRoom {
 		
 		try {
 			storage.removeMember(group_id, member);
-			
 			// now tell the group
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
@@ -561,7 +561,12 @@ public class LinphoneGroupChatRoom {
 	public LinkedList<GroupChatMember> getMembers(){
 		
 		LinkedList<GroupChatMember> members = new LinkedList<>();
-		
+		try {
+			this.members = storage.getMembers(group_id);
+		} catch (GroupDoesNotExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Iterator<GroupChatMember> it = this.members.iterator();
 		while (it.hasNext()){
 			
