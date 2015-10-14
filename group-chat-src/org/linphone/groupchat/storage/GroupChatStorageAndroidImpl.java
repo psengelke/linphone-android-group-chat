@@ -17,6 +17,7 @@ import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
+import org.linphone.groupchat.exception.MemberExistsException;
 
 import java.lang.Override;
 import java.lang.String;
@@ -73,6 +74,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 				} catch (GroupDoesNotExistException e) 
 				{
 					e.printStackTrace();
+				} catch (MemberExistsException e) {
+					e.printStackTrace();
 				}
 			}			
 		}
@@ -82,7 +85,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	/***********************************************************************************************************************/
 
 	@Override
-	public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException {
+	public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException,  MemberExistsException {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
@@ -92,14 +95,22 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 		else
 		{
-			ContentValues values = new ContentValues();
-	
-			values.put(GroupChatHelper.Members.name, member.name);
-			values.put(GroupChatHelper.Members.sipAddress, member.sip);
-			values.put(GroupChatHelper.Members.groupId, id);
-	
-			db.insert(GroupChatHelper.Members.tableName, null, values);
-			db.close();
+
+			if (!MemberExists(member.sip , id))
+			{
+				throw new MemberExistsException();
+			}
+			else
+			{
+				ContentValues values = new ContentValues();
+		
+				values.put(GroupChatHelper.Members.name, member.name);
+				values.put(GroupChatHelper.Members.sipAddress, member.sip);
+				values.put(GroupChatHelper.Members.groupId, id);
+		
+				db.insert(GroupChatHelper.Members.tableName, null, values);
+				db.close();
+			}
 		}
 	}
 
@@ -363,6 +374,24 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String queryCheck = "SELECT * FROM " + GroupChatHelper.Groups.tableName +" WHERE "+ GroupChatHelper.Groups.groupId +" ='"+ id + "'" ;
+		Cursor cCheck = db.rawQuery(queryCheck, null);
+		if (!cCheck.moveToFirst())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	private boolean MemberExists(String memberId, String GroupId) 
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		
+		/* Sip-address vs Member id??????????*/
+		
+		String queryCheck = "SELECT * FROM " + GroupChatHelper.Members.tableName +" WHERE "+ GroupChatHelper.Members.sipAddress +" ='"+ memberId + "' AND " + GroupChatHelper.Members.groupId +" ='"+ GroupId + "'" ;
 		Cursor cCheck = db.rawQuery(queryCheck, null);
 		if (!cCheck.moveToFirst())
 		{

@@ -8,6 +8,7 @@ import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.GroupChatExistsException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
+import org.linphone.groupchat.exception.MemberExistsException;
 
 import java.lang.String;
 import java.util.LinkedList;
@@ -99,7 +100,7 @@ public interface GroupChatStorage {
      * @param member The member to be added.
      * @throws GroupDoesNotExistException if the group does not exist.
      */
-    public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException;
+    public void addMember(String id, GroupChatMember member) throws GroupDoesNotExistException, MemberExistsException;
 
     /**
      * Acquires the number of unread messages for a group.
