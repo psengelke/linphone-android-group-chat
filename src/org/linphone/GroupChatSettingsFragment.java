@@ -200,7 +200,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+		String temp=groupName;
 		if (id == R.id.back)		// back button clicked. call popBackStack() to make previous fragment (GroupChatMessagingFragme) visible
 		{
 			getActivity().getSupportFragmentManager().popBackStack();
@@ -209,6 +209,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		{
 			// Change interface to accomodate for edit functionality
 			// Make delete members buttons visible
+			temp=groupName;
 			isEditMode = true;
 			edit.setVisibility(View.GONE);
 			next.setVisibility(View.VISIBLE);
@@ -236,11 +237,14 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			encryptionTypeLbl.setVisibility(View.VISIBLE);
 			
 			// Check if groupName Changed
-			if (groupNameEdit.getText().toString().equals(groupName) == false)
-			{
+			
+			Log.e("Group Name1111",temp);
+			//if (groupNameEdit.getText().toString().equals(temp) == false)
+			//{
 				//TODO Update group name via appropriate GroupChatStorage interface
-				
+				Log.e("Group Name2222222222",groupName);
 				try {
+					Log.e("Group Name333333333",groupName);
 					groupName = groupNameEdit.getText().toString();
 					chatroom.setName(groupName);
 					groupNameView.setText(groupName);
@@ -248,7 +252,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 					showAlert("You need to be an administrator to change the group name");
 					e.printStackTrace();
 				}
-			}
+			//}
 
 			closeKeyboard(getActivity(), groupNameEdit.getWindowToken());
 		}
