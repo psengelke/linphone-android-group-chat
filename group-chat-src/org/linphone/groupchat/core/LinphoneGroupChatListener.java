@@ -39,7 +39,7 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	private static LinphoneGroupChatListener instance;
 	
 	private LinphoneManager linphone_manager;
-	private LinphoneGroupChatManager chat_manager;
+	//private LinphoneGroupChatManager chat_manager;
 	
 	private LinphoneGroupChatListener(LinphoneManager m) {
 		
