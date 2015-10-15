@@ -82,7 +82,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private boolean useLinphoneStorage;
 	private boolean displayGroupChats;
 	
-	private LinphoneGroupChatManager lgm;
 	private LinkedList<LinphoneGroupChatRoom> groups;
 	
 	@Override
@@ -95,8 +94,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 		
-		lgm = LinphoneGroupChatManager.getInstance();
-		groups = lgm.getGroupChatList();
+		groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 		
@@ -358,7 +356,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	
 	public void refreshGroupList()
 	{
-		groups = lgm.getGroupChatList();
+		groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		hideAndDisplayMessageIfNoChat();
 	}
 	
@@ -454,7 +452,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	 */
 	protected void leaveGroup(int position) {
 		try {
-			lgm.deleteGroupChat(groups.get(position).getGroupId());
+			LinphoneGroupChatManager.getInstance().deleteGroupChat(groups.get(position).getGroupId());
 			hideAndDisplayMessageIfNoChat();
 		} catch (GroupDoesNotExistException e) {
 			e.printStackTrace();
@@ -654,7 +652,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		public GroupListAdapter()
 		{
-			groups = lgm.getGroupChatList();
+			groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		}
 		
 		@Override
@@ -690,13 +688,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			
-			TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
+			/*TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
 			int unreadMessages = group.getUnreadMessagesCount();
 			if (unreadMessages > 0)
 			{
 				unread.setText(unreadMessages);
 				unread.setVisibility(View.VISIBLE);
-			}
+			}*/
 			
 			String lastMessage = group.getHistory().getLast().message;
 			TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);

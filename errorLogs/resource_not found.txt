@@ -1,0 +1,6 @@
+10-15 20:13:31.866: E/AndroidRuntime(30893): FATAL EXCEPTION: main
+10-15 20:13:31.866: E/AndroidRuntime(30893): Process: org.linphone, PID: 30893
+10-15 20:13:31.866: E/AndroidRuntime(30893): android.content.res.Resources$NotFoundException: String resource ID #0xa
+10-15 20:13:31.866: E/AndroidRuntime(30893): 	at android.content.res.Resources.getText(Resources.java:1334)
+10-15 20:13:31.866: E/AndroidRuntime(30893): 	at android.widget.TextView.setText(TextView.java:4928)
+10-15 20:13:31.866: E/AndroidRuntime(30893): 	at org.linphone.ChatListFragment$GroupListAdapter.getView(ChatListFragment.java:697)
