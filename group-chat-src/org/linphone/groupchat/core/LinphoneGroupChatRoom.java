@@ -610,7 +610,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException{
 		
-		//if (this.listener != null) throw new GroupChatListenerIsSetException(); // TODO not sure if necessary, might use a lock instead.
+		//if (this.listener != null) throw new GroupChatListenerIsSetException();
 		
 		this.listener = listner;
 	}
