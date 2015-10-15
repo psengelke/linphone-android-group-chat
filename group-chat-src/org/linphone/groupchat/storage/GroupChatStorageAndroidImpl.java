@@ -226,7 +226,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
 			
 
-			SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
+			SimpleDateFormat format = new SimpleDateFormat ("d MMM HH:mm", Locale.ENGLISH);	
 			Date d=null;
 			if(c.moveToFirst()){
 				do{	          
@@ -238,10 +238,12 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 					temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress));/*cSip.getString(cSip.getColumnIndex(GroupChatHelper.Members.sipAddress))*/; 
 					temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
 					temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
+					// TODO Mock date
+					temp.time= new Date();
 					try {
 						d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
 						
-						temp.time = new Date();
+						
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -407,12 +409,10 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		else
 		{
 			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName +
-					" WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName
-					+ " WHERE Members.group_id = '"+id + "') and Messages.message_state=0";
+					" mes, " + GroupChatHelper.Members.tableName +" mem WHERE mem." + GroupChatHelper.Members.groupId
+					 + "='" + id + "' and mes.message_state=0";
 			Cursor c=db.rawQuery(query, null);
-			c.moveToFirst();
 			int count=0;
-			if (c!=null)
 				while (c.moveToNext())
 					count++;
 			return count;

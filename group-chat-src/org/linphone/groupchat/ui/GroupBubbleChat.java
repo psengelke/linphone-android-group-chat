@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.linphone.R;
@@ -151,9 +152,10 @@ public class GroupBubbleChat {
         	}
     	}
     	
+		SimpleDateFormat format = new SimpleDateFormat ("d MMMM HH:mm", Locale.ENGLISH);	
+    	
     	TextView timeView = (TextView) layout.findViewById(R.id.time);
-    	Log.e("in bubble", message.time);
-    	timeView.setText(message.time.toString());
+    	timeView.setText(format.format(message.time));
     	timeView.setVisibility(View.VISIBLE);
 
 //    	String externalBodyUrl = message.getExternalBodyUrl();

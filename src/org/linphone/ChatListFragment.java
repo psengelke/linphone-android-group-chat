@@ -655,7 +655,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		public GroupListAdapter()
 		{
 			groups = lgm.getGroupChatList();
-			Log.e("groups.size in ChatListFragment", "" + groups.size());
 		}
 		
 		@Override
@@ -690,6 +689,19 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			groupName.setText(group.getName());
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
+			
+			TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
+			int unreadMessages = group.getUnreadMessagesCount();
+			if (unreadMessages > 0)
+			{
+				unread.setText(unreadMessages);
+				unread.setVisibility(View.VISIBLE);
+			}
+			
+			String lastMessage = group.getHistory().getLast().message;
+			TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
+			lastMsg.setText(lastMessage);
+			lastMsg.setVisibility(View.VISIBLE);
 			
 			if (isEditMode)
 				delete.setVisibility(View.VISIBLE);
