@@ -12,6 +12,7 @@ import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.core.GroupChatRoomListener;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
+import org.linphone.groupchat.exception.GroupChatListenerIsSetException;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.ui.GroupBubbleChat;
 import org.linphone.ui.BubbleChat;
@@ -72,9 +73,13 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		LinphoneGroupChatManager lgm = LinphoneGroupChatManager.getInstance();
 		try {
 			chatroom = lgm.getGroupChat(groupID);
+			chatroom.setGroupChatRoomListener(this);
 			groupName = chatroom.getName();
 		} catch (GroupDoesNotExistException e1) {
 			e1.printStackTrace();
+		} catch (GroupChatListenerIsSetException e) {
+			// TODO alert here
+			e.printStackTrace();
 		}
 		
 		// Use groupID to retrieve messages
@@ -121,7 +126,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	public void onPause()
 	{
 		super.onPause();
-		
+		Log.e("msgFragmet on pause", "msgFragmet on pause");
+		chatroom.unsetGroupChatListener();
 	}
 	
 	public void onResume()
