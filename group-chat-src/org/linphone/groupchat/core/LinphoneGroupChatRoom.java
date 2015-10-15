@@ -604,13 +604,14 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
-	 * Sets a listner for the {@link LinphoneGroupChatRoom}.
-	 * @param listner The listner to receive push messages from the {@link LinphoneGroupChatRoom}.
+	 * Sets a listener for the {@link LinphoneGroupChatRoom}.
+	 * @param listner The listener to receive push messages from the {@link LinphoneGroupChatRoom}.
 	 * @throws GroupChatListenerIsSetException If a listener is currently set.
 	 */
 	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException{
 		
-		if (this.listener != null) throw new GroupChatListenerIsSetException(); // TODO not sure if necessary, might use a lock instead.
+		//if (this.listener != null) throw new GroupChatListenerIsSetException(); // TODO not sure if necessary, might use a lock instead.
+		
 		this.listener = listner;
 	}
 	
