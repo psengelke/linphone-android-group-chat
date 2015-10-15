@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.groupchat.communication.MessageParser;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatData;
@@ -216,13 +215,9 @@ public class LinphoneGroupChatManager {
 	/**
 	 * Sends the message to the correct group chat instance.
 	 * @param lc The {@link LinphoneCore} instance.
-	 * @param cr The {@link LinphoneChatRoom} instance.
 	 * @param message The message received for a group chat.
-	 * @throws InvalidKeySeedException 
 	 */
-	public void handleMessage(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-		
-		cr.deleteMessage(message);
+	public void handleMessage(LinphoneCore lc, LinphoneChatMessage message) {
 		
 		String message_type = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
 		if (message_type != null && message_type.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1)){ // new group
@@ -249,7 +244,8 @@ public class LinphoneGroupChatManager {
 			
 		} else { // existing group
 		
-			Log.e("LinphoneGroupChatManager", "handle normal message in LGM");
+			Log.e("LinphoneGroupChatManager.handleMessage()", message_type);  // debugging purposes
+			
 			String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
 			Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 			while (it.hasNext()) {

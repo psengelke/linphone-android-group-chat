@@ -31,8 +31,11 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 		for (GroupChatMember member : members) {
 			String encryptedMessage=sHandler.encrypt(message);
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
-			//			chatRoom.compose();
+			
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(encryptedMessage);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_MESSAGE);
+			
 			chatRoom.sendChatMessage(newMessage);
 			chatRoom.deleteMessage(newMessage);
 		}
@@ -41,8 +44,12 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	@Override
 	public void sendMessage(String id, InitialContactInfo info, GroupChatMember member, LinphoneCore lc) {
 		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
+		
 		String message=sHandler.encrypt(MessageParser.stringifyInitialContactInfo(info));
 		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
+		newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
+		newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1);
+		
 		chatRoom.sendChatMessage(newMessage);
 		chatRoom.deleteMessage(newMessage);
 	}
@@ -50,13 +57,33 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	@Override
 	public void sendMessage(String id, MemberUpdateInfo info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		String message=sHandler.encrypt(MessageParser.stringifyMemberUpdateInfo(info));
-		sendMessage(id, message, members, lc);
+		
+		for (GroupChatMember member : members) {
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
+
+			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_MEMBER_UPDATE);
+
+			chatRoom.sendChatMessage(newMessage);
+			chatRoom.deleteMessage(newMessage);
+		}
 	}
 
 	@Override
 	public void sendMessage(String id, GroupChatMember info, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		String message=sHandler.encrypt(MessageParser.stringifyGroupChatMember(info));
-		sendMessage(id, message, members, lc);
+
+		for (GroupChatMember member : members) {
+			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
+			
+			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
+			newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_ADMIN_CHANGE);
+			
+			chatRoom.sendChatMessage(newMessage);
+			chatRoom.deleteMessage(newMessage);
+		}
 	}
 
 	@Override
@@ -94,31 +121,6 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	}
 
-	/*	@Override
-	public GroupChatMember handleInitialContactMessage(String message, String id, GroupChatStorage storage,
-			boolean encrypted) {
-		String decryptedMessage=handler.decrypt(message);
-		InitialContactInfo ic=MessageParser.parseInitialContactInfo(decryptedMessage);
-		if (ic.public_key==0 && ic.secret_key==0)
-		{
-			ic.public_key=handler.getPublicKey();
-			String newMessage=MessageParser.stringifyInitialContactInfo(ic);
-			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(ic.group.admin);
-			LinphoneChatMessage lcMessage=chatRoom.createLinphoneChatMessage(newMessage);
-			chatRoom.sendChatMessage(lcMessage);
-			chatRoom.deleteMessage(lcMessage);
-		}
-		else
-		{
-			if (ic.public_key!=0 && ic.secret_key==0)
-			{
-				ic.secret_key=handler.getSecretKey();
-				storage.updateSecretKey(id, ic.secret_key);
-			}
-		}
-		return null;
-	}*/
-
 	@Override
 	public void handleInitialContactMessage(LinphoneChatMessage message,
 			String id, GroupChatStorage storage, LinphoneCore lc) {
@@ -133,12 +135,14 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1: 
 //				handler.generateAsymmetricKeys();
 				newMessage=chatRoom.createLinphoneChatMessage(aHandler.getPublicKey());
+				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2);
 				chatRoom.sendChatMessage(newMessage);
 				chatRoom.deleteMessage(newMessage);
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2:
 				String encryptedKey=aHandler.encrypt(message.getText(), aHandler.getPublicKey());
 				newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
+				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3);
 				chatRoom.sendChatMessage(newMessage);
 				chatRoom.deleteMessage(newMessage);
 				break;
