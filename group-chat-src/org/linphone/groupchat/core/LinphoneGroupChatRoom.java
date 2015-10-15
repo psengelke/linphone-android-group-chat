@@ -294,7 +294,7 @@ public class LinphoneGroupChatRoom {
 			handleGroupInfoRequest(message);
 			break;
 		case MSG_HEADER_TYPE_RECEIVE_GROUP_INFO:
-				handleGroupInfoReceived(message);
+			handleGroupInfoReceived(message);
 			break;
 		default:
 			break;
@@ -424,6 +424,7 @@ public class LinphoneGroupChatRoom {
 			LinphoneChatRoom cr = lc.getOrCreateChatRoom(message.getFrom().asStringUriOnly());
 			String m = MessageParser.stringifyGroupChatData(group);
 			LinphoneChatMessage _message = cr.createLinphoneChatMessage(m);
+			_message.addCustomHeader(MSG_HEADER_GROUP_ID, group_id);
 			_message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_RECEIVE_GROUP_INFO);
 			cr.sendChatMessage(_message);
 			cr.deleteMessage(_message);
