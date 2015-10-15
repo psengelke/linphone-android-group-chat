@@ -692,13 +692,16 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
 			int unreadMessages = group.getUnreadMessagesCount();
-			if (unreadMessages > 0)
-			{
-				unread.setText(unreadMessages);
-				unread.setVisibility(View.VISIBLE);
-			}
+//			if (unreadMessages > 0 && unread != null)
+//			{
+//				unread.setText(unreadMessages);
+//				unread.setVisibility(View.VISIBLE);
+//			}
 			
-			String lastMessage = group.getHistory().getLast().message;
+			String lastMessage = "";
+			if (group.getHistory() != null)
+				if (!group.getHistory().isEmpty())
+					lastMessage = group.getHistory().getLast().message;
 			TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
 			lastMsg.setText(lastMessage);
 			lastMsg.setVisibility(View.VISIBLE);
