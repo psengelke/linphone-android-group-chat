@@ -29,6 +29,7 @@ import org.linphone.groupchat.exception.PermissionRequiredException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 /**
  * This class serves as the chat {@link LinphoneChatRoom} for group chats. It provides all the functionality 
@@ -239,10 +240,12 @@ public class LinphoneGroupChatRoom {
 		
 		if (!me.equals(admin)) throw new PermissionRequiredException();
 		if (member.sip.equals(admin)) throw new IsAdminException("You must assign a new admin first.");
+		
+		// TODO throw error, telling user to remove in another way.
 		if (me.equals(member.sip)){
-			LinphoneGroupChatManager.getInstance().deleteGroupChat(group_id);
+			
 			return;
-		} // TODO might not be necessary.
+		}
 		
 		try {
 			storage.removeMember(group_id, member);
@@ -341,19 +344,15 @@ public class LinphoneGroupChatRoom {
 			it = info.removed.iterator();
 			while (it.hasNext()){
 				GroupChatMember m = it.next();
-				try {
-					storage.removeMember(group_id, m);
-				} catch (MemberDoesNotExistException e1) {
-					// ignore this case as it should not happen
-				}
 				
 				if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 					
-					members = new LinkedList<>();
-					try {
-						LinphoneGroupChatManager.getInstance().deleteGroupChat(group_id);
-					} catch (GroupDoesNotExistException | IsAdminException e) {}
+					storage.deleteChat(group_id);
+					LinphoneGroupChatManager.getInstance().refreshGroupChats();
+					return;
 				}
+				
+				
 			}
 			
 			it = info.confirmed.iterator();
@@ -367,7 +366,7 @@ public class LinphoneGroupChatRoom {
 					try {
 						storage.addMember(group_id, member);
 						storage.setMemberStatus(group_id, member);
-					} catch (GroupDoesNotExistException | MemberExistsException | MemberDoesNotExistException ex){
+					} catch (MemberExistsException | MemberDoesNotExistException ex){
 						// ignore
 					}
 				
@@ -377,7 +376,7 @@ public class LinphoneGroupChatRoom {
 			// get updated versions from database.
 			members = storage.getMembers(group_id); 
 		} catch (GroupDoesNotExistException e){
-			
+			Log.e("LinphoneGroupChatRoom.HandleMemberUpdate()", e.getMessage());
 		}
 	}
 	
@@ -453,69 +452,64 @@ public class LinphoneGroupChatRoom {
 				this.group_name = group.group_name;
 				storage.setGroupName(group_id, group_name);
 			}
-		} catch (GroupDoesNotExistException e){
-			// group uses valid id
-		}
-		
-		// copy members
-		LinkedList<GroupChatMember> tmp = getMembers();
-		Iterator<GroupChatMember> it1;
-		
-		// remove like members from lists, remaining are either new or removed.
-		it1 = tmp.iterator();
-		Iterator<GroupChatMember> it2;
-		while (it1.hasNext()){
-			it2 = group.members.iterator();
-			GroupChatMember m1 = it1.next();
-			while (it2.hasNext()){
-				GroupChatMember m2 = it2.next();
-				if (m1.sip.equals(m2.sip)){
-					it1.remove();
-					it2.remove();
-					break;
+			
+			// copy members
+			LinkedList<GroupChatMember> tmp = getMembers();
+			Iterator<GroupChatMember> it1;
+			
+			// remove like members from lists, remaining are either new or removed.
+			it1 = tmp.iterator();
+			Iterator<GroupChatMember> it2;
+			while (it1.hasNext()){
+				it2 = group.members.iterator();
+				GroupChatMember m1 = it1.next();
+				while (it2.hasNext()){
+					GroupChatMember m2 = it2.next();
+					if (m1.sip.equals(m2.sip)){
+						it1.remove();
+						it2.remove();
+						break;
+					}
 				}
 			}
-		}
-		
-		if (tmp.size() == 0 && group.members.size() == 0) return; // members are the same.
-		
-		// remove members that were not matched with the new group
-		it1 = tmp.iterator();
-		while (it1.hasNext()){
 			
-			GroupChatMember m = it1.next();
+			if (tmp.size() == 0 && group.members.size() == 0) return; // members are the same.
 			
-			if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){ // member is this client
+			// remove members that were not matched with the new group
+			it1 = tmp.iterator();
+			while (it1.hasNext()){
 				
-				try {// delete group chat
-					LinphoneGroupChatManager.getInstance().deleteGroupChat(group_name);
+				GroupChatMember m = it1.next();
+				
+				if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){ // member is this client
+					
+					storage.deleteChat(group_id);
+					LinphoneGroupChatManager.getInstance().refreshGroupChats();;
 					return;
-				} catch (IsAdminException | GroupDoesNotExistException e) {
-					// ignore, 
+				} else { // else not this client
+					
+					try{
+						storage.removeMember(group_id, m);
+					} catch (MemberDoesNotExistException e){
+						// valid id, ignore member if not in group
+					}
 				}
-			} else { // else not this client
-				
-				try{
-					storage.removeMember(group_id, m);
-				} catch (GroupDoesNotExistException | MemberDoesNotExistException e){
-					// valid id, ignore member if not in group
+			
+				it1.remove();
+			}
+			
+			// add members
+			it2 = group.members.iterator();
+			while (it2.hasNext()){
+				try {storage.addMember(group_id, it2.next());} catch (MemberExistsException e){
+					//member exists, ignore
 				}
 			}
 		
-			it1.remove();
-		}
-		
-		// add members
-		it2 = group.members.iterator();
-		while (it2.hasNext()){
-			try {storage.addMember(group_id, it2.next());} catch (MemberExistsException | GroupDoesNotExistException e){
-				//member exists, ignore
-			}
-		}
-		
-		try {
 			members = storage.getMembers(group_id);
-		} catch (GroupDoesNotExistException e) {}
+		} catch (GroupDoesNotExistException e){
+			Log.e("LinphoneGroupChatRoom.handleGroupInfoReceived()", e.getMessage());
+		}
 	}
 
 	/* Getters & Setters */
@@ -604,13 +598,14 @@ public class LinphoneGroupChatRoom {
 	}
 	
 	/**
-	 * Sets a listner for the {@link LinphoneGroupChatRoom}.
-	 * @param listner The listner to receive push messages from the {@link LinphoneGroupChatRoom}.
+	 * Sets a listener for the {@link LinphoneGroupChatRoom}.
+	 * @param listner The listener to receive push messages from the {@link LinphoneGroupChatRoom}.
 	 * @throws GroupChatListenerIsSetException If a listener is currently set.
 	 */
-	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException{
+	public synchronized void setGroupChatRoomListener(GroupChatRoomListener listner) throws GroupChatListenerIsSetException {
 		
-		if (this.listener != null) throw new GroupChatListenerIsSetException(); // TODO not sure if necessary, might use a lock instead.
+		//if (this.listener != null) throw new GroupChatListenerIsSetException();
+		
 		this.listener = listner;
 	}
 	
