@@ -690,15 +690,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			
-			/*TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
-			int unreadMessages = group.getUnreadMessagesCount();
-
-			if (unreadMessages > 0)
-			{
-				unread.setText(unreadMessages);
-				unread.setVisibility(View.VISIBLE);
-			}*/
-			
 			try {
 				String lastMessage = group.getHistory().getLast().message;
 				TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
@@ -706,10 +697,21 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				lastMsg.setVisibility(View.VISIBLE);
 			} catch (NoSuchElementException e){}
 			
+			TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
+			int unreadMessages = group.getUnreadMessagesCount();
+
+			if (unreadMessages > 0)
+			{
+				unread.setVisibility(View.VISIBLE);
+				unread.setText(String.valueOf(unreadMessages));
+				
+			}
+			
+			
 			if (isEditMode)
 				delete.setVisibility(View.VISIBLE);
 			else
-				delete.setVisibility(View.GONE);
+				delete.setVisibility(View.INVISIBLE);
 			
 			return view;
 		}

@@ -522,7 +522,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		else
 		{
 			String query="UPDATE " + GroupChatHelper.Members.tableName  + " SET " + GroupChatHelper.Members.pending + "='"+member.pending
-					+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND WHERE " + GroupChatHelper.Members.groupId + "='"+id+"'";
+					+"' WHERE " + GroupChatHelper.Members.sipAddress + "='"+member.sip+"' AND " + GroupChatHelper.Members.groupId + "='"+id+"'";
 			db.execSQL(query);
 		}
 	}
