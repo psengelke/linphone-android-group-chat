@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
@@ -34,6 +35,7 @@ import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.mediastream.Log;
+
 
 
 
@@ -82,7 +84,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private boolean useLinphoneStorage;
 	private boolean displayGroupChats;
 	
-	private LinphoneGroupChatManager lgm;
 	private LinkedList<LinphoneGroupChatRoom> groups;
 	
 	@Override
@@ -95,8 +96,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 		
-		lgm = LinphoneGroupChatManager.getInstance();
-		groups = lgm.getGroupChatList();
+		groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
 		
@@ -358,7 +358,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	
 	public void refreshGroupList()
 	{
-		groups = lgm.getGroupChatList();
+		groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		hideAndDisplayMessageIfNoChat();
 	}
 	
@@ -454,7 +454,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	 */
 	protected void leaveGroup(int position) {
 		try {
-			lgm.deleteGroupChat(groups.get(position).getGroupId());
+			LinphoneGroupChatManager.getInstance().deleteGroupChat(groups.get(position).getGroupId());
 			hideAndDisplayMessageIfNoChat();
 		} catch (GroupDoesNotExistException e) {
 			e.printStackTrace();
@@ -654,7 +654,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		public GroupListAdapter()
 		{
-			groups = lgm.getGroupChatList();
+			groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		}
 		
 		@Override
@@ -690,21 +690,21 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			
-			TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
+			/*TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
 			int unreadMessages = group.getUnreadMessagesCount();
-//			if (unreadMessages > 0 && unread != null)
-//			{
-//				unread.setText(unreadMessages);
-//				unread.setVisibility(View.VISIBLE);
-//			}
+
+			if (unreadMessages > 0)
+			{
+				unread.setText(unreadMessages);
+				unread.setVisibility(View.VISIBLE);
+			}*/
 			
-			String lastMessage = "";
-			if (group.getHistory() != null)
-				if (!group.getHistory().isEmpty())
-					lastMessage = group.getHistory().getLast().message;
-			TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
-			lastMsg.setText(lastMessage);
-			lastMsg.setVisibility(View.VISIBLE);
+			try {
+				String lastMessage = group.getHistory().getLast().message;
+				TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
+				lastMsg.setText(lastMessage);
+				lastMsg.setVisibility(View.VISIBLE);
+			} catch (NoSuchElementException e){}
 			
 			if (isEditMode)
 				delete.setVisibility(View.VISIBLE);
