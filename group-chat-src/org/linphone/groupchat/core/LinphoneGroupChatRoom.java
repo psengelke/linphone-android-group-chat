@@ -307,6 +307,10 @@ public class LinphoneGroupChatRoom {
 	private void handlePlainTextMessage(LinphoneChatMessage message){
 		
 		GroupChatMessage m = messenger.handlePlainTextMessage(message);
+		m.direction = MessageDirection.Incoming;
+		m.state = MessageState.Unread;
+		m.sender = message.getFrom().asStringUriOnly();
+		m.time = new Date();
 		
 		try {
 			storage.saveTextMessage(group_id, m);
