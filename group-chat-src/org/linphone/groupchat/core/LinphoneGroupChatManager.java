@@ -177,7 +177,6 @@ public class LinphoneGroupChatManager {
 			if (chat.getGroupId().equals(id)){
 
 				chat.removeSelf();
-				storage.deleteChat(id);
 				it.remove();
 				return;
 			}
@@ -239,7 +238,9 @@ public class LinphoneGroupChatManager {
 				
 				group.receiveMessage(message);
 			} catch (GroupChatExistsException e) {
-				
+				Log.e("LinphoneGroupChatManager.handleMessage() for new group", e.getMessage());
+			} catch (Exception e){
+				Log.e("LinphoneGroupChatManager.handleMessage() for new group", e.getMessage());
 			}
 			
 		} else { // existing group
