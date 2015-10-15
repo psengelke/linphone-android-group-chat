@@ -14,7 +14,7 @@ import org.linphone.groupchat.storage.GroupChatStorage;
 
 /**
  *	This class serves as an interface for use by an {@link LinphoneGroupChatRoom} instance. The 
- *	strategy will provide messsaging functionality for the group chat dependent on the type of encryption chosen 
+ *	strategy will provide messaging functionality for the group chat dependent on the type of encryption chosen 
  *	by the group admin.
  *
  * @author David Breetzke
