@@ -47,7 +47,7 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 		
 		// wait for 500ms before trying to initialize everything, 
 		// gives the LinphoneService time to configure.
-		new Thread(new Runnable() {
+		/*new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -56,10 +56,10 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 					Thread.sleep(500);
 					chat_manager = LinphoneGroupChatManager.getInstance();
 				} catch (InterruptedException e) {
-					// TODO 
+					Log.e("Thread interrupted", e.getMessage());
 				}
 			}
-		});
+		});*/
 	}
 	
 	/**
@@ -204,12 +204,15 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		
-		
-		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID) != null){
-			chat_manager.handleMessage(lc, cr, message);
-			
-		} else {
-			linphone_manager.messageReceived(lc, cr, message);
+
+		try {
+			if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID) != null){
+				LinphoneGroupChatManager.getInstance().handleMessage(lc, cr, message);
+			} else {
+				linphone_manager.messageReceived(lc, cr, message);
+			}
+		} catch (Exception e){// debugging 
+			Log.e("messageReceived caught", e.getMessage());
 		}
 	}
 

@@ -204,27 +204,28 @@ public class LinphoneGroupChatManager {
 		
 		cr.deleteMessage(message);
 		
-		String message_type = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE_MESSAGE);
+		String message_type = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE);
 		if (message_type != null && message_type.equals(LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1)){ // new group
 			
 			InitialContactInfo info = MessageParser.parseInitialContactInfo(message.getText());
 			
 			try {
 				storage.createGroupChat(info.group);
+				
+				LinphoneGroupChatRoom group;
+				group = new LinphoneGroupChatRoom(
+						info.group, 
+						EncryptionFactory.createEncryptionStrategy(info.group.encryption_type), 
+						storage,
+						lc
+				);
+				
+				chats.add(group);
+				
+				group.receiveMessage(message);
 			} catch (GroupChatExistsException e) {
-				return; // something went wrong in the network, ignore message.
+				
 			}
-			
-			LinphoneGroupChatRoom group;
-			group = new LinphoneGroupChatRoom(
-					info.group, 
-					EncryptionFactory.createEncryptionStrategy(info.group.encryption_type), 
-					storage,
-					lc
-			);
-			
-			chats.add(group);
-			group.receiveMessage(message);
 			
 		} else { // existing group
 		
