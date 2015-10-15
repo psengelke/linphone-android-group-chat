@@ -121,7 +121,7 @@ public class LinphoneGroupChatManager {
 	private void generateGroupChats(){
 		
 		LinkedList<GroupChatData> groups = storage.getChatList();
-		Log.e("groups.size in LM", "" + groups.size());
+
 		Iterator<GroupChatData> it = groups.iterator();
 		while (it.hasNext()) {
 			GroupChatData group = it.next();
@@ -185,6 +185,15 @@ public class LinphoneGroupChatManager {
 		}
 		
 		throw new GroupDoesNotExistException("Group does not exist!");
+	}
+	
+	/**
+	 * Refreshes the group list.
+	 */
+	public void refreshGroupChats(){
+		
+		chats = new LinkedList<>();
+		generateGroupChats();
 	}
 	
 	/**
