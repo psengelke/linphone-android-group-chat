@@ -692,6 +692,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			
 			/*TextView unread = (TextView) view.findViewById(R.id.unreadMessages);
 			int unreadMessages = group.getUnreadMessagesCount();
+
 			if (unreadMessages > 0)
 			{
 				unread.setText(unreadMessages);
