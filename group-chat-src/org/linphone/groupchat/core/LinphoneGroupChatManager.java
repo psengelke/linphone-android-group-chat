@@ -63,6 +63,17 @@ public class LinphoneGroupChatManager {
 		group.group_name = name;
 		group.group_id = generateGroupId(admin, name);
 		group.members = members;
+		
+		Iterator<GroupChatMember> it = group.members.iterator();
+		while (it.hasNext()){
+			
+			GroupChatMember m = it.next();
+			if (m.sip.equals(admin)){
+				m.pending = false;
+				break;
+			}
+		}
+		
 		group.encryption_type = type;
 		
 		LinphoneGroupChatRoom chat;

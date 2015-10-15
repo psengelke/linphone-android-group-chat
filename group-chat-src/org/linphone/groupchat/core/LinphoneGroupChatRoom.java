@@ -111,7 +111,7 @@ public class LinphoneGroupChatRoom {
 		InitialContactInfo info = new InitialContactInfo();
 		info.group = group;
 		
-		Iterator<GroupChatMember> it = getOtherMembers().iterator();
+		Iterator<GroupChatMember> it = getOtherMembers(true).iterator();
 		while (it.hasNext()) {
 			GroupChatMember member = (GroupChatMember) it.next();
 			messenger.sendMessage(group_id, info, member, lc);
@@ -133,7 +133,7 @@ public class LinphoneGroupChatRoom {
 		
 		// TODO delegate to messenger
 		
-		Iterator<GroupChatMember> it = getOtherMembers().iterator();
+		Iterator<GroupChatMember> it = getOtherMembers(false).iterator();
 		while (it.hasNext()){
 			GroupChatMember m = it.next();
 			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
@@ -158,7 +158,7 @@ public class LinphoneGroupChatRoom {
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
-		messenger.sendMessage(group_id, info, getOtherMembers(), lc);
+		messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 	}
 	
 	/**
@@ -210,7 +210,7 @@ public class LinphoneGroupChatRoom {
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
-			messenger.sendMessage(group_id, info, getOtherMembers(), lc);
+			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 		} catch (MemberDoesNotExistException e) {
 			
 			// member was removed before adding, send remove to user.
@@ -251,7 +251,7 @@ public class LinphoneGroupChatRoom {
 			// now tell the group
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
-			messenger.sendMessage(group_id, info, getOtherMembers(), lc);
+			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 			
 		} catch (MemberDoesNotExistException e) {
 			
@@ -581,9 +581,10 @@ public class LinphoneGroupChatRoom {
 	/**
 	 * Creates and returns a deep copy of the group's members, excluding self.
 	 * Used specifically for sending messages.
+	 * @param include_pending Add pending members to the list to send to.
 	 * @return A list of {@link GroupChatMember}s.
 	 */
-	private LinkedList<GroupChatMember> getOtherMembers(){
+	private LinkedList<GroupChatMember> getOtherMembers(boolean include_pending){
 		
 		LinkedList<GroupChatMember> members = new LinkedList<>();
 		
@@ -591,8 +592,11 @@ public class LinphoneGroupChatRoom {
 		while (it.hasNext()){
 			
 			GroupChatMember m = it.next();
-			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip) && !m.pending){// TODO: remove pending check if not working
-				members.add(new GroupChatMember(m.name, m.sip, m.pending));
+			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
+				
+				if (!m.pending || (include_pending && m.pending)){
+					members.add(new GroupChatMember(m.name, m.sip, m.pending));
+				}
 			}
 		}
 		
@@ -631,7 +635,7 @@ public class LinphoneGroupChatRoom {
 		try {
 			
 			storage.setAdmin(group_id, member);
-			messenger.sendMessage(group_id, member, getOtherMembers(), lc);
+			messenger.sendMessage(group_id, member, getOtherMembers(false), lc);
 		} catch (GroupDoesNotExistException e){
 			// valid id
 		} catch (MemberDoesNotExistException e) {
@@ -682,7 +686,7 @@ public class LinphoneGroupChatRoom {
 			m.time = new Date();
 			m.message = message;
 			storage.saveTextMessage(group_id, m);
-			messenger.sendMessage(group_id, message, getOtherMembers(), lc);
+			messenger.sendMessage(group_id, message, getOtherMembers(false), lc);
 		} catch (GroupDoesNotExistException e){
 			// valid id
 		}
