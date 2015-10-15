@@ -129,6 +129,12 @@ public class GroupBubbleChat {
 	    	}
     	}
     	
+    	TextView sender = (TextView) layout.findViewById(R.id.sender);
+    	String senderText = message.sender;
+    	senderText = senderText.substring(senderText.indexOf(':') + 1, senderText.indexOf('@'));
+    	sender.setText(senderText);
+    	sender.setVisibility(View.VISIBLE);
+    	
     	TextView msgView = (TextView) layout.findViewById(R.id.message);
     	if (msgView != null) {
         	Spanned text = null;
