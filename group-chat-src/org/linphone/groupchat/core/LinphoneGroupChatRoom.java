@@ -587,7 +587,7 @@ public class LinphoneGroupChatRoom {
 		while (it.hasNext()){
 			
 			GroupChatMember m = it.next();
-			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
+			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip) && !m.pending){// TODO: remove pending check if not working
 				members.add(new GroupChatMember(m.name, m.sip, m.pending));
 			}
 		}

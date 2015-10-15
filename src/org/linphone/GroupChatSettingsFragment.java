@@ -8,9 +8,9 @@ package org.linphone;
  */
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMember;
+import org.linphone.groupchat.core.LinphoneGroupChatListener;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
@@ -92,7 +92,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		chooseAdminMode = false;
 		
 		
-		ownSip = LinphoneManager.getInstance().getLc().getDefaultProxyConfig().getIdentity();
+		ownSip = LinphoneGroupChatListener.getLinphoneCore().getDefaultProxyConfig().getIdentity();
 		
 		groupID = args.getString("groupID");
 		groupName = args.getString("groupName");
@@ -272,10 +272,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 				//TODO test valid sip address or contact
 				String sipUri = newSip;
 				if (!LinphoneUtils.isSipAddress(sipUri)) {
-					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
+					if (LinphoneGroupChatListener.getLinphoneCore().getDefaultProxyConfig() == null) {
 						return;
 					}
-					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+					sipUri = sipUri + "@" + LinphoneGroupChatListener.getLinphoneCore().getDefaultProxyConfig().getDomain();
 				}
 				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
 					sipUri = "sip:" + sipUri;
