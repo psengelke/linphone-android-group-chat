@@ -155,22 +155,10 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 		else
 		{
-			String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " mes, " + GroupChatHelper.Members.tableName + " mem WHERE mem.group_id = '"+groupId+ "'" ;
-			Cursor c = db.rawQuery(querySelect,null);
-			LinkedList<String> members = new LinkedList<>();
 			
-			while (c.moveToNext())
-				members.add(c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
-			
-			if(c.getCount() > 0){
-				
-				for (int k = 0; k < members.size(); ++k)
-				{
 					String queryDelete = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
-							+ " = 0 WHERE Messages.member_id = '" + members.get(k) + "'";
+							+ " = 1 WHERE " + GroupChatHelper.Messages.groupId + " = '" + groupId + "'";
 					db.execSQL(queryDelete);
-				}
-			}
 //			
 //			String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
 //					+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
@@ -427,8 +415,8 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		else
 		{
 			String query = "SELECT * FROM " + GroupChatHelper.Messages.tableName +
-					" mes, " + GroupChatHelper.Members.tableName +" mem WHERE mem." + GroupChatHelper.Members.groupId
-					 + "='" + id + "' and mes.message_state=0";
+					" WHERE "+ GroupChatHelper.Messages.groupId
+					 + "='" + id + "' AND Messages.message_state=0";
 			Cursor c=db.rawQuery(query, null);
 			int count=0;
 				while (c.moveToNext())

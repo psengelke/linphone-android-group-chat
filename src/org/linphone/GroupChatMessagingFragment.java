@@ -194,6 +194,7 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	{
 		history = chatroom.getHistory();
 		msgList.setAdapter(new GroupChatMessageAdapter());
+		chatroom.markAsRead();
 	}
 	
 	/**
