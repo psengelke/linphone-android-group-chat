@@ -140,6 +140,7 @@ public class LinphoneGroupChatRoom {
 			if (!lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
 				LinphoneChatRoom cr = lc.getOrCreateChatRoom(m.sip);
 				LinphoneChatMessage message = cr.createLinphoneChatMessage("");
+				message.addCustomHeader(MSG_HEADER_GROUP_ID, group_id);
 				message.addCustomHeader(MSG_HEADER_TYPE, MSG_HEADER_TYPE_GET_GROUP_INFO);
 				cr.sendChatMessage(message);
 				cr.deleteMessage(message);
@@ -352,7 +353,11 @@ public class LinphoneGroupChatRoom {
 					return;
 				}
 				
-				
+				try {
+					storage.removeMember(group_id, m);
+				} catch (MemberDoesNotExistException e) {
+					// member already gone or never added, ignore
+				}
 			}
 			
 			it = info.confirmed.iterator();
@@ -362,14 +367,16 @@ public class LinphoneGroupChatRoom {
 					storage.setMemberStatus(group_id, member);
 				} catch (MemberDoesNotExistException e) {
 					
-					// add the member and update
-					try {
-						storage.addMember(group_id, member);
-						storage.setMemberStatus(group_id, member);
-					} catch (MemberExistsException | MemberDoesNotExistException ex){
-						// ignore
-					}
-				
+					// TODO add or ignore?
+					
+//					// add the member and update
+//					try {
+//						storage.addMember(group_id, member);
+//						storage.setMemberStatus(group_id, member);
+//					} catch (MemberExistsException | MemberDoesNotExistException ex){
+//						// ignore
+//					}
+//				
 				}
 			}
 			
