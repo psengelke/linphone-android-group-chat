@@ -21,7 +21,6 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 	public void sendMessage(String id, String message, LinkedList<GroupChatMember> members, LinphoneCore lc) {
 		
 		for (GroupChatMember member : members) {
-			
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 			
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
@@ -53,8 +52,7 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 		
 		String message=MessageParser.stringifyMemberUpdateInfo(info);
 		
-		for (GroupChatMember member : members) {
-			
+		for (GroupChatMember member : members) {	
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 			
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
@@ -71,9 +69,7 @@ class UnencryptedMessagingStrategy implements MessagingStrategy {
 		
 		String message=MessageParser.stringifyGroupChatMember(info);
 		
-		
 		for (GroupChatMember member : members) {
-			
 			LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 			
 			LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
