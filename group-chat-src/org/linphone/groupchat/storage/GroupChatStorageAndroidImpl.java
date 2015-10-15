@@ -155,9 +155,26 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		}
 		else
 		{
-			String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
-					+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
-			db.execSQL(query);
+			String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " mes, " + GroupChatHelper.Members.tableName + " mem WHERE mem.group_id = '"+groupId+ "'" ;
+			Cursor c = db.rawQuery(querySelect,null);
+			LinkedList<String> members = new LinkedList<>();
+			
+			while (c.moveToNext())
+				members.add(c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
+			
+			if(c.getCount() > 0){
+				
+				for (int k = 0; k < members.size(); ++k)
+				{
+					String queryDelete = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
+							+ " = 0 WHERE Messages.member_id = '" + members.get(k) + "'";
+					db.execSQL(queryDelete);
+				}
+			}
+//			
+//			String query = "UPDATE " + GroupChatHelper.Messages.tableName + " SET " + GroupChatHelper.Messages.messageState
+//					+ " = 0 WHERE Messages.member_id = (SELECT Members._id FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupId + "')" ;
+//			db.execSQL(query);
 		}
        
 	}
@@ -189,6 +206,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	
 			values.put(GroupChatHelper.Messages.messageText, message.message);
 			values.put(GroupChatHelper.Messages.memberId, memberId);
+			values.put(GroupChatHelper.Messages.groupId, id);
 			values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
 			values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
 			values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
@@ -606,7 +624,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 				
 				for (int k = 0; k < members.size(); ++k)
 				{
-					String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = '" + members.get(k) + "'";
+					String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE " + GroupChatHelper.Messages.groupId + " = '" + groupIdToDelete + "'";
 					db.execSQL(queryDelete);
 				}
 			}
@@ -676,6 +694,8 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 			private static final String messageTextType = " TEXT ";
 			private static final String memberId = "member_id";
 			private static final String memberIdType = " INTEGER "; 
+			private static final String groupId = "group_id";
+			private static final String groupIdType = " VARCHAR(255) ";
 			private static final String messageState = "message_state";
 			private static final String messageStateType = " INTEGER ";
 			private static final String messageDirection = "message_direction";
@@ -725,7 +745,8 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 
 			String createMessagesTable = "CREATE TABLE " + Messages.tableName + "("
 					+ Messages.id + " "+ Messages.idType +", " +  Messages.messageText + " " + Messages.messageTextType 
-					+ "," + Messages.memberId + " " + Messages.memberIdType + "," +  Messages.messageState 
+					+ "," + Messages.memberId + " " + Messages.memberIdType + " ," + Messages.groupId + " "
+					+ Messages.groupIdType + ", " +  Messages.messageState 
 					+ " " + Messages.messageStateType + ", " + Messages.messageDirection + " " 
 					+ Messages.messageDirectionType +", " + Messages.timeSent + " " + Messages.timeSentType + " )";
 
