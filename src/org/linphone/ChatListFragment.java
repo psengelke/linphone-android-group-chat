@@ -455,6 +455,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	protected void leaveGroup(int position) {
 		try {
 			lgm.deleteGroupChat(groups.get(position).getGroupId());
+			hideAndDisplayMessageIfNoChat();
 		} catch (GroupDoesNotExistException e) {
 			e.printStackTrace();
 		} catch (IsAdminException e) {

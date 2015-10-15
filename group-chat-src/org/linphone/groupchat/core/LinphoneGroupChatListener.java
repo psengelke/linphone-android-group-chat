@@ -24,6 +24,8 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 
+import android.util.Log;
+
 /**
  *	This class serves as an intercepter for group chat messages and defers those messages 
  *	to the {@link LinphoneGroupChatManager} instance. It also serves as a wrapper class for 
@@ -202,8 +204,10 @@ public class LinphoneGroupChatListener  implements LinphoneCoreListener {
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		
+		
 		if (message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID) != null){
 			chat_manager.handleMessage(lc, cr, message);
+			
 		} else {
 			linphone_manager.messageReceived(lc, cr, message);
 		}

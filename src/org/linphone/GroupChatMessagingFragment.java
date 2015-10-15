@@ -226,7 +226,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 
 	@Override
 	public void onMessageReceived(GroupChatMessage message) {
-		//adapter.refreshHistory();
+		Log.e("onMessageReceived", "onMsgReceived in GroupChatMessagingFragment");
+		refreshMsgList();
 		
 	}
 }

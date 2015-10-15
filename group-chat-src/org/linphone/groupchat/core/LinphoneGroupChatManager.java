@@ -228,6 +228,7 @@ public class LinphoneGroupChatManager {
 			
 		} else { // existing group
 		
+			Log.e("LinphoneGroupChatManager", "handle normal message in LGM");
 			String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
 			Iterator<LinphoneGroupChatRoom> it = chats.iterator();
 			while (it.hasNext()) {
