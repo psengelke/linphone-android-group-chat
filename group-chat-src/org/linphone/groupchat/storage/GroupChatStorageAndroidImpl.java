@@ -588,8 +588,8 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		}
 		else
 		{
-			String query="DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE Messages.member_id = (SELECT Members._id FROM "
-					+ GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+id + "')";
+			String query="DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE " + GroupChatHelper.Messages.groupId +
+					" = '" + id + "'";
 			db.execSQL(query);
 		}
 	}
@@ -613,21 +613,9 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 		if (groupExists(groupIdToDelete))
 		{
 			//Delete from messages table
-			String querySelect = "SELECT * FROM " + GroupChatHelper.Messages.tableName + " mes, " + GroupChatHelper.Members.tableName + " mem WHERE mem.group_id = '"+groupIdToDelete+ "'" ;
-			Cursor c = db.rawQuery(querySelect,null);
-			LinkedList<String> members = new LinkedList<>();
 			
-			while (c.moveToNext())
-				members.add(c.getString(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
-			
-			if(c.getCount() > 0){
 				
-				for (int k = 0; k < members.size(); ++k)
-				{
-					String queryDelete = "DELETE FROM " + GroupChatHelper.Messages.tableName + " WHERE " + GroupChatHelper.Messages.groupId + " = '" + groupIdToDelete + "'";
-					db.execSQL(queryDelete);
-				}
-			}
+				deleteMessages(groupIdToDelete);
 	
 				//Delete from Members table
 				String query = "DELETE FROM " + GroupChatHelper.Members.tableName + " WHERE Members.group_id = '"+groupIdToDelete+ "'" ;
