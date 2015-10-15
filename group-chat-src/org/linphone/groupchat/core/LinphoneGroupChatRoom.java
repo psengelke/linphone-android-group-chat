@@ -150,17 +150,26 @@ public class LinphoneGroupChatRoom {
 	
 	/**
 	 * Removes self from the group if self is not the admin.
-	 * @throws IsAdminException  If the admin tries to remove themselves without assigning a new admin.
+	 * @throws IsAdminException  If the admin tries to remove themselves without assigning a new admin, 
+	 * provided that the admin is not thelast member in the group.
 	 */
 	public void removeSelf() throws IsAdminException {
-
+		
 		String me = lc.getDefaultProxyConfig().getIdentity();
 		
-		if (me.equals(admin)) throw new IsAdminException("You must assign a new admin first.");
+		if (me.equals(admin) && members.size() > 1) throw new IsAdminException("You must assign a new admin first.");
 		
-		MemberUpdateInfo info = new MemberUpdateInfo();
-		info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
-		messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
+		if (members.size() > 1){
+			MemberUpdateInfo info = new MemberUpdateInfo();
+			info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
+			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
+		}
+		
+		try {
+			storage.deleteChat(group_id);
+		} catch (GroupDoesNotExistException e) {
+			Log.e("LinphoneGroupChatRoom.removeSelf()", e.getMessage());
+		}
 	}
 	
 	/**
