@@ -150,6 +150,11 @@ public class GroupBubbleChat {
         		msgView.setVisibility(View.VISIBLE);
         	}
     	}
+    	
+    	TextView timeView = (TextView) layout.findViewById(R.id.time);
+    	Log.e("in bubble", message.time);
+    	timeView.setText(message.time.toString());
+    	timeView.setVisibility(View.VISIBLE);
 
 //    	String externalBodyUrl = message.getExternalBodyUrl();
 //    	LinphoneContent fileTransferContent = message.getFileTransferInformation();
@@ -194,8 +199,7 @@ public class GroupBubbleChat {
 //	    	}
 //    	}
     	
-//    	TextView timeView = (TextView) layout.findViewById(R.id.time);
-//    	timeView.setText(message.time.toString());
+
     	
 //    	LinphoneChatMessage.State status = message.getStatus();
 //    	statusView = (ImageView) layout.findViewById(R.id.status);

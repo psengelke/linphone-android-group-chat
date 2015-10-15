@@ -222,21 +222,7 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 			
 			String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName + " msg," + GroupChatHelper.Members.tableName + " mem WHERE " + "msg."+ GroupChatHelper.Messages.memberId + "=mem." + GroupChatHelper.Members.id+" AND mem."+GroupChatHelper.Members.groupId + "=" + "'"+ id + "'" ;
 			Cursor c = db.rawQuery(query, null);
-			// For debugging
-//			String query1 = "Select * from " + GroupChatHelper.Members.tableName + " where " + GroupChatHelper.Members.groupId + "='" + id + "'";
-//			Cursor c1 = db.rawQuery(query1,  null);
-//			String query3 = "Select * from " + GroupChatHelper.Messages.tableName;
-//			Cursor c2 = db.rawQuery(query3, null);
-//			Log.e("c2.size", "" + c2.getCount());
-//			if (c2.moveToFirst())
-//			Log.e("memberId in c2", "" +c2.getInt(c.getColumnIndex(GroupChatHelper.Messages.memberId)));
-//			Log.e("c1.size", "" + c1.getCount());
-//			if (c1.moveToFirst())
-//			{
-//				Log.e("member 1 Id in c1", "" +c1.getInt(0));
-//				if (c1.moveToNext())
-//					Log.e("member 2 Id in c1", "" +c1.getInt(0));
-//			}
+			
 			LinkedList<GroupChatMessage> el = new LinkedList<>();
 			
 
@@ -254,7 +240,8 @@ String query = "SELECT * FROM "+ GroupChatHelper.Messages.tableName;
 					temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
 					try {
 						d=format.parse(c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent)));
-						temp.time= d;
+						
+						temp.time = new Date();
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
