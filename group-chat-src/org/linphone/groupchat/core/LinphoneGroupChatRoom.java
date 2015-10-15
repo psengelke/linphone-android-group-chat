@@ -638,6 +638,7 @@ public class LinphoneGroupChatRoom {
 		try {
 			
 			storage.setAdmin(group_id, member);
+			this.admin = member.sip;
 			messenger.sendMessage(group_id, member, getOtherMembers(false), lc);
 		} catch (GroupDoesNotExistException e){
 			// valid id
