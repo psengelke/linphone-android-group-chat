@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
@@ -34,6 +35,7 @@ import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.IsAdminException;
 import org.linphone.mediastream.Log;
+
 
 
 
@@ -696,10 +698,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				unread.setVisibility(View.VISIBLE);
 			}*/
 			
-			String lastMessage = group.getHistory().getLast().message;
-			TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
-			lastMsg.setText(lastMessage);
-			lastMsg.setVisibility(View.VISIBLE);
+			try {
+				String lastMessage = group.getHistory().getLast().message;
+				TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
+				lastMsg.setText(lastMessage);
+				lastMsg.setVisibility(View.VISIBLE);
+			} catch (NoSuchElementException e){}
 			
 			if (isEditMode)
 				delete.setVisibility(View.VISIBLE);
