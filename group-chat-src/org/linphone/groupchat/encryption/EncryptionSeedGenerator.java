@@ -1,10 +1,6 @@
 package org.linphone.groupchat.encryption;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Random;
-
-import org.apache.commons.codec.binary.Base64;
 
 class EncryptionSeedGenerator {
 	

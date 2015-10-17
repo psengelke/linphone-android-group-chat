@@ -1,34 +1,15 @@
 package org.linphone.groupchat.ui;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.linphone.R;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatMessage.State;
-import org.linphone.core.LinphoneContent;
 import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
-import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -37,11 +18,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -84,11 +61,7 @@ public class GroupBubbleChat {
 	}
 	
 	private RelativeLayout view;
-	private ImageView statusView;
 	private GroupChatMessage message;
-//	private LinphoneChatMessage.LinphoneChatMessageListener fileTransferListener;
-	private Context mContext;
-	private static final int SIZE_MAX = 512;
 	
 	@SuppressLint("InflateParams") 
 	public GroupBubbleChat(final Context context, GroupChatMessage message) {
@@ -96,7 +69,6 @@ public class GroupBubbleChat {
 			return;
 		}
 		this.message = message;
-		mContext = context;
 		
 		view = new RelativeLayout(context);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

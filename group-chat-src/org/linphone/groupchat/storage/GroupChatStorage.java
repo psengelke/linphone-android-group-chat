@@ -151,7 +151,7 @@ public interface GroupChatStorage {
     /**
      * Get the encryption type used by the group.
      * @param id The group id.
-     * @return The encryption type.
+     * @return The encryption type of the group chat.
      * @throws GroupDoesNotExistException if the group does not exist.
      */
     public EncryptionType getEncryptionType(String id) throws GroupDoesNotExistException;

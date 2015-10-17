@@ -99,7 +99,7 @@ public class LinphoneGroupChatManager {
 	 */
 	private String generateGroupId(String admin_uri, String group_name) throws InvalidGroupNameException {
 		
-		String id =  + ':' + group_name.replaceAll(" ", "");
+		String id = admin_uri + ':' + group_name.replaceAll(" ", "");
 		
 		LinkedList<String> list = storage.getChatIdList();
 		if (list != null)

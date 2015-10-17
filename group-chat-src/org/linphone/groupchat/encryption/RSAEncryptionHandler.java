@@ -4,12 +4,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
+import android.annotation.SuppressLint;
 import android.util.Base64;
-
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -18,6 +15,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -26,6 +24,7 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 	private SecureRandom rng;
 //	private Key publicKey, privateKey;
 	
+	@SuppressLint("TrulyRandom")
 	public RSAEncryptionHandler(String keySeed) {
 		try {
 			
@@ -78,6 +77,9 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
 		return null;
 	}
@@ -110,6 +112,9 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

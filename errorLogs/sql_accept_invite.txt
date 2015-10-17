@@ -1,0 +1,3 @@
+10-15 22:00:44.596: E/LinphoneGroupChatManager.handleMessage()(13750): LinphoneGroupChatRoom.accept_invite
+10-15 22:00:44.596: E/SQLiteLog(13750): (1) near "WHERE": syntax error
+10-15 22:00:44.596: E/messageReceived caught(13750): near "WHERE": syntax error (code 1): , while compiling: UPDATE Members SET pending='false' WHERE sip_address='sip:izakf@sip.linphone.org' AND WHERE group_id='58AnotherBloodyGroup'
