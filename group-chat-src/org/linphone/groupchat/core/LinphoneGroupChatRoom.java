@@ -151,7 +151,7 @@ public class LinphoneGroupChatRoom {
 	/**
 	 * Removes self from the group if self is not the admin.
 	 * @throws IsAdminException  If the admin tries to remove themselves without assigning a new admin, 
-	 * provided that the admin is not thelast member in the group.
+	 * provided that the admin is not the last member in the group.
 	 */
 	public void removeSelf() throws IsAdminException {
 		
@@ -161,7 +161,7 @@ public class LinphoneGroupChatRoom {
 		
 		if (members.size() > 1){
 			MemberUpdateInfo info = new MemberUpdateInfo();
-			info.removed.add(new GroupChatMember(null, me, false)); //TODO: user's name?
+			info.removed.add(new GroupChatMember("", me, false)); //TODO: user's name?
 			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 		}
 		
@@ -200,7 +200,14 @@ public class LinphoneGroupChatRoom {
 			info.group.members = members;
 			info.group.encryption_type = storage.getEncryptionType(group_id);
 			
+			// send invite
 			messenger.sendMessage(group_id, info, member, lc);
+			
+			// send the new member to rest of group
+			MemberUpdateInfo broadcast = new MemberUpdateInfo();
+			broadcast.added.add(member);
+			messenger.sendMessage(group_id, broadcast, getOtherMembers(false), lc);
+			
 		} catch (GroupDoesNotExistException e){
 			// TODO handle error
 		}
@@ -243,30 +250,30 @@ public class LinphoneGroupChatRoom {
 	 * @throws IsAdminException If the admin tries to remove themselves before assigning a new admin.
 	 * @throws GroupDoesNotExistException If the the group chat does not exist.
 	 */
-	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException, 
-		GroupDoesNotExistException {
+	public void removeMember(GroupChatMember member) throws PermissionRequiredException, IsAdminException {
 		
 		String me = lc.getDefaultProxyConfig().getIdentity();
 		
 		if (!me.equals(admin)) throw new PermissionRequiredException();
 		if (member.sip.equals(admin)) throw new IsAdminException("You must assign a new admin first.");
 		
-		// TODO throw error, telling user to remove in another way.
+		
 		if (me.equals(member.sip)){
-			
+			// TODO throw error, telling user to remove in another way.
 			return;
 		}
 		
 		try {
 			storage.removeMember(group_id, member);
-			this.members = storage.getMembers(group_id);
 			
 			// now tell the group
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.removed.add(member);
 			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 			
-		} catch (MemberDoesNotExistException e) {
+			this.members = storage.getMembers(group_id);
+			
+		} catch (MemberDoesNotExistException | GroupDoesNotExistException e) {
 			
 			// member should not show up on group if deleted.
 			// TODO throw this error, hide group exists error
@@ -339,7 +346,13 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handleMemberUpdate(String message){
 		
+		Log.e("Member Update", message); // debug
+		
 		MemberUpdateInfo info = messenger.handleMemberUpdate(message);
+		
+		Log.e("New Members", ""+info.added.size());
+		Log.e("Removed Members", ""+info.removed.size());
+		Log.e("Confirmed Members", ""+info.confirmed.size());
 		
 		try {
 			Iterator<GroupChatMember> it;

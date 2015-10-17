@@ -340,8 +340,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 					chatroom.removeMember(members.get(position));
 					refreshAdapter();
 					testDone();
-				} catch (PermissionRequiredException | IsAdminException
-						| GroupDoesNotExistException e) {
+				} catch (PermissionRequiredException | IsAdminException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					showAlert(e.getMessage());

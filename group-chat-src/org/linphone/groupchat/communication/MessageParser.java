@@ -126,6 +126,11 @@ public class MessageParser {
 		return member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 	}
 	
+	public static String stringifyEncryptionType(EncryptionType type){
+		
+		return type.ordinal()+"";
+	}
+	
 	/* parse functions */
 	
 	/**
@@ -220,6 +225,15 @@ public class MessageParser {
 		} catch (ArrayIndexOutOfBoundsException e){} // confirmed was empty
 		
 		return info;
+	}
+	
+	public static EncryptionType parseEncryptionType(String message){
+		
+		try {
+			return EncryptionType.values()[Integer.parseInt(message)];
+		} catch (ArrayIndexOutOfBoundsException | NumberFormatException e){
+			return EncryptionType.None;
+		}
 	}
 	
 	/**
