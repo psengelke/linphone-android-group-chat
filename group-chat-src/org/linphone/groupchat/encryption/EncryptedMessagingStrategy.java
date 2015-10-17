@@ -157,6 +157,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 				try {storage.setSecretKey(id, key);} catch (GroupDoesNotExistException e){/*TODO*/}
 				GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
 				newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
+				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);
 				chatRoom.sendChatMessage(newMessage);
 				chatRoom.deleteMessage(newMessage);

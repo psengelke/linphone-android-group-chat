@@ -10,16 +10,21 @@ import android.util.Base64;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implements AsymmetricEncryptionHandler {
 
 	private SecureRandom rng;
-	private Key publicKey, privateKey;
+//	private Key publicKey, privateKey;
 	
 	public RSAEncryptionHandler(String keySeed) {
 		try {
@@ -28,10 +33,10 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			KeyPairGenerator gen=KeyPairGenerator.getInstance("RSA", "BC");
 			gen.initialize(1024, rng);
 			KeyPair pair=gen.generateKeyPair();
-			publicKey=pair.getPublic();
-			privateKey=pair.getPrivate();
-			key_public=pair.getPublic().getEncoded().toString();
-			key_private=pair.getPrivate().getEncoded().toString();
+//			publicKey=pair.getPublic();
+//			privateKey=pair.getPrivate();
+			key_public=Base64.encodeToString(pair.getPublic().getEncoded(), Base64.DEFAULT);
+			key_private=Base64.encodeToString(pair.getPrivate().getEncoded(), Base64.DEFAULT);
 			
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -46,6 +51,11 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 	@Override
 	public String encrypt(String message, String public_key) {
 		try {
+			byte[] publicKeyBytes=Base64.decode(public_key, Base64.DEFAULT);
+			X509EncodedKeySpec publicKeySpec=new X509EncodedKeySpec(publicKeyBytes);
+			KeyFactory keyFactory=KeyFactory.getInstance("RSA");
+			PublicKey publicKey=keyFactory.generatePublic(publicKeySpec);
+			
 			Cipher cipher=Cipher.getInstance("RSA/None/NoPadding", "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey, rng);
 //			byte[] cipherText=cipher.doFinal(message.getBytes());
@@ -76,6 +86,11 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 	public String decrypt(String messsage) {
 		Cipher cipher;
 		try {
+			byte[] privateKeyBytes=Base64.decode(key_private, Base64.DEFAULT);
+			PKCS8EncodedKeySpec privateKeySpec=new PKCS8EncodedKeySpec(privateKeyBytes);
+			KeyFactory keyFactory=KeyFactory.getInstance("RSA");
+			PrivateKey privateKey=keyFactory.generatePrivate(privateKeySpec);
+			
 			cipher = Cipher.getInstance("RSA/None/NoPadding", "BC");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			return new String(cipher.doFinal(Base64.decode(messsage, Base64.DEFAULT)));
