@@ -12,6 +12,7 @@ import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 
 import junit.framework.TestCase;
 
+
 /**
  * 
  * Test class for {@link MessageParser}
@@ -182,10 +183,8 @@ public class MessageParserTester extends TestCase {
 	public void testParseMemberUpdateMessage() {
 
 		MemberUpdateInfo info = new MemberUpdateInfo();
-		info.added = new LinkedList<>();
 		info.added.add(new GroupChatMember("Steve", "steve@linphone.org", false));
 		info.added.add(new GroupChatMember("Bob", "bob@linphone.org", false));
-		info.removed = new LinkedList<>();
 		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
 		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
 		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
@@ -195,9 +194,10 @@ public class MessageParserTester extends TestCase {
 				MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
 		
 		assertEquals(info.added.size(), parsed.added.size());
-		assertEquals(info.removed.size(), info.removed.size());
+		assertEquals(info.removed.size(), parsed.removed.size());
+		assertEquals(info.confirmed.size(), parsed.confirmed.size());
 		
-		Iterator<GroupChatMember> it1 = parsed.added.iterator();
+		Iterator<GroupChatMember> it1 = info.added.iterator();
 		Iterator<GroupChatMember> it2 = parsed.added.iterator();
 		while (it1.hasNext()){
 			
@@ -208,7 +208,7 @@ public class MessageParserTester extends TestCase {
 			assertEquals(e.pending, a.pending);
 		}
 		
-		it1 = parsed.removed.iterator();
+		it1 = info.removed.iterator();
 		it2 = parsed.removed.iterator();
 		while (it1.hasNext()){
 			
@@ -219,9 +219,75 @@ public class MessageParserTester extends TestCase {
 			assertEquals(e.pending, a.pending);
 		}
 		
-		it1 = parsed.confirmed.iterator();
+		it1 = info.confirmed.iterator();
 		it2 = parsed.confirmed.iterator();
 		while (it1.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+			assertEquals(e.pending, a.pending);
+		}
+		
+		// test where only added
+		info.confirmed = new LinkedList<>();
+		info.removed = new LinkedList<>();
+		
+		parsed = MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
+		
+		assertEquals(info.confirmed.size() == 0, parsed.confirmed.size() == 0);
+		assertEquals(info.removed.size() == 0, parsed.removed.size() == 0);
+		
+		it1 = info.added.iterator();
+		it2 = parsed.added.iterator();
+		while (it1.hasNext() && it2.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+			assertEquals(e.pending, a.pending);
+		}
+		
+		// test where only removed
+		info.added = new LinkedList<>();
+		info.confirmed = new LinkedList<>();
+		
+		info.removed = new LinkedList<>();
+		info.removed.add(new GroupChatMember("Ginger", "souless@linphone.org", false));
+		info.removed.add(new GroupChatMember("Scott", "gibson@linphone.org", false));
+		
+		parsed = MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
+		
+		assertEquals(info.added.size() == 0, parsed.added.size() == 0);
+		assertEquals(info.confirmed.size() == 0, parsed.confirmed.size() == 0);
+		
+		it1 = info.removed.iterator();
+		it2 = parsed.removed.iterator();
+		while (it1.hasNext() && it2.hasNext()){
+			
+			GroupChatMember a = it1.next();
+			GroupChatMember e = it2.next();
+			assertEquals(e.name, a.name);
+			assertEquals(e.sip, a.sip);
+			assertEquals(e.pending, a.pending);
+		}
+		
+		// test where only confirmed
+		info.added = new LinkedList<>();
+		info.removed = new LinkedList<>();
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
+		info.confirmed.add(new GroupChatMember("Fred", "freddy@linphone.org", false));
+		
+		parsed = MessageParser.parseMemberUpdateInfo(MessageParser.stringifyMemberUpdateInfo(info));
+		
+		assertEquals(info.added.size() == 0, parsed.added.size() == 0);
+		assertEquals(info.removed.size() == 0, parsed.removed.size() == 0);
+		
+		it1 = info.confirmed.iterator();
+		it2 = parsed.confirmed.iterator();
+		while (it1.hasNext() && it2.hasNext()){
 			
 			GroupChatMember a = it1.next();
 			GroupChatMember e = it2.next();

@@ -126,16 +126,6 @@ public class MessageParser {
 		return member.name + SEPARATOR + member.sip + SEPARATOR + member.pending;
 	}
 	
-	/**
-	 * Converts an {@link EncryptionType} to string.
-	 * @param type The {@link EncryptionType} to convert.
-	 * @return A string containing the ordinal value of the {@link EncryptionType}.
-	 */
-	public static String stringifyEncryptionType(EncryptionType type){
-		
-		return ""+type.ordinal();
-	}
-	
 	/* parse functions */
 	
 	/**
@@ -200,25 +190,34 @@ public class MessageParser {
 		
 		MemberUpdateInfo info = new MemberUpdateInfo();
 		
-		String[] lists = message.split(SEPARATOR2);
-		String[] added = lists[0].split(SEPARATOR);
-		String[] removed = lists[1].split(SEPARATOR);
-		String[] confirmed = lists[2].split(SEPARATOR);
+		String[] lists = message.split(SEPARATOR2), added, removed, confirmed, 
+				empty = {""};
+		
+		try {added = lists[0].split(SEPARATOR);} catch (ArrayIndexOutOfBoundsException e){added = empty;}
+		try {removed = lists[1].split(SEPARATOR);} catch (ArrayIndexOutOfBoundsException e){removed = empty;}
+		try {confirmed = lists[2].split(SEPARATOR);} catch (ArrayIndexOutOfBoundsException e){confirmed = empty;}
 		
 		int i = 0;
-		while (i < added.length){
-			info.added.add(new GroupChatMember(added[i++], added[i++], Boolean.parseBoolean(added[i++])));
-		}
+		try {
+			while (i < added.length){
+				info.added.add(new GroupChatMember(added[i++], added[i++], Boolean.parseBoolean(added[i++])));
+			}
+		} catch (ArrayIndexOutOfBoundsException e){} // added was empty
 		
 		i = 0;
-		while (i < removed.length){
-			info.removed.add(new GroupChatMember(removed[i++], removed[i++], Boolean.parseBoolean(removed[i++])));
-		}
+		try {
+			while (i < removed.length){
+				info.removed.add(new GroupChatMember(removed[i++], removed[i++], Boolean.parseBoolean(removed[i++])));
+			}
+		} catch (ArrayIndexOutOfBoundsException e){} // removed was empty
+		
 		
 		i = 0;
-		while (i < confirmed.length){
-			info.confirmed.add(new GroupChatMember(confirmed[i++], confirmed[i++], Boolean.parseBoolean(confirmed[i++]))); 
-		}
+		try {
+			while (i < confirmed.length){
+				info.confirmed.add(new GroupChatMember(confirmed[i++], confirmed[i++], Boolean.parseBoolean(confirmed[i++]))); 
+			}
+		} catch (ArrayIndexOutOfBoundsException e){} // confirmed was empty
 		
 		return info;
 	}
@@ -233,15 +232,5 @@ public class MessageParser {
 		String[] admin = message.split(SEPARATOR);
 		
 		return new GroupChatMember(admin[0], admin[1], Boolean.parseBoolean(admin[2]));
-	}
-	
-	/**
-	 * Converts a serialised object to an {@link EncryptionType}.
-	 * @param message The serialised {@link EncryptionType}.
-	 * @return An {@link EncryptionType}.
-	 */
-	public static EncryptionType parseEncryptionType(String message){
-		
-		return EncryptionType.values()[Integer.parseInt(message)];
 	}
 }
