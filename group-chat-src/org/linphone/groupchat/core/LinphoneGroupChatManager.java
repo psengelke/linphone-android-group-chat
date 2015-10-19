@@ -160,7 +160,7 @@ public class LinphoneGroupChatManager {
 			}
 		}
 		
-		throw new GroupDoesNotExistException("Group does not exist!"); // or return null?
+		throw new GroupDoesNotExistException("Group does not exist!");
 	}
 	
 	/**

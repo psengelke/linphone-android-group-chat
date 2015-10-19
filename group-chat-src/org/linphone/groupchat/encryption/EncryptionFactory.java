@@ -14,14 +14,15 @@ public class EncryptionFactory {
 	 * @return A {@link MessagingStrategy} instance that matches the parameter.
 	 */
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type) {
+		
 		switch (type) {
-		case AES256:
-			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(EncryptionSeedGenerator.generateSeed(AES256_SEED_LENGTH));
-			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
-			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
-			return strategy;
-		default:
-			return new UnencryptedMessagingStrategy();
+			case AES256:
+				SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(EncryptionSeedGenerator.generateSeed(AES256_SEED_LENGTH));
+				AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
+				MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
+				return strategy;
+			default:
+				return new UnencryptedMessagingStrategy();
 		}
 	}
 	
@@ -33,14 +34,15 @@ public class EncryptionFactory {
 	 * @throws InvalidKeySeedException If the passed key is invalid for the specified {@link EncryptionType}.
 	 */
 	public static MessagingStrategy createEncryptionStrategy(EncryptionType type, String seed) throws InvalidKeySeedException{
+		
 		switch (type) {
-		case AES256:
-			SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(seed);
-			AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
-			MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
-			return strategy;
-		default:
-			return new UnencryptedMessagingStrategy();
+			case AES256:
+				SymmetricEncryptionHandler shandler = new AES256EncryptionHandler(seed);
+				AsymmetricEncryptionHandler ahandler = new RSAEncryptionHandler(EncryptionSeedGenerator.generateSeed(RSA_SEED_LENGTH));
+				MessagingStrategy strategy = new EncryptedMessagingStrategy(shandler, ahandler);
+				return strategy;
+			default:
+				return new UnencryptedMessagingStrategy();
 		}
 	}
 }

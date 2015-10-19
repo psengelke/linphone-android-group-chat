@@ -37,8 +37,8 @@ public class MessageParserTester extends TestCase {
 	public void testStringifyInitialContactMessage() {
 		
 		InitialContactInfo info = new InitialContactInfo();
-		info.secret_key = 98232;
-		info.public_key = 89624;
+		info.secret_key = "hfjdhfjdhfjdhfjd";
+		info.public_key = "hfjdhfjdhfjdhfjdhfjdhfjdhfjdhfjd";
 		info.group = new GroupChatData();
 		info.group.group_id = "sip@linphone.org:GroupName";
 		info.group.group_name = "Group Name";
@@ -118,8 +118,8 @@ public class MessageParserTester extends TestCase {
 	public void testParseInitialContactMessage() {
 
 		InitialContactInfo info = new InitialContactInfo();
-		info.secret_key = 98232;
-		info.public_key = 89624;
+		info.secret_key = "hfjdhfjdhfjdhfjd";
+		info.public_key = "hfjdhfjdhfjdhfjdhfjdhfjdhfjdhfjd";
 		info.group = new GroupChatData();
 		info.group.group_id = "sip@linphone.org:GroupName";
 		info.group.group_name = "Group Name";

@@ -58,14 +58,14 @@ public interface DataExchangeFormat {
 	public class InitialContactInfo {
 		
 		public GroupChatData group;
-		public long public_key;
-		public long secret_key;
+		public String public_key;
+		public String secret_key;
 		
 		public InitialContactInfo() {
 			
 			group = new GroupChatData();
-			public_key = 0;
-			secret_key = 0;
+			public_key = "uadfhisdfdisihfsadihsfd";
+			secret_key = "kdkfhsdihfisdhfdsih";
 		}
 	}
 	
