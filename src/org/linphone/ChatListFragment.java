@@ -52,6 +52,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -60,6 +61,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -89,6 +91,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.e("ChatlistFragment onCreate", "ChatListFragment onCreate");
 		mInflater = inflater;
 		displayGroupChats = false;
 		View view = inflater.inflate(R.layout.chatlist, container, false);
@@ -99,6 +102,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		groups = LinphoneGroupChatManager.getInstance().getGroupChatList();
 		
 		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
+		
 		
 		
 		if (!displayGroupChats)
@@ -398,7 +402,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				b.putString("groupName", group.getName());
 				intent.putExtras(b);
 				startActivity(intent);
-				
 			}
 			else	// Leave this group
 			{

@@ -77,21 +77,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 			groupName = chatroom.getName();
 		} catch (GroupDoesNotExistException e1) {
 			e1.printStackTrace();
-		} catch (GroupChatListenerIsSetException e) {
-			// TODO alert here
-			e.printStackTrace();
-		}
-		
-		// Use groupID to retrieve messages
-		try {
-			LinphoneGroupChatRoom groupChat = lgm.getGroupChat(groupID);
-			history = groupChat.getHistory();
-			
-			refreshMsgList();
-			
-		} catch (GroupDoesNotExistException e) {
 			AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage(e.getMessage());
+            builder1.setMessage(e1.getMessage());
             builder1.setCancelable(true);
             builder1.setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
@@ -101,9 +88,15 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
             });
             AlertDialog alert11 = builder1.create();
             alert11.show();
+		} catch (GroupChatListenerIsSetException e) {
+			// TODO alert here
+			e.printStackTrace();
 		}
 		
-		
+		// Use groupID to retrieve messages
+		history = chatroom.getHistory();
+		refreshMsgList();
+
 		groupNameView = (TextView) view.findViewById(R.id.groupName);
 		groupNameView.setText(groupName);
 		
@@ -133,7 +126,12 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	public void onResume()
 	{
 		super.onResume();
-		
+		Log.e("msgFragment onResume", "msgFragment onResume");
+		try {
+			chatroom = LinphoneGroupChatManager.getInstance().getGroupChat(groupID);
+		} catch (GroupDoesNotExistException e) {
+			getActivity().finish();
+		}
 	}
 	
 	
