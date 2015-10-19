@@ -156,23 +156,25 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 				
 				try {
 					storage.setSecretKey(id, sHandler.getSecretKey());
-					Log.e("handleInitialContactMessage()", "Theirs: "+message.getText()); //check key received
+					Log.e("handleInitialContactMessage(1)", "Theirs: "+message.getText()); //check key received
 					String encryptedKey=aHandler.encrypt(sHandler.getSecretKey(), message.getText());
-					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
+					Log.e("handleInitialContactMessage(2)", "Secret Key: "+sHandler.getSecretKey()); //check key received
 					newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3);
 					chatRoom.sendChatMessage(newMessage);
 					chatRoom.deleteMessage(newMessage);
 				} catch (GroupDoesNotExistException e){
-					Log.e("handleInitialContactMessage()", e.getMessage());
+					Log.e("handleInitialContactMessage(err1)", e.getMessage());
 				}
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3:
+				
+				Log.e("handleInitialContactMessage(3)", "Secret Key (encrypted): "+message.getText()); //check key received
 				String key=aHandler.decrypt(message.getText());
 				try {
 					sHandler.setSecretKey(key);
-					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
+					Log.e("handleInitialContactMessage(4)", "Secret Key: "+sHandler.getSecretKey()); //check key received
 					storage.setSecretKey(id, sHandler.getSecretKey());
 					GroupChatMember gcm=new GroupChatMember(message.getTo().getDisplayName(), message.getTo().asStringUriOnly(), true);
 					newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
@@ -181,7 +183,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 					chatRoom.sendChatMessage(newMessage);
 					chatRoom.deleteMessage(newMessage);
 				} catch (InvalidKeySeedException | GroupDoesNotExistException e) {
-					e.printStackTrace();
+					Log.e("handleInitialContactMessage(err2)", e.getMessage());
 				}
 				break;
 			default: 

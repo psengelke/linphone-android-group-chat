@@ -1,24 +1,21 @@
 package org.linphone.groupchat.encryption;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
+
+import android.util.Log;
 
 class EncryptionSeedGenerator {
 	
+	public static SecureRandom random = new SecureRandom();
+	
 	public static String generateSeed(int bitLength) {
-		/*SecureRandom rng=new SecureRandom();
-		String keySeed=null;
 		
-		try {
-			keySeed=new BigInteger(bitLength, rng).toString(8);
-		}
-		catch(Exception e) {
-			System.err.println(e.getMessage());
-		}
+		BigInteger r = new BigInteger(bitLength, random);
 		
-		return keySeed;*/
-		Random rng=new Random();
-		byte[] r = new byte[bitLength];
-		rng.nextBytes(r);
-		return new String(r);
+		Log.e("generateSeed", r.toString(32)); // check string
+		
+		return r.toString(32);
 	}
 }
