@@ -126,7 +126,14 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		groupNameView.setText(args.getString("groupName"));
 		
 		encryptionType = (TextView) view.findViewById(R.id.encType);
-		EncryptionType enctype = chatroom.getEncryptionType();
+		EncryptionType enctype = null;
+		try {
+			enctype = chatroom.getEncryptionType();
+		}
+		catch (NullPointerException e)
+		{
+			showRemovedAlertAndExit();
+		}
 		if (enctype == EncryptionType.AES256)
 			encryptionType.setText("AES encryption");
 		else
@@ -170,6 +177,15 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		return view;
 	}
 	
+	public void showRemovedAlertAndExit()
+	{
+		showAlert("You have been removed from this group");
+		getActivity().getSupportFragmentManager().popBackStack();
+		getActivity().getSupportFragmentManager().popBackStack();
+	}
+	
+	
+
 	public void onPause()
 	{
 		super.onPause();
@@ -197,8 +213,12 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		
 		try {
 			chatroom.setAdmin(member);
+			refreshAdapter();
 		} catch (PermissionRequiredException e) {
 			showAlert(e.getMessage());
+		}
+		catch (NullPointerException e) {
+			showRemovedAlertAndExit();
 		}
 		return true;
 	}
@@ -213,21 +233,36 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 		}
 		else if (id == R.id.edit)		// edit button clicked
 		{
-			// Change interface to accomodate for edit functionality
-			// Make delete members buttons visible
-			temp=groupName;
-			isEditMode = true;
-			edit.setVisibility(View.GONE);
-			next.setVisibility(View.VISIBLE);
-			groupNameEdit.setVisibility(View.VISIBLE);
-			groupNameView.setVisibility(View.GONE);
-			groupNameEdit.setText(groupName);
-			//editEncryptionGroup.setVisibility(View.VISIBLE);
-			addMemberLayout.setVisibility(View.VISIBLE);
-			encryptionType.setVisibility(View.GONE);
-			encryptionTypeLbl.setVisibility(View.GONE);
+			try
+			{
+				// Check admin
+				if (!chatroom.userIsAdmin())
+					showAlert("You need to be the administrator to edit group information");
+				else
+				{
+				
+					// Change interface to accomodate for edit functionality
+					// Make delete members buttons visible
+					temp=groupName;
+					isEditMode = true;
+					edit.setVisibility(View.GONE);
+					next.setVisibility(View.VISIBLE);
+					groupNameEdit.setVisibility(View.VISIBLE);
+					groupNameView.setVisibility(View.GONE);
+					groupNameEdit.setText(groupName);
+					//editEncryptionGroup.setVisibility(View.VISIBLE);
+					addMemberLayout.setVisibility(View.VISIBLE);
+					encryptionType.setVisibility(View.GONE);
+					encryptionTypeLbl.setVisibility(View.GONE);
+					
+					getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				}
+			}
+			catch (NullPointerException e)
+			{
+				showRemovedAlertAndExit();
+			}
 			
-			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		}
 		else if (id == R.id.groupchatinfo_next)		// next button clicked after edit
 		{
@@ -254,6 +289,10 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 				} catch (PermissionRequiredException e) {
 					showAlert("You need to be an administrator to change the group name");
 					e.printStackTrace();
+				}
+				catch (NullPointerException e)
+				{
+					showRemovedAlertAndExit();
 				}
 			}
 
@@ -316,10 +355,16 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 	 */
 	private void refreshAdapter() 
 	{
-		members = chatroom.getMembers();
-		chooseAdminMode = false;
-		// Update groupParticipants ListView
-		groupParticipants.setAdapter(new MembersAdapter());
+		try {
+			members = chatroom.getMembers();
+			chooseAdminMode = false;
+			// Update groupParticipants ListView
+			groupParticipants.setAdapter(new MembersAdapter());
+		}
+		catch (NullPointerException e)
+		{
+			showRemovedAlertAndExit();
+		}
 	}
 
 	@Override

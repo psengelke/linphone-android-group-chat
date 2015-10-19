@@ -569,6 +569,13 @@ public class LinphoneGroupChatRoom {
 		}
 	}
 	
+	public boolean userIsAdmin()
+	{
+		if (!lc.getDefaultProxyConfig().getIdentity().equals(admin))
+			return false;
+		else return true;
+	}
+	
 	public String getName(){
 		
 		return group_name;
