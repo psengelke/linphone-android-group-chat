@@ -372,9 +372,7 @@ public class GroupChatSettingsFragment extends Fragment implements OnClickListen
 			long id) {
 		if (isEditMode)	// Action only needed when editMode (after edit button clicked)
 		{
-			if (members.size() == 2)	// show alert invalid group size
-				showAlert("A group should have at least two members");
-			else if (((GroupChatMember) view.getTag()).sip.equals(ownSip))	// Trying to remove self
+			if (((GroupChatMember) view.getTag()).sip.equals(ownSip))	// Trying to remove self
 			{
 				showAlert("You cannot remove yourself from this group. " +
 						"\nPlease delete the group from the group listing screen to leave it");

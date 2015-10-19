@@ -227,12 +227,14 @@ public class GroupChatCreationFragment  extends Fragment implements OnClickListe
 		else if (id == R.id.radio_none)				// Radio button no encryption selected
 		{
 			encryptionChoice = ENC_NONE;
+			closeKeyboard(getActivity(), newParticipant.getWindowToken());
 			// Enable next button?
 			testDone();
 		}
 		else if (id == R.id.radio_EncAES)			// Radio button AES encryption selected
 		{
 			encryptionChoice = ENC_AES;
+			closeKeyboard(getActivity(), newParticipant.getWindowToken());
 			// Enable next button?
 			testDone();
 		}

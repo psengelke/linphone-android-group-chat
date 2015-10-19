@@ -21,9 +21,12 @@ import org.linphone.groupchat.exception.MemberExistsException;
 
 import java.lang.Override;
 import java.lang.String;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * This class uses {@link org.linphone.groupchat.storage.interfaces.GroupChatStorage} instance.
@@ -128,7 +131,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		values.put(GroupChatHelper.Messages.groupId, id);
 		values.put(GroupChatHelper.Messages.messageState, message.state.ordinal());
 		values.put(GroupChatHelper.Messages.messageDirection, message.direction.ordinal());
-		values.put(GroupChatHelper.Messages.timeSent, message.time.getTime());
+		values.put(GroupChatHelper.Messages.timeSent, message.time.toString());
 		
 		db.insert(GroupChatHelper.Messages.tableName, null, values);
 		db.close();
@@ -169,8 +172,14 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress));
 			temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
 			temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
-			temp.time= new Date(); //TODO mock date, need to convert properly using simple date format
-			
+			String s = c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent));
+			try {
+				temp.time= (new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")).parse(s);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				Log.e("Storage", e.getMessage());
+				e.printStackTrace();
+			} //TODO mock date, need to convert properly using simple date format
 			el.add(temp);
 		}
 		
@@ -205,7 +214,14 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			temp.sender = c.getString(c.getColumnIndex(GroupChatHelper.Members.sipAddress));
 			temp.state = MessageState.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageState))];
 			temp.direction = MessageDirection.values()[c.getInt(c.getColumnIndex(GroupChatHelper.Messages.messageDirection))];
-			temp.time= new Date(); //TODO mock date, need to convert properly using simple date format
+			String s = c.getString(c.getColumnIndex(GroupChatHelper.Messages.timeSent));
+			try {
+				temp.time= (new SimpleDateFormat ("d MMMM HH:mm", Locale.ENGLISH)).parse(s);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				Log.e("Storage", e.getMessage());
+				e.printStackTrace();
+			}
 			
 			el.add(temp);
 			i++;
@@ -542,7 +558,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			private static final String messageDirection = "message_direction";
 			private static final String messageDirectionType = " INTEGER "; 
 			private static final String timeSent = "time_sent";
-			private static final String timeSentType = "DATETIME"; 
+			private static final String timeSentType = " VARCHAR(255) "; 
 		}
 
 		//Members Table
