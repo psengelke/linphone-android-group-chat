@@ -30,4 +30,10 @@ class SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 		else
 			keySeed=key;
 	}
+
+	@Override
+	public String getSecretKey() {
+		
+		return keySeed;
+	}
 }
