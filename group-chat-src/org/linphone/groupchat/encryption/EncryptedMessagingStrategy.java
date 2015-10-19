@@ -15,6 +15,8 @@ import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
+import android.util.Log;
+
 class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	private final SymmetricEncryptionHandler sHandler;
@@ -23,7 +25,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 	public EncryptedMessagingStrategy(SymmetricEncryptionHandler handler, AsymmetricEncryptionHandler aHandler) {
 
 		this.sHandler = handler;
-		this.aHandler=aHandler;
+		this.aHandler = aHandler;
 	}
 
 	@Override
@@ -46,7 +48,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 		
 		LinphoneChatRoom chatRoom=lc.getOrCreateChatRoom(member.sip);
 		
-		String message=sHandler.encrypt(MessageParser.stringifyInitialContactInfo(info));
+		String message=MessageParser.stringifyInitialContactInfo(info);
 		LinphoneChatMessage newMessage=chatRoom.createLinphoneChatMessage(message);
 		newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 		newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1);
@@ -97,8 +99,13 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	@Override
 	public GroupChatMessage handlePlainTextMessage(LinphoneChatMessage message) {
+		
 		GroupChatMessage gcm=new GroupChatMessage();
 		gcm.message=sHandler.decrypt(message.getText());
+		
+		Log.e("handlePlainTextMessage)():encrypted", message.getText());
+		Log.e("handlePlainTextMessage)():decrypted", sHandler.decrypt(message.getText()));
+		
 		return gcm;
 	}
 
@@ -137,7 +144,8 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 			
 			switch (header) {
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1: 
-//				handler.generateAsymmetricKeys();
+				
+				Log.e("handleInitialContactMessage()", "Mine: "+aHandler.getPublicKey()); //check key sent
 				newMessage=chatRoom.createLinphoneChatMessage(aHandler.getPublicKey());
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2);
@@ -145,19 +153,28 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 				chatRoom.deleteMessage(newMessage);
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2:
-				String encryptedKey=aHandler.encrypt(message.getText(), aHandler.getPublicKey());
-				newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
-				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
-				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3);
-				chatRoom.sendChatMessage(newMessage);
-				chatRoom.deleteMessage(newMessage);
+				
+				try {
+					storage.setSecretKey(id, sHandler.getSecretKey());
+					Log.e("handleInitialContactMessage()", "Theirs: "+message.getText()); //check key received
+					String encryptedKey=aHandler.encrypt(sHandler.getSecretKey(), message.getText());
+					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
+					newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
+					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
+					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3);
+					chatRoom.sendChatMessage(newMessage);
+					chatRoom.deleteMessage(newMessage);
+				} catch (GroupDoesNotExistException e){
+					Log.e("handleInitialContactMessage()", e.getMessage());
+				}
 				break;
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3:
 				String key=aHandler.decrypt(message.getText());
 				try {
 					sHandler.setSecretKey(key);
-					storage.setSecretKey(id, key);
-					GroupChatMember gcm=new GroupChatMember(message.getFrom().getDisplayName(), message.getFrom().asStringUriOnly(), true);
+					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
+					storage.setSecretKey(id, sHandler.getSecretKey());
+					GroupChatMember gcm=new GroupChatMember(message.getTo().getDisplayName(), message.getTo().asStringUriOnly(), true);
 					newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_ACCEPT);

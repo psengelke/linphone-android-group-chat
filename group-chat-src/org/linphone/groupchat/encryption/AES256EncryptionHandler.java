@@ -3,11 +3,14 @@ package org.linphone.groupchat.encryption;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
+
 import android.util.Base64;
+import android.util.Log;
 
 class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 
 	public AES256EncryptionHandler(String keySeed) {
+		
 		this.keySeed=keySeed;
 	}
 
@@ -24,8 +27,8 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 			cipher.init(Cipher.ENCRYPT_MODE, sk);
 			return Base64.encodeToString(cipher.doFinal(message.getBytes()), Base64.DEFAULT);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			Log.e("encrypt()", e.getMessage());
+			return "";
 		}
 	}
 
@@ -43,9 +46,8 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 			cipher.init(Cipher.DECRYPT_MODE, sk);
 			return new String(cipher.doFinal(Base64.decode(message, Base64.DEFAULT)));
 		} catch (Exception e){
-			e.printStackTrace();
-			return null;
+			Log.e("decrypt()", e.getMessage());
+			return "";
 		}
 	}
-
 }

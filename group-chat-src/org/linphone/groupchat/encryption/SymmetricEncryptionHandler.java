@@ -17,4 +17,5 @@ interface SymmetricEncryptionHandler {
     public String encrypt(String message);
     public String decrypt(String message);
     public void setSecretKey(String key) throws InvalidKeySeedException;
+    public String getSecretKey();
 }

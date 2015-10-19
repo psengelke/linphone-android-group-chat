@@ -1,0 +1,2 @@
+10-19 11:00:15.861: E/LinphoneGroupChatManager.handleMessage() for new group(4811): unrecognized token: "" (code 1): , while compiling: UPDATE Groups SET secret_Key=���k�Խ��mH��:�h�.��F��vP�;ǡ�ɲ�khD%���P�r�rKkz9�{�VW2u�R���qq� ��]W�>�꨾&0�����ZT��1K8���]��T��4�NY-G�y��VjA$g��c�x�S�2�m�\D��c��;�_�C��J�����R&�~ݏUj�`0�ȏ��J��Y"b;.E[��C�"`�����	��c(^�������q�Y�AW$L�n�Z�3Az�4ɷ(���a��ߔ�� WHERE group_id = 'sip:psengelke@sip.linphone.org:encryption'
+10-19 11:00:16.626: E/LinphoneGroupChatManager.handleMessage()(4811): LinphoneGroupChatRoom.receive_group_info
