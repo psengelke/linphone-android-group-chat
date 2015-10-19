@@ -143,8 +143,8 @@ public class MessageParser {
 		String[] parts = message.split(SEPARATOR);
 		InitialContactInfo info = new InitialContactInfo();
 		
-		info.secret_key = Long.parseLong(parts[0]);
-		info.public_key = Long.parseLong(parts[1]);
+		info.secret_key = parts[0];
+		info.public_key = parts[1];
 		
 		info.group = new GroupChatData();
 		info.group.group_id = parts[2];
