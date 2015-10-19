@@ -10,7 +10,7 @@ import android.util.Log;
 class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 
 	public AES256EncryptionHandler(String keySeed) {
-		
+		try {
 		this.keySeed=keySeed;
 		
 		KeyGenerator keygen=KeyGenerator.getInstance("AES");
@@ -18,6 +18,10 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 		sr.setSeed(keySeed.getBytes());
 		keygen.init(256, sr);
 		sks=new SecretKeySpec(keygen.generateKey().getEncoded(), "AES");
+		}
+		catch (Exception e) {
+			Log.e("AESEncryptionHandler()", e.getMessage());
+		}
 	}
 
 	@Override
