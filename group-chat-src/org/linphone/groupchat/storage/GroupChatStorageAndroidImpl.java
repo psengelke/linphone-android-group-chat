@@ -324,7 +324,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 		if (!groupExists(id)) throw new GroupDoesNotExistException("Group does not exist.");
 
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "="+ key +" WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "='"+ key +"' WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
@@ -522,7 +522,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			private static final String adminId = "admin_id";
 			private static final String adminIdType = " INTEGER ";
 			private static final String secretKey = "secret_Key";
-			private static final String secretKeyType = " VARCHAR(50) ";
+			private static final String secretKeyType = " VARCHAR(1024) ";
 
 		}
 
