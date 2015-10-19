@@ -144,7 +144,8 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 			
 			switch (header) {
 			case LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_1: 
-					
+				
+				Log.e("handleInitialContactMessage()", "Mine: "+aHandler.getPublicKey()); //check key sent
 				newMessage=chatRoom.createLinphoneChatMessage(aHandler.getPublicKey());
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 				newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_2);
@@ -155,7 +156,9 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 				
 				try {
 					storage.setSecretKey(id, sHandler.getSecretKey());
+					Log.e("handleInitialContactMessage()", "Theirs: "+message.getText()); //check key received
 					String encryptedKey=aHandler.encrypt(sHandler.getSecretKey(), message.getText());
+					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
 					newMessage=chatRoom.createLinphoneChatMessage(encryptedKey);
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID, id);
 					newMessage.addCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_TYPE, LinphoneGroupChatRoom.MSG_HEADER_TYPE_INVITE_STAGE_3);
@@ -169,6 +172,7 @@ class EncryptedMessagingStrategy implements MessagingStrategy {
 				String key=aHandler.decrypt(message.getText());
 				try {
 					sHandler.setSecretKey(key);
+					Log.e("handleInitialContactMessage()", "Secret Key: "+sHandler.getSecretKey()); //check key received
 					storage.setSecretKey(id, sHandler.getSecretKey());
 					GroupChatMember gcm=new GroupChatMember(message.getTo().getDisplayName(), message.getTo().asStringUriOnly(), true);
 					newMessage=chatRoom.createLinphoneChatMessage(MessageParser.stringifyGroupChatMember(gcm));
