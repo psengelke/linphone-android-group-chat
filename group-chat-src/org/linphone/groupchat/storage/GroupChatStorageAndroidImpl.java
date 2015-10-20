@@ -19,6 +19,8 @@ import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.MemberDoesNotExistException;
 import org.linphone.groupchat.exception.MemberExistsException;
 
+import android.util.Base64;
+
 import java.lang.Override;
 import java.lang.String;
 import java.text.ParseException;
@@ -340,7 +342,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 		if (!groupExists(id)) throw new GroupDoesNotExistException("Group does not exist.");
 
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "='"+ key +"' WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "='"+ new String(Base64.decode(key, Base64.DEFAULT)) +"' WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
