@@ -16,7 +16,7 @@ class EncryptionSeedGenerator {
 		
 		Log.e("generateSeed", r.toString(32)); // check string
 		
-		return r.toString(32);
+		return Base64.encodeToString(r.toString(32).getBytes(), Base64.DEFAULT);
 		
 //		Random rng=new Random();
 //		byte[] r = new byte[bitLength];

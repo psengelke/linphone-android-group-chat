@@ -23,7 +23,7 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 //			byte[] keyseed=keySeed.getBytes();
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-			md.update(keySeed.getBytes("UTF-8"));
+			md.update(Base64.decode(keySeed, Base64.DEFAULT));
 			byte[] digest = md.digest();
 			sks=new SecretKeySpec(digest, "AES");
 		}
