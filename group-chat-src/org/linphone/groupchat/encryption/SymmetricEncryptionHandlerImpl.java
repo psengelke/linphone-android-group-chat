@@ -6,6 +6,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.linphone.groupchat.encryption.MessagingStrategy.EncryptionType;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
+
+import android.util.Base64;
 import android.util.Log;
 
 class SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
