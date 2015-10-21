@@ -1,4 +1,5 @@
 \documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
 \usepackage{graphicx}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{bookmark}
@@ -29,21 +30,10 @@
 \begin{table}[h]
 \begin{tabular}{llll}
 \textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
-\multicolumn{1}{|R{2cm}|}{26/08/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
+\multicolumn{1}{|R{2cm}|}{26/08/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.0} \\ \hline
+\multicolumn{1}{|R{2cm}|}{21/10/2015} & \multicolumn{1}{L{4.5cm}|}{Tests Updated} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.1} \\ \hline
 \multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+
 \end{tabular}
 \end{table}
 
@@ -152,7 +142,7 @@ The group will not be created if one of the following preconditions is not met:
 \item User must have access to the Linphone service.
 \item The user may not create the group unless at least one other member is added.
 \end{itemize}
-\paragraph{Postconditions:} \\
+\paragraph{Postconditions:}
 The postconditions specify the conditions which must hold true when the service has been provided.
 \begin{itemize}
 \item The creator is automatically assigned administrator rights.
@@ -172,7 +162,7 @@ An invite shall be sent to each user added to the group upon creation or when a 
 
 \subsubsection{Test 2.1: Invite Sent on Group Chat Creation}
 \paragraph{Description:}
- A new group chat will be created and checked whether the initially added participants receive the invite to join the group chat.
+ A new group chat will be created and a check will be performed as to whether the added participants receive the invite to join the group chat.
  \paragraph{Preconditions:}
  For each of the pre-conditions below an exception is raised where that precondition is not met, to indicate service refusal.
  The invite will not be sent if one of the following scenarios occurs:
@@ -249,7 +239,7 @@ The administrator shall be able to add new users to the group. Once a new member
 \begin{itemize}
 \item The user is added to the list of current users in the group and receives messages, etc.
 \end{itemize}
-\paragraph{Expected Result to Pass the Test}
+\paragraph{Expected Result to Pass the Test:}
 New member receives an invite to participate in group chat and is then linked to the group chat. New member can then send and receive messages on the group.
 \paragraph{Result -- Pass:}
 Member was successfully added to the group. All postconditions were met.
@@ -282,7 +272,7 @@ one other user.
 \item The user selected receives administrator privileges while the current administrator is stripped of the privileges.
 \end{itemize}
 \paragraph{Expected Result to Pass the Test:}
-The previous administrator no longer has administrative rights, the new administrator has administrative rights, all group chat profiles are updated to show the new administrator.
+The previous administrator no longer has administrative rights, the new administrator has administrative rights and all group chat profiles are updated to show the new administrator.
 \paragraph{Result -- Pass:}
 A new administrator was assigned to a group by the current administrator. All postconditions were met.
 
