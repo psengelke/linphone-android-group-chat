@@ -1,4 +1,5 @@
 \documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
 \usepackage{graphicx}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{bookmark}
@@ -29,12 +30,11 @@
 \begin{table}[h]
 \begin{tabular}{llll}
 \textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
-\multicolumn{1}{|R{2cm}|}{23/06/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
+\multicolumn{1}{|R{2cm}|}{23/06/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.0} \\ \hline
 \multicolumn{1}{|R{2cm}|}{28/08/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.0} \\ \hline
 \multicolumn{1}{|R{2cm}|}{13/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 2} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.1} \\ \hline
 \multicolumn{1}{|R{2cm}|}{15/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 3} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 3.0} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|R{2cm}|}{15/10/2015} & \multicolumn{1}{L{4.5cm}|}{Minor Spelling \& Grammar Corrections} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 3.1} \\ \hline
 \end{tabular}
 \end{table}
 
@@ -88,11 +88,11 @@ This class provides functionality for parsing string message objects and convert
 This section discusses new class implementations, listed alphabetically.
 
 \subsubsection{GroupChatRoomListener}\label{ssc: groupchatroomlistener}
-This interface's intent is to support UI component that require LinphoneGroupChatRoom \ref{ssc: linphonegroupchatroom} updates to be pushed to the component. It serves as an interceptor for group chat messages and defers those messages to the \textit{LinphoneGroupChatManager} \ref{ssc: linphonegroupchatmanager} instance. It also serves as a wrapper class for the \textit{LinphoneManager} instance, to which responsibility for its purpose as a {LinphoneCoreListener} is delegated.
+This interface's intent is to support UI components which require LinphoneGroupChatRoom \ref{ssc: linphonegroupchatroom} updates to be pushed to the component. It serves as an interceptor for group chat messages and defers those messages to the \textit{LinphoneGroupChatManager} \ref{ssc: linphonegroupchatmanager} instance. It also serves as a wrapper class for the \textit{LinphoneManager} instance, to which responsibility for its purpose as a {LinphoneCoreListener} is delegated.
 
 \subsubsection{LinphoneGroupChatListener}\label{ssc: linphonegroupchatlistener}
 The \textit{LinphoneGroupChatListener} implements the \textit{LinphoneCoreListener} interface and is responsible for ensuring that messages intended for group chats are intercepted and deferred to the \textit{LinphoneGroupChatManager} instance. \\
-The class is outlined below, in Figure \ref{cd_linphone_group_chat_listener} and referred to in Figure \ref{cd-chat-manager}.
+The class is outlined below, in Figure \ref{cd_linphone_group_chat_listener}, and referred to in Figure \ref{cd-chat-manager}.
 \begin{figure}[H]
 	\centering
 	\centering
@@ -111,7 +111,7 @@ The \textit{LinphoneGroupChatManager} is responsible for handling the creation a
 \end{figure}
 The \textit{LinphoneGroupChatManager} \ref{ssc: linphonegroupchatmanager} helps realise the requirements and use cases specified in the \textbf{Software Requirements Specification (SRS)} document pertaining to group creation and management.
 \subsubsection{LinphoneGroupChatRoom}\label{ssc: linphonegroupchatroom}
-The \textit{LinphoneGroupChatRoom} class implements the \textit{LinphoneChatRoom} interface with added functionality. The purpose of this class is implement the core workings of a group chat instance, including the management of the group appearance(group name and group picture), group members(adding and removing members) and security(encryption).\\
+The \textit{LinphoneGroupChatRoom} class implements the \textit{LinphoneChatRoom} interface with added functionality. The purpose of this class is to implement the core workings of a group chat instance, including the management of the group appearance(group name and group picture), group members(adding and removing members) and security(encryption).\\
 This class will make use of \textit{LinphoneChatRoomImpl} instances to communicate with each of the group members.
 \begin{figure}[H]
 	\centering
@@ -135,7 +135,7 @@ The \textit{EncryptedMessagingStrategy} implements the \textit{MessagingStrategy
 \subsubsection{EncryptionFactory}\label{ssc: encryptionfactory}
 The \textit{EncryptionFactory} includes Factory methods for creating \textit{MessagingStrategy} \ref{ssc: messagingstrategy} instances. On construction, this class receives an \textit{EncryptionType} to be used by the group chat instance and returns a corresponding \textit{MessagingStrategy} \ref{ssc: messagingstrategy} instance.
 \subsubsection{EncryptionSeedGenerator}\label{ssc: encryptionseedgenerator}
-The \textit{EncryptionSeedGenerator} generates seeds for encryption and is used by the \textit{EncryptionFactory} \ref{ssc: encryptionfactory} to in creating \textit{MessagingStrategy} \ref{ssc: messagingstrategy} instances.
+The \textit{EncryptionSeedGenerator} generates seeds for encryption and is used by the \textit{EncryptionFactory} \ref{ssc: encryptionfactory} in creating \textit{MessagingStrategy} \ref{ssc: messagingstrategy} instances.
 \subsubsection{MessagingStrategy}\label{ssc: messagingstrategy}
 This class serves as an interface for use by a \textit{LinphoneGroupChatRoom} \ref{ssc: linphonegroupchatroom}  instance. The strategy will provide messaging functionality for the group chat dependent on the type of encryption chosen by the group administrator.
 \subsubsection{RSAEncryptionHandler}\label{ssc: rsaencryptionhandler}
@@ -181,13 +181,13 @@ This factory class provides a service for creating or getting storage instances 
 \subsection{Linphone Group Chat: Android Classes}\label{subsec: androidclasses}
 This section lists and describes a number of classes that extend Android specific implementations for the application, specifically the user interface components. The classes are listed in alphabetical order.
 \subsubsection{GroupChatActivity}\label{ssc: groupchatactivity}
-The purpose of the \textit{GroupChatActivity} class is to launch all new Android fragments such as \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment}, \textit{GroupChatSettingsFragment} \ref{groupchatsettingsfragment} and \textit{GroupChatCreationFragment} \ref{groupchatcreationfragment}. The \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment} will host the interface for messaging, \textit{GroupChatSettingsFragment} \ref{groupchatsettingsfragment} will host the interface for manipulation of group-chat settings and \textit{GroupChatCreationFragment} \ref{groupchatcreationfragment} will host the interface for creating a new group chat. The \textit{GroupChatActivity} class will also be responsible for handling requests from fragments and routing it to the appropriate core implementations. The \textit{GroupChatActivity} class can be seen in Figure ~\ref{cd-group-chat-messaging-ui}.
+The purpose of the \textit{GroupChatActivity} class is to launch all new Android fragments such as \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment}, \textit{GroupChatSettingsFragment} \ref{groupchatsettingsfragment} and \textit{GroupChatCreationFragment} \ref{groupchatcreationfragment}. The \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment} will host the interface for messaging, \textit{GroupChatSettingsFragment} \ref{groupchatsettingsfragment} will host the interface for manipulation of group-chat settings and \textit{GroupChatCreationFragment} \ref{groupchatcreationfragment} will host the interface for creating a new group chat. The \textit{GroupChatActivity} class will also be responsible for handling requests from fragments and routing it to the appropriate core implementations. The \textit{GroupChatActivity} class can be seen in Figure \ref{cd-group-chat-messaging-ui}.
 \subsubsection{GroupChatMessageAdapter}\label{groupchatmessageadapter}
-The \textit{GroupChatMessageAdapter} will retrieve chat history for the \textit{GroupChatMessagingFragment} so that it can be added to the user interface as clearly separated message bubbles. Each message in the chat history will be converted to a message bubble and added to the \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment}, which then adds it to the displayed user interface. This class can be seen in Figure ~\ref{cd-group-chat-messaging-ui}.
+The \textit{GroupChatMessageAdapter} will retrieve chat history for the \textit{GroupChatMessagingFragment} so that it can be added to the user interface as clearly separated message bubbles. Each message in the chat history will be converted to a message bubble and added to the \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment}, which then adds it to the displayed user interface. This class can be seen in Figure \ref{cd-group-chat-messaging-ui}.
 \subsubsection{GroupChatMessagingFragment}\label{groupchatmessagingfragment}
 Similar to the existing \textit{ChatFragment}, but there needs to be a reference to \textit{LinphoneGroupChatRoom} \ref{ssc: linphonegroupchatroom} which will be a specialisation of the existing \textit{LinphoneChatRoom}. Send/Receive requests etc. will be delegated to this LinphoneGroupChatRoom instance instead of a \textit{LinphoneChatRoom} instance. Additional attributes required for group-chat messaging will also be defined in the \textit{GroupChatMessagingFragment} \ref{groupchatmessagingfragment} class. 
 The \textit{GroupChatMessagingFragment} will host the interface for messaging; i.e. sent or received messages will be displayed here in separate message bubbles along with the group name, group image, a text-box for typing messages, a send-message button, a send-image button and a back button to return to the ChatListing page.
-This class can be seen in Figure ~\ref{cd-group-chat-messaging-ui}.
+This class can be seen in Figure \ref{cd-group-chat-messaging-ui}.
 \begin{figure}[H]
 \centering
 \centerline{\includegraphics[width=7in]{./images/class_group_chat_messaging_ui.png}}
@@ -253,22 +253,22 @@ The current default interface for a chat between two Linphone users consists of:
 \item	A yellow arrow represents a sending message.
 \item	A green tick represents a sent and delivered message.
 \item	A red cross symbolizes a message that cannot be sent and thus not delivered.
-\item	When the contact to which the user is chatting to types, the line “Remote is writing…” appears at the bottom of the chat screen.
+\item	When the contact to which the user is chatting is currently typing, the line \enquote{\textit{Remote is writing\ldots}} appears at the bottom of the chat screen.
 
 \end{itemize}
 
-\subsubsection{Potential upgrades and changes to Current interface}.\newline
+\subsubsection{Potential Upgrades and Changes to the Current Interface}.\newline
 When looking at the current interface that Linphone implements, from a programmer's perspective, there are some immediate user interface issues that are noticeable, and that can be changed to better accommodate the user. After comparing several Instant Messaging services, such as Skype, Whatsapp, iMessage and BBM, many patterns and standards were identified. These standards provided solutions to layout, presentation, and access to functionality and options. To further assist with decision making and changes to be made to the user interface, several users were asked to explore and test the application and suggest what they like and do not like about the interface, as well as any additional features and changes that could be made to the interface.\\\\
 Applying these noted patterns and standards along with the feedback collected from the few users, the following changes to the interface seem plausible: \\\\
 Starting from left to right, looking at each screen/option located on the bottom of the menu on the Linphone application:
 \paragraph{History Screen}
 \begin{itemize}
-\item On the top of the screen it is unclear which option is selected between "All" and "Missed" calls. To fix this issue the slider, to indicate the selected option, will be changed to highlight the currently selected option and possibly dim out the unselected option.
+\item On the top of the screen it is unclear which option is selected between \enquote{All} and \enquote{Missed} calls. To fix this issue the slider, to indicate the selected option, will be changed to highlight the currently selected option and possibly dim out the unselected option.
 \end{itemize}
 
 \paragraph{Contacts Screen}
 \begin{itemize}
-\item On the top of the screen it is unclear which option is selected between "All" and "SIP" contacts. To fix this issue the slider, to indicate the selected option, will be changed to highlight the currently selected option and possibly dim out the unselected option.
+\item On the top of the screen it is unclear which option is selected between \enquote{All} and \enquote{SIP} contacts. To fix this issue, the slider (indicating the selected option) will be changed to highlight the currently selected option and possibly dim out the unselected option.
 
 \item On the right to the text box, where one would type to search for a contact, the clear button appears as a small white cross in a red circle. This is so even if the user has not typed anything in the search box. The red circle will appear grey or a faded colour until the user types something in the search box after which the circle can return to its original red colour. 
 
@@ -417,8 +417,8 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Icons}
 \begin{itemize}
-\item	"\textbf{+}" Will be used to symbolize adding a participant to the group.  
-\item "\textbf{-}" Will be used to symbolize removing a participant from the group.
+\item	\enquote{\textbf{+}} Will be used to symbolize adding a participant to the group.  
+\item \enquote{\textbf{-}} Will be used to symbolize removing a participant from the group.
 \item The \textit{Back} button will be replaced by a plain standard arrow to symbolize the \textit{Back} option.  
 \end{itemize}
 
@@ -453,8 +453,8 @@ Starting from left to right, looking at each screen/option located on the bottom
 
 \paragraph{Icons}
 \begin{itemize}
-\item	"\textbf{+}" Will be used to symbolize adding a participant to the group.  
-\item "\textbf{-}" Will be used to symbolize removing a participant from the group.
+\item	\enquote{\textbf{+}} Will be used to symbolize adding a participant to the group.  
+\item \enquote{\textbf{-}} Will be used to symbolize removing a participant from the group.
 \item The \textit{Back} button will be replaced by a plain standard arrow to symbolize the \textit{Back} option. 
 \item A paper-clip represents attaching a media file, in this case a profile picture.  
 \end{itemize}
@@ -564,13 +564,13 @@ The traceability matrix in this section shows the relationships between the desi
 For readability purposes, the matrix has been split into two halves, each with the complete list of items in this document and half the items in the \textbf{Software Requirements Specification (SRS)} document. Figure \ref{tbl-trace-1} shows the first half and Figure \ref{tbl-trace-2} shows the second half.
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in]{./images/trace_matrix_1.png}
+\includegraphics[width=6in]{./images/trace_matrix_1.png}
 \caption[Traceability Matrix Part 1]{This table shows the first half of the traceability matrix.}
 \label{tbl-trace-1}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in]{./images/trace_matrix_2.png}
+\includegraphics[width=6in]{./images/trace_matrix_2.png}
 \caption[Traceability Matrix Part 1]{This table shows the second half of the traceability matrix.}
 \label{tbl-trace-2}
 \end{figure}
