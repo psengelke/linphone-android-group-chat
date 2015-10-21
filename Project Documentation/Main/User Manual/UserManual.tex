@@ -1,4 +1,5 @@
 \documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
 \usepackage{graphicx}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{bookmark}
@@ -21,6 +22,18 @@
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{5}
 \tableofcontents
+
+\newpage
+\section{Revision History}
+\begin{table}[h]
+	\begin{tabular}{llll}
+		\textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
+		\multicolumn{1}{|R{2cm}|}{23/06/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1} \\ \hline
+		\multicolumn{1}{|R{2cm}|}{13/10/2015} & \multicolumn{1}{L{4.5cm}|}{Spelling and Grammar} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.1} \\ \hline
+		\multicolumn{1}{|R{2cm}|}{21/10/2015} & \multicolumn{1}{L{4.5cm}|}{Spelling and Grammar} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.2} \\ \hline
+		
+	\end{tabular}
+\end{table}
 
 \newpage
 \section{Systems Overview}
@@ -91,7 +104,7 @@ To install the Linphone application simply follow the steps below:
 \textbf{Note:} This may take a while depending on your network speeds.
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in]{./images/clone.png}
+\includegraphics[width=6in]{./images/clone.png}
 \caption{Clone repository and pull submodules}
 \label{cmd_clone}
 \end{figure}
@@ -127,15 +140,15 @@ To install the Linphone application simply follow the steps below:
 
 \textbf{Using a Makefile}
 \begin{enumerate}
-\item Download the Android SDK with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both \textit{tools} and \textit{platform-tools} folders in your \textit{path}.
-\item Download the Android NDK (=r10c) from Google and add it to your path.
+\item Download the Android SDK with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both \textit{tools} and \textit{platform-tools} folders in your \textbf{path}.
+\item Download the Android NDK (=r10c) from Google and add it to your \textbf{path}.
 \item Install yasm, nasm, curl, ant, rsync and the autotools: autoconf, automake, aclocal, libtoolize, pkgconfig.
-\subitem On 64 bits linux systems you'll need the ia32-libs package
+\subitem On 64-bit linux systems you'll need the ia32-libs package
 \subitem With the latest Debian (multiarch), you need to do this:
 \subsubitem \texttt{dpkg --add-architecture i386}
 \subsubitem \texttt{aptitude update}
 \subsubitem \texttt{aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386}
-\item run the Makefile script in the root directory. This will download iLBC source files and convert some assembly files in VP8 project.
+\item Run the Makefile script in the root directory. This will download iLBC source files and convert some assembly files in VP8 project.
 \begin{verbatim}$ make \end{verbatim}
 \item To generate a signed APK file, run  \begin{verbatim} $ make release \end{verbatim}
 \item Locate the created APK on the the computer and copy it to the device. 
@@ -176,43 +189,43 @@ Below are guidelines on how to use the system. Guidelines are provided for vario
 \subsubsection{Locate list of group chats} \label{locate}
 Follow the steps below to locate the location/list of all your current group chats:
 \begin{enumerate}
-\item Start the application
-\item On the \textit{Home} screen click the \textit{Chat} option as shown in the diagram\\
-\includegraphics[width=50px]{images/mainScreen.png}
-\item Click on the \textit{Groups} button\\
+\item Start the application.
+\item On the \textit{Home} screen click the \textit{Chat} option as shown in the diagram.\\
+\includegraphics[width=100px]{images/mainScreen.png}
+\item Click on the \textit{Groups} button.\\
 
-\includegraphics[width=50px]{images/ChatlistNav.png}
-\item You are now presented with the list of group chats
+\includegraphics[width=100px]{images/ChatlistNav.png}
+\item You are now presented with the list of group chats.
 \begin{enumerate}
-\item If a group chat from the list is selected, the group chat will open\\
+\item If a group chat from the list is selected, the group chat will open.\\
 \end{enumerate}
-\includegraphics[width=50px]{images/Grouplist.png}
-\item to navigate back to your private chat lists, click on the "Chats" button\\
-\includegraphics[width=50px]{images/GrouplistNav.png}
+\includegraphics[width=100px]{images/Grouplist.png}
+\item To navigate back to your private chat lists, click on the \textit{Chats} button.\\
+\includegraphics[width=100px]{images/GrouplistNav.png}
 \end{enumerate}
 
 \subsubsection{Create New Group Chat} \label{create}
 Follow the steps below to create and launch a new group chat:
 \begin{enumerate}
-\item Start the application
+\item Start the application.
 \item On the \textit{Home} screen click the \textit{Chat} option as shown in the diagram.\\
-\includegraphics[width=50px]{images/mainScreen.png}
+\includegraphics[width=100px]{images/mainScreen.png}
 \item Click on the \textit{New Group Chat} button.\\
-\includegraphics[width=50px]{images/ChatlistCG.png}
+\includegraphics[width=100px]{images/ChatlistCG.png}
 \item You are now presented with a user interface where necessary information is needed in order to create the group chat.
 \begin{enumerate}
 \item Enter a desired group name.
 \item Choose the type of encryption you wish to use.
 \item Add members to participate in the group chat - Note: at least two members must be added.
 \subitem Type the member's SIP address in the text edit.
-\subitem Click on the green "+" button.
-\subitem To clear the text edit click on the red "X" to the left of the text edit.
-\subitem To remove a added member click on the red "X" next to the corresponding member you wish to remove
+\subitem Click on the green \enquote{+} button.
+\subitem To clear the text edit click on the red \enquote{X} to the left of the text edit.
+\subitem To remove an already added member, click on the red \enquote{X} next to the member you wish to remove.
 \item Click \textit{Next}.
 \end{enumerate}
-\includegraphics[width=50px]{images/GroupChatCreation.png}
+\includegraphics[width=100px]{images/GroupChatCreation.png}
 \item You will now be presented with the actual group chat where you can proceed to chat with the members.\\
-\includegraphics[width=50px]{images/groupchat.png}
+\includegraphics[width=100px]{images/groupchat.png}
 \end{enumerate}
 
 \subsubsection{Chat in Group Chat}  \label{chat}
@@ -220,26 +233,26 @@ Follow the steps below to participate in a group chat in which you are a member:
 \begin{enumerate}
 \item Start the application.
 \item On the \textit{Home} screen click the \textit{Chat} option as shown in the diagram.\\
-\includegraphics[width=50px]{images/mainScreen.png}
+\includegraphics[width=100px]{images/mainScreen.png}
 \item Click on the \textit{Groups} button.\\
-\includegraphics[width=50px]{images/ChatlistNav.png}
+\includegraphics[width=100px]{images/ChatlistNav.png}
 \item You are now presented with a list of the group chats in which you are a member and may participate.
 \item Click on the group chat in which you want to send/observe messages.\\
-\includegraphics[width=50px]{images/Grouplist.png}
+\includegraphics[width=100px]{images/Grouplist.png}
 \item You will be presented with the group chat interface.\\
-\includegraphics[width=50px]{images/groupchat.png}
+\includegraphics[width=100px]{images/groupchat.png}
 \item To type a message:
 \begin{enumerate}
 \item Click on the text edit.\\
-\includegraphics[width=50px]{images/groupchatEdit.png}
+\includegraphics[width=100px]{images/groupchatEdit.png}
 \item The keyboard will pop-up. Type the desired message.
 \item Click the \textit{Send} button to send the message to the group and all the members in the group.\\
-\includegraphics[width=50px]{images/groupchatSend.png}
+\includegraphics[width=100px]{images/groupchatSend.png}
 \end{enumerate}
 \item To send a picture/image to the group:
 \begin{enumerate}
 \item Click on the \textit{Pic} button.\\
-\includegraphics[width=50px]{images/groupchatSendPic.png}
+\includegraphics[width=100px]{images/groupchatSendPic.png}
 \item You will be asked whether to send a picture already stored in you phone gallery or to take a new picture. Click on the button that corresponds to your desired choice.
 \item Follow the respective steps for the picture option and select the image you wish to send.
 \item Once you locate the picture you wish to send, click on it and it will automatically send the rest of the group members.
@@ -251,34 +264,34 @@ Follow the steps below to view a group chat's details and information:
 \begin{enumerate}
 \item Start the application.
 \item On the \textit{Home} screen click the \textit{Chat} option as shown in the diagram.\\
-\includegraphics[width=50px]{images/mainScreen.png}
+\includegraphics[width=100px]{images/mainScreen.png}
 \item Click on the \textit{Groups} button.\\
-\includegraphics[width=50px]{images/ChatlistNav.png}
+\includegraphics[width=100px]{images/ChatlistNav.png}
 \item You are now presented with a list of the group chats.
 \item Click on the group chat for which you wish to see details.\\
-\includegraphics[width=50px]{images/Grouplist.png}
-\item The actual group chat will open.
+\includegraphics[width=100px]{images/Grouplist.png}
+\item The selected group chat will open.
 \item Click on the \textit{Group Information} button on the top right of the screen.\\
-\includegraphics[width=50px]{images/groupchatInfo.png}
-\item The groups information will be displayed.\\
-\includegraphics[width=50px]{images/groupchatInfoDisp.png}
+\includegraphics[width=100px]{images/groupchatInfo.png}
+\item The group's information will be displayed.\\
+\includegraphics[width=100px]{images/groupchatInfoDisp.png}
 \end{enumerate}
 
 \subsubsection{Edit Existing Group}  \label{edit}
 Follow the steps below to edit a group chat's details and information:
 \begin{enumerate}
-\item Follow the steps listed in the section \textbf{View Group Chat Information}\ref{info} to navigate to the group chat's information screen
+\item Follow the steps listed in the section \textbf{View Group Chat Information} \ref{info} to navigate to the group chat's information screen
 \item Once on the group chat's information screen click on the \textit{Edit} button.\\
-\includegraphics[width=50px]{images/groupchatInfoEdit.png}
+\includegraphics[width=100px]{images/groupchatInfoEdit.png}
 \item The fields which can be edited will be enabled.
 \begin{enumerate}
 \item Click on the group name to edit to change the group's name.
 \item To add members to the group, type the member's SIP address in the text box.\label{edit-3c}
-\item Click on the green "+" button.
-\item To clear the text, click on the red "X" to the left of the text box.\label{edit-3e}
-\item To remove a current member, click on the red "X" next to the corresponding member's name.\label{edit-3f}
+\item Click on the green \enquote{+} button.
+\item To clear the text, click on the red \enquote{X} to the left of the text box.\label{edit-3e}
+\item To remove a current member, click on the red \enquote{X} next to the corresponding member's name.\label{edit-3f}
 \end{enumerate}
-\item Click \textit{Next}
+\item Click \textit{Next}.
 \end{enumerate}
 
 
