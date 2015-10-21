@@ -244,8 +244,6 @@ public class LinphoneGroupChatManager {
 			}
 			
 		} else { // existing group
-		
-			Log.e("LinphoneGroupChatManager.handleMessage()", message_type);  // debugging purposes
 			
 			String group_id = message.getCustomHeader(LinphoneGroupChatRoom.MSG_HEADER_GROUP_ID);
 			Iterator<LinphoneGroupChatRoom> it = chats.iterator();

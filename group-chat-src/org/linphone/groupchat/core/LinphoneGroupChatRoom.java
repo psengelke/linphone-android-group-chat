@@ -346,13 +346,7 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void handleMemberUpdate(String message){
 		
-		Log.e("Member Update", message); // debug
-		
 		MemberUpdateInfo info = messenger.handleMemberUpdate(message);
-		
-		Log.e("New Members", ""+info.added.size());
-		Log.e("Removed Members", ""+info.removed.size());
-		Log.e("Confirmed Members", ""+info.confirmed.size());
 		
 		try {
 			Iterator<GroupChatMember> it;

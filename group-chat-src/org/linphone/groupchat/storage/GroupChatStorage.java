@@ -35,6 +35,9 @@ public interface GroupChatStorage {
     
     /**
      * Persists an image to the database.
+     * 
+     * Not supported yet.
+     * 
      * @param id The group id.
      * @param message The message object.
      * @throws GroupDoesNotExistException if the group does not exist.
@@ -43,11 +46,12 @@ public interface GroupChatStorage {
 
     /**
      * Persists a voice recording to the database.
+     * 
+     * Not supported yet.
+     * 
      * @param id The group id.
      * @param message The message object.
      * @throws GroupDoesNotExistException if the group does not exist.
-     * 
-     * TODO: determine the correct data structure to use.
      */
     public void saveVoiceRecording(String id, GroupChatMessage message) throws GroupDoesNotExistException;
 

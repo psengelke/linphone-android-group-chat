@@ -32,16 +32,15 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			KeyPairGenerator gen=KeyPairGenerator.getInstance("RSA", "BC");
 			gen.initialize(1024, rng);
 			KeyPair pair=gen.generateKeyPair();
-//			publicKey=pair.getPublic();
-//			privateKey=pair.getPrivate();
+
 			key_public=Base64.encodeToString(pair.getPublic().getEncoded(), Base64.DEFAULT);
 			key_private=Base64.encodeToString(pair.getPrivate().getEncoded(), Base64.DEFAULT);
 			
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -57,28 +56,27 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			
 			Cipher cipher=Cipher.getInstance("RSA/None/NoPadding", "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey, rng);
-//			byte[] cipherText=cipher.doFinal(message.getBytes());
 			return Base64.encodeToString(cipher.doFinal(message.getBytes()), Base64.DEFAULT);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IllegalBlockSizeException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} 
 		return null;
@@ -97,25 +95,25 @@ public class RSAEncryptionHandler extends AsymmetricEncryptionHandlerImpl implem
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			return new String(cipher.doFinal(Base64.decode(messsage, Base64.DEFAULT)));
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IllegalBlockSizeException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return null;

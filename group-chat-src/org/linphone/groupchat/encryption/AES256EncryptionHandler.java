@@ -12,15 +12,11 @@ import android.util.Log;
 class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements SymmetricEncryptionHandler {
 
 	public AES256EncryptionHandler(String keySeed) {
+		
 		try {
+			
 			this.keySeed=keySeed;
 
-			/*		KeyGenerator keygen=KeyGenerator.getInstance("AES");
-		java.security.SecureRandom sr=java.security.SecureRandom.getInstance("SHA1PRNG");
-		sr.setSeed(keySeed.getBytes());
-		keygen.init(256, sr);
-		sks=new SecretKeySpec(keygen.generateKey().getEncoded(), "AES");*/
-//			byte[] keyseed=keySeed.getBytes();
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 
 			md.update(Base64.decode(keySeed, Base64.DEFAULT));
@@ -34,12 +30,8 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 
 	@Override
 	public String encrypt(String message) {
+		
 		try {
-			//			KeyGenerator keygen=KeyGenerator.getInstance("AES");
-			//			java.security.SecureRandom sr=java.security.SecureRandom.getInstance("SHA1PRNG");
-			//			sr.setSeed(keySeed.getBytes());
-			//			keygen.init(256, sr);
-			//			SecretKeySpec sk=new SecretKeySpec(keygen.generateKey().getEncoded(), "AES");
 			
 			Cipher cipher=Cipher.getInstance("AES");
 			cipher.init(Cipher.ENCRYPT_MODE, sks);
@@ -55,11 +47,6 @@ class AES256EncryptionHandler extends SymmetricEncryptionHandlerImpl implements 
 	public String decrypt(String message) {
 
 		try {
-			//			KeyGenerator keygen=KeyGenerator.getInstance("AES");
-			//			java.security.SecureRandom sr=java.security.SecureRandom.getInstance("SHA1PRNG");
-			//			sr.setSeed(keySeed.getBytes());
-			//			keygen.init(256, sr);
-			//			SecretKeySpec sk=new SecretKeySpec(keygen.generateKey().getEncoded(), "AES");
 
 			Cipher cipher=Cipher.getInstance("AES");
 			cipher.init(Cipher.DECRYPT_MODE, sks);

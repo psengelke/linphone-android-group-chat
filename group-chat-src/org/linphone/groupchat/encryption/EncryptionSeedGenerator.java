@@ -15,14 +15,6 @@ class EncryptionSeedGenerator {
 		
 		BigInteger r = new BigInteger(bitLength, random);
 		
-		Log.e("generateSeed", r.toString(32)); // check string
-		
 		return Base64.encodeToString(r.toString(32).getBytes(), Base64.DEFAULT);
-		
-//		Random rng=new Random();
-//		byte[] r = new byte[bitLength];
-//		rng.nextBytes(r);
-//		Log.e("generateSeed", r.toString()); // check string
-//		return new String(r);
 	}
 }

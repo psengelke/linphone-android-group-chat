@@ -25,7 +25,6 @@ import java.lang.Override;
 import java.lang.String;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -142,13 +141,13 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 	@Override
 	public void saveImageMessage(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		
-		// TODO Auto-generated method stub
+		// TODO not supported yet
 	}
 
 	@Override
 	public void saveVoiceRecording(String id, GroupChatMessage message) throws GroupDoesNotExistException {
 		
-		// TODO Auto-generated method stub
+		// TODO not supported yet
 	}
 
 	@Override
@@ -178,10 +177,8 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			try {
 				temp.time= (new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")).parse(s);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				Log.e("Storage", e.getMessage());
-				e.printStackTrace();
-			} //TODO mock date, need to convert properly using simple date format
+			}
 			el.add(temp);
 		}
 		
@@ -206,7 +203,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 		LinkedList<GroupChatMessage> el = new LinkedList<>();
 
-		//SimpleDateFormat format = new SimpleDateFormat ("MMMM d, yyyy", Locale.ENGLISH);	
 		int i=0;
 		while (c.moveToNext() && i < limit){
 			
@@ -220,7 +216,6 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 			try {
 				temp.time= (new SimpleDateFormat ("d MMMM HH:mm", Locale.ENGLISH)).parse(s);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				Log.e("Storage", e.getMessage());
 				e.printStackTrace();
 			}
@@ -342,7 +337,9 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		
 		if (!groupExists(id)) throw new GroupDoesNotExistException("Group does not exist.");
 
-		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + GroupChatHelper.Groups.secretKey + "='"+ new String(Base64.decode(key, Base64.DEFAULT)) +"' WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
+		String query = "UPDATE " + GroupChatHelper.Groups.tableName + " SET " + 
+				GroupChatHelper.Groups.secretKey + "='"+ new String(Base64.decode(key, Base64.DEFAULT)) 
+				+"' WHERE " + GroupChatHelper.Groups.groupId + " = '"+id+"'";
 		db.execSQL(query);		
 	}
 
