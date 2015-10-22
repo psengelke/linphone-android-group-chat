@@ -34,7 +34,7 @@
 \multicolumn{1}{|R{2cm}|}{28/08/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 1} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.0} \\ \hline
 \multicolumn{1}{|R{2cm}|}{13/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 2} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 2.1} \\ \hline
 \multicolumn{1}{|R{2cm}|}{15/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 3} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 3.0} \\ \hline
-\multicolumn{1}{|R{2cm}|}{15/10/2015} & \multicolumn{1}{L{4.5cm}|}{Minor Spelling \& Grammar Corrections} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 3.1} \\ \hline
+\multicolumn{1}{|R{2cm}|}{20/10/2015} & \multicolumn{1}{L{4.5cm}|}{Minor Spelling \& Grammar Corrections} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 3.1} \\ \hline
 \multicolumn{1}{|R{2cm}|}{21/10/2015} & \multicolumn{1}{L{4.5cm}|}{Revision 4} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 4.0} \\ \hline
 \end{tabular}
 \end{table}
@@ -86,7 +86,7 @@ This class provides functionality for parsing string message objects and convert
 \end{figure}
 
 \subsubsection{Communication Protocol}
-The existing implementation of the Linphone for Android application makes use of the Session Initiation Protocol (SIP). The documentation for this protocol can be found at \href{https://www.ietf.org/rfc/rfc3261.txt}{https://www.ietf.org/rfc/rfc3261.txt}. While this protocol provides the necessary means for communication between Linphone clients, we will be making use of an informal message protocol for group chat communication. Custom message headers will be added to the message objects before they are sent via SIP. The list of custom headers as of the writing of this document are as below.
+The existing implementation of Linphone for Android makes use of Session Initiation Protocol (SIP). The documentation for this protocol can be found at \href{https://www.ietf.org/rfc/rfc3261.txt}{https://www.ietf.org/rfc/rfc3261.txt}. While this protocol provides the necessary means for communication between Linphone clients, we will be making use of an informal message protocol for group chat communication. Custom message headers will be added to the message objects before they are sent via SIP. The list of custom headers as of the writing of this document are as below.
 
 \paragraph{Group Identification}\mbox{}\\ \\
 \textbf{\small GROUP-CHAT-ID}:\\\
@@ -94,14 +94,14 @@ The existing implementation of the Linphone for Android application makes use of
 
 \paragraph{Message Types}\mbox{}\\ \\
 \textbf{\small GROUP-CHAT-MESSAGE-TYPE}:\\
- This header is used to identify the type of message received and allows the LinphoneGroupChatManager instance or the LinphoneGroupChatRoom to handle the message object appropriately.\\
+ This header is used to identify the type of message received and allows the \textit{LinphoneGroupChatManager} \ref{ssc: linphonegroupchatmanager} instance or the \textit{LinphoneGroupChatRoom} \ref{ssc: linphonegroupchatroom} to handle the message object appropriately.\\
  
 Below is a list of the different message types that can be handled.
 \begin{itemize}
-\item \textbf{Invite Messages}: These come in multiple stages depending on the level of encryption used. If none is used, then only the first stage occurs. If some level of encryption is used, the first stage is the initial contact, the second and third stages involve the transfer of the secret symmetric encryption key via asymmetric encryption.
+\item \textbf{Invite Messages}: These come in multiple stages depending on the level of encryption used. If none is used, then only the first stage occurs. If some level of encryption is used, the first stage is the initial contact and the second and third stages involve the transfer of the secret symmetric encryption key via asymmetric encryption.
 \item \textbf{Member Update Messages}: These messages contain members information of those members who have been added, removed or confirmed.
 \item \textbf{Administrator Change Messages}: This message type will contain the details of the new group administrator.
-\item \textbf{Group Description Messages}: These messages contain a full description of a group, it's members, administrator, encryption type and name. The purpose of these messages are to provide the latest information to client nodes that have been off-line.
+\item \textbf{Group Description Messages}: These messages contain a full description of a group: its members, administrator, encryption type and name. The purpose of these messages are to provide the latest information to client nodes that have been off-line.
 \end{itemize}
 
 \subsection{Linphone Group Chat: Core Classes}
@@ -146,14 +146,14 @@ This class helps realise and address the requirements pertaining to group manage
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=5in]{./images/class_encryption_handler.png}
-	\caption[EncryptionHandlers]{A figure showing the encryption handlers for encrypted messaging.}
+	\caption[EncryptionHandlers]{A diagram showing the encryption handlers for encrypted messaging.}
 	\label{uml-encrypt-handler}
 \end{figure}
 
 \subsubsection{AES256EncryptionHandler}\label{ssc: aes256encryptionhandler}
 The \textit{AES256EncryptionHandler} extends \textit{SymmetricEncryptionHandlerImpl} \ref{ssc: symmetricencryptionhandlerimpl} and implements the \textit{SymmetricEncryptionHandler} \ref{ssc: symmetricencryptionhandler} to provide AES256 encryption and decryption of messages. 
 \subsubsection{AsymmetricEncryptionHandler}\label{ssc: asymmetricencryptionhandler}
-The \textit{AsymmetricEncryptionHandler} is an interface that allows implementation of asymmetric encryption for secret key exchange when a new member is added to a group that uses secure messaging.
+The \textit{AsymmetricEncryptionHandler} is an interface that allows implementation of asymmetric encryption for secret key exchange when a new member is added to a group which uses secure messaging.
 \subsubsection{AsymmetricEncryptionHandlerImpl}\label{ssc: asymmetricencryptionhandlerimpl}
 the \textit{AsymmetricEncryptionHandlerImpl} implements the \textit{AsymmetricEncryptionHandler}\ref{ssc: asymmetricencryptionhandler} and is extended by the \textit{RSAEncryptionHandler} \ref{ssc: rsaencryptionhandler}.
 \subsubsection{EncryptedMessagingStrategy}\label{encryptedmessaginstrategy}
