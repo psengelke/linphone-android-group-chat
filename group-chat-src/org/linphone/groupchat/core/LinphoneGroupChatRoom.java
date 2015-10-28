@@ -221,6 +221,8 @@ public class LinphoneGroupChatRoom {
 	 */
 	private void updateMember(String message){
 		
+		Log.e("Updating member...", message);
+		
 		GroupChatMember member = MessageParser.parseGroupChatMember(message);
 		try {
 			
@@ -230,14 +232,16 @@ public class LinphoneGroupChatRoom {
 			MemberUpdateInfo info = new MemberUpdateInfo();
 			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
 			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
+			
+			members = storage.getMembers(group_id);
 		} catch (MemberDoesNotExistException e) {
 			
 			// member was removed before adding, send remove to user.
-			LinkedList<GroupChatMember> m = new LinkedList<>();
-			m.add(member);
-			MemberUpdateInfo info = new MemberUpdateInfo();
-			info.removed.add(member);
-			messenger.sendMessage(group_id, info, m, lc);
+//			LinkedList<GroupChatMember> m = new LinkedList<>();
+//			m.add(member);
+//			MemberUpdateInfo info = new MemberUpdateInfo();
+//			info.removed.add(member);
+//			messenger.sendMessage(group_id, info, m, lc);
 			
 		} catch (GroupDoesNotExistException e) {
 			// TODO handler error
@@ -351,22 +355,29 @@ public class LinphoneGroupChatRoom {
 		
 		MemberUpdateInfo info = messenger.handleMemberUpdate(message);
 		
+		
+		
 		try {
 			Iterator<GroupChatMember> it;
 	
+			Log.e("Added", ""+info.added.size());
 			it = info.added.iterator();
 			while (it.hasNext()){
-				try {storage.addMember(group_id, it.next());} catch (MemberExistsException e) {
+				try {
+					storage.addMember(group_id, it.next());
+					Log.e("Member added", "");
+				} catch (MemberExistsException e) {
 					// member exists would have been handled on admin side
 				}
 			}
 	
+			Log.e("Removed", ""+info.removed.size());
 			it = info.removed.iterator();
 			while (it.hasNext()){
 				GroupChatMember m = it.next();
 				
 				if (lc.getDefaultProxyConfig().getIdentity().equals(m.sip)){
-					
+					Log.e("Removing self","");
 					storage.deleteChat(group_id);
 					LinphoneGroupChatManager.getInstance().refreshGroupChats();
 					return;
@@ -379,23 +390,23 @@ public class LinphoneGroupChatRoom {
 				}
 			}
 			
+			Log.e("Confirmed", ""+info.confirmed.size());
 			it = info.confirmed.iterator();
 			while (it.hasNext()) {
 				GroupChatMember member = it.next();
 				try {
 					storage.setMemberStatus(group_id, member);
+					Log.e("Member confirmed", member.sip);
 				} catch (MemberDoesNotExistException e) {
 					
-					// TODO add or ignore?
+					// add the member and update
+					try {
+						storage.addMember(group_id, member);
+						storage.setMemberStatus(group_id, member);
+					} catch (MemberExistsException | MemberDoesNotExistException ex){
+						// ignore
+					}
 					
-//					// add the member and update
-//					try {
-//						storage.addMember(group_id, member);
-//						storage.setMemberStatus(group_id, member);
-//					} catch (MemberExistsException | MemberDoesNotExistException ex){
-//						// ignore
-//					}
-//				
 				}
 			}
 			
