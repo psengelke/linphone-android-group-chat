@@ -30,6 +30,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.groupchat.communication.DataExchangeFormat.GroupChatMessage;
 import org.linphone.groupchat.core.LinphoneGroupChatManager;
 import org.linphone.groupchat.core.LinphoneGroupChatRoom;
 import org.linphone.groupchat.exception.GroupDoesNotExistException;
@@ -694,9 +695,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			ImageView delete = (ImageView) view.findViewById(R.id.delete);
 			
 			try {
-				String lastMessage = group.getHistory().getLast().message;
+				GroupChatMessage lastMessage = group.getHistory().getLast();
 				TextView lastMsg = (TextView) view.findViewById(R.id.lastMessage);
-				lastMsg.setText(lastMessage);
+				String senderName = lastMessage.sender;
+				senderName = senderName.substring(senderName.indexOf(':') + 1, senderName.indexOf('@'));
+				lastMsg.setText(senderName + ": " + lastMessage.message);
 				lastMsg.setVisibility(View.VISIBLE);
 			} catch (NoSuchElementException e){}
 			

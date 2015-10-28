@@ -339,8 +339,11 @@ public class LinphoneGroupChatRoom {
 		} catch (GroupDoesNotExistException e) {
 			// should not occur, this group uses it's own valid id
 		}
+		String senderName = m.sender;
+		senderName = senderName.substring(senderName.indexOf(':') + 1, senderName.indexOf('@'));
 		
-		LinphoneService.instance().displayMessageNotification(m.sender, this.group_name, m.message, this.group_id);
+		LinphoneService.instance().displayMessageNotification(m.sender, this.group_name, 
+				senderName + "@" + this.group_name + ": " +m.message, this.group_id);
 	}
 	
 	/**

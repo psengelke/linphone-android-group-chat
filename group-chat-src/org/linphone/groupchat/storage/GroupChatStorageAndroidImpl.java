@@ -90,6 +90,7 @@ class GroupChatStorageAndroidImpl implements GroupChatStorage {
 		values.put(GroupChatHelper.Members.name, member.name);
 		values.put(GroupChatHelper.Members.sipAddress, member.sip);
 		values.put(GroupChatHelper.Members.groupId, id);
+		values.put(GroupChatHelper.Members.pending, member.pending);
 		
 		db.insert(GroupChatHelper.Members.tableName, null, values);
 		db.close();

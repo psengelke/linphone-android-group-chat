@@ -124,6 +124,8 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		super.onPause();
 		Log.e("msgFragmet on pause", "msgFragmet on pause");
 		chatroom.unsetGroupChatListener();
+		LinphoneService.instance().resetMessageNotifCount();
+		LinphoneService.instance().removeMessageNotification();
 	}
 	
 	public void onResume()
