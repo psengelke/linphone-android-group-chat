@@ -15,6 +15,8 @@ import org.linphone.groupchat.exception.GroupDoesNotExistException;
 import org.linphone.groupchat.exception.InvalidKeySeedException;
 import org.linphone.groupchat.storage.GroupChatStorage;
 
+import android.util.Log;
+
 class EncryptedMessagingStrategy implements MessagingStrategy {
 
 	private final SymmetricEncryptionHandler sHandler;

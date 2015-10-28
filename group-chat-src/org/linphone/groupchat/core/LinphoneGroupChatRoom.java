@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
@@ -338,6 +339,8 @@ public class LinphoneGroupChatRoom {
 		} catch (GroupDoesNotExistException e) {
 			// should not occur, this group uses it's own valid id
 		}
+		
+		LinphoneService.instance().displayMessageNotification(m.sender, this.group_name, m.message, this.group_id);
 	}
 	
 	/**

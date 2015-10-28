@@ -106,6 +106,9 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 		info = (TextView) view.findViewById(R.id.group_info);
 		info.setOnClickListener(this);
 		
+		TextView sendPic = (TextView) view.findViewById(R.id.sendPicture);
+		sendPic.setVisibility(View.INVISIBLE);
+		
 		sendMsgBtn = (TextView) view.findViewById(R.id.sendMessage);
 		sendMsgBtn.setOnClickListener(this);
 		msgToSend = (EditText) view.findViewById(R.id.message);
@@ -233,6 +236,5 @@ public class GroupChatMessagingFragment extends Fragment  implements OnClickList
 	public void onMessageReceived(GroupChatMessage message) {
 		Log.e("onMessageReceived", "onMsgReceived in GroupChatMessagingFragment");
 		refreshMsgList();
-		
 	}
 }

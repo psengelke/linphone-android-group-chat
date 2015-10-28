@@ -16,6 +16,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -109,6 +110,8 @@ public class GroupBubbleChat {
     	sender.setVisibility(View.VISIBLE);
     	
     	TextView msgView = (TextView) layout.findViewById(R.id.message);
+    	msgView.setTextSize(TypedValue.COMPLEX_UNIT_PX, layout.getResources().getDimension(R.dimen.textsize));
+    	
     	if (msgView != null) {
         	Spanned text = null;
         	String msg = message.message;
@@ -123,6 +126,7 @@ public class GroupBubbleChat {
         		msgView.setVisibility(View.VISIBLE);
         	}
     	}
+    	
     	
 		SimpleDateFormat format = new SimpleDateFormat ("d MMMM HH:mm", Locale.ENGLISH);	
     	
