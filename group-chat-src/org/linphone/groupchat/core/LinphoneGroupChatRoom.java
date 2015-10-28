@@ -230,7 +230,7 @@ public class LinphoneGroupChatRoom {
 			
 			// now tell the group of the update.
 			MemberUpdateInfo info = new MemberUpdateInfo();
-			info.confirmed.add(new GroupChatMember(member.name, member.sip, true));
+			info.confirmed.add(new GroupChatMember(member.name, member.sip, false));
 			messenger.sendMessage(group_id, info, getOtherMembers(false), lc);
 			
 			members = storage.getMembers(group_id);
@@ -357,8 +357,6 @@ public class LinphoneGroupChatRoom {
 	private void handleMemberUpdate(String message){
 		
 		MemberUpdateInfo info = messenger.handleMemberUpdate(message);
-		
-		
 		
 		try {
 			Iterator<GroupChatMember> it;
