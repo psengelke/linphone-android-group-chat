@@ -127,6 +127,7 @@
         
         <activity
             android:name="GroupChatActivity"
+            android:theme="@style/NoTitle"
             android:label="@string/title_activity_groupchat"
             android:parentActivityName=".MainActivity" >
             <meta-data
