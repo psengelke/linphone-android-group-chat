@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{graphicx}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{bookmark}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\input{./title_page.tex}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\tableofcontents
+
+\newpage
+\section{Revision History}
+\begin{table}[h]
+\begin{tabular}{llll}
+\textbf{Date}          & \textbf{Description}  & \textbf{Author}       & \textbf{Comments}   \\ \hline
+\multicolumn{1}{|R{2cm}|}{28/10/2015} & \multicolumn{1}{L{4.5cm}|}{Document Creation} & \multicolumn{1}{l|}{Team Eclectic} & \multicolumn{1}{L{4cm}|}{Version 1.0} \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+
+\end{tabular}
+\end{table}
+
+\section{Document Approval}
+\begin{table}[h]
+\begin{tabular}{llll}
+\textbf{Signature}     & \textbf{Printed Name} & \textbf{Title}        & \textbf{Comments}     \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{L{3.5cm}|}{} & \multicolumn{1}{L{3.5cm}|}{} & \multicolumn{1}{L{4cm}|}{} \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} \\ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\section{Introduction}
+
+\subsection{Purpose}
+The purpose of this document is to summarise the completion of project requirements.
+
+\subsection{Scope}
+The scope of this document is an assessment of the completion of all the requirements laid out in the PSAC, and described in detail in the SRS. 
+
+\subsection{Acronyms and Abbreviations}
+\paragraph{AES256:} Advanced Encryption Standard (256 bit key length).
+\paragraph{PSAC:} Plan for Software Aspects of Certification
+\paragraph{SRS:} Software Requirements Specification
+
+\section{Requirements Completion Summary}
+
+\subsection{Creation of a Group Chat}
+\paragraph{Description:} Functionality to create a group chat.
+\paragraph{Status:} Complete.
+
+\subsection{Deletion of a Group Chat}
+\paragraph{Description:} Functionality to delete a group chat, either as a normal member or the administrator.
+\paragraph{Status:} Complete.
+
+\subsection{Addition of Members}
+\paragraph{Description:} Functionality to add new members to a group.
+\paragraph{Status:} Complete.
+
+\subsection{Removal of Members}
+\paragraph{Description:} Functionality to remove existing members from a group.
+\paragraph{Status:} Complete.
+
+\subsection{Change Administrator}
+\paragraph{Description:} Functionality to allow the administrator of a group chat to choose a new administrator from the existing group members.
+\paragraph{Status:} Complete.
+
+\subsection{Change of Group Profile}
+\paragraph{Description:} Functionality to change the profile picture and subject of a group.
+\paragraph{Status:} Incomplete
+\paragraph{Reasons for non-completion:} Time constraints for project completion prevented the feature from being implemented as well as it's priority status as a non-mandatory desire on a requirements level.
+
+\subsection{Sending of a Text Message}
+\paragraph{Description:} Functionality to broadcast text messages to the rest of the members in a group.
+\paragraph{Status:} Complete.
+
+\subsection{Receiving of a Text Message}
+\paragraph{Description:} Functionality to receive broadcast text messages from other members in a group.
+\paragraph{Status:} Complete.
+
+\subsection{Sending of a Voice Recording}
+\paragraph{Description:} Functionality to send a voice recording to other members of a group chat.
+\paragraph{Status:} Incomplete.
+\paragraph{Reasons for non-completion:} Time constraints for project completion prevented the feature from being implemented as well as it's priority status as a non-mandatory desire on a requirements level.
+
+\subsection{Receiving of a Voice Recording}
+\paragraph{Description:} Functionality to receive a voice recording from other members of a group chat.
+\paragraph{Status:} Incomplete.
+\paragraph{Reasons for non-completion:} Time constraints for project completion prevented the feature from being implemented as well as it's priority status as a non-mandatory desire on a requirements level.
+
+\subsection{Encryption of Text Messages}
+\paragraph{Description:} Functionality to support encryption of text messages, specifically using the AES256 algorithm.
+\paragraph{Status:} Complete.
+\paragraph{Additional Notes:} The interfaces support the addition of other encryption algorithms.
+
+\subsection{Decryption of Text Messages}
+\paragraph{Description:} Functionality to support the decryption of encrypted group chat messages.
+\paragraph{Status:} Complete.
+
+\subsection{Improvements to the User Interfaces}
+
+\subsubsection{Indication of a User Typing}
+\paragraph{Description:} Functionality to allow group users to see when another user is typing a message.
+\paragraph{Status:} Incomplete.
+\paragraph{Reasons for non-completion:} Time constraints for project completion prevented the feature from being implemented as well as it's priority status as a non-mandatory desire on a requirements level.
+
+\subsubsection{Improvement of Word Spacing}
+\paragraph{Description:} Increases to word spacing for better readability.
+\paragraph{Status:} Complete.
+
+\subsubsection{Improvement of Message Font Sizes}
+\paragraph{Description:} Increases to the font size of text to allow better readability.
+\paragraph{Status:} Complete. 
+
+\subsubsection{Improvement of Sender Indication}
+\paragraph{Description:} Messages indicate who sent the message. Messages from other members are left-aligned and messages sent by the client are right-aligned.
+\paragraph{Status:} Complete.
+
+\subsubsection{Improvement of Profile Picture Display}
+\paragraph{Description:} Adjustment of the way in which profile pictures are displayed, to improve aesthetics of the interface.
+\paragraph{Status:} Incomplete.
+\paragraph{Reasons for non-completion:} Time constraints for project completion prevented the feature from being implemented as well as it's priority status as a non-mandatory desire on a requirements level.
+
+\section{Traceability Matrix}
+
+\end{document}
